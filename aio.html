@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Start Page</title>
+    <style>
+        body {
+            font-family: 'Menlo', 'Courier New', Courier, monospace; /* Apple-like monospace font */
+            background-color: #0d1b2a; 
+            color: #ffd166; 
+            margin: 0;
+            padding: 20px;
+            font-size: 18px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .column {
+            width: 30%;
+            padding: 10px;
+            border: 1px solid #3e4451;
+            background-color: #1b263b; /* Darker background for columns */
+        }
+
+        h2 {
+            color: #eeeeee;
+        }
+
+        a {
+            color: #61afef; /* text color for links */
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #ffd166; /* Hover color for links */
+        }
+
+        img {
+            width: 100%; /* Full width to match container */
+            height: auto; /* Maintain aspect ratio */
+            display: block;
+            margin: 0 auto;
+        }
+
+        ul {
+            list-style-type: none; /* Removing bullet points from list */
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px; /* Spacing between list items */
+        }
+
+        video {
+            width: 50%; /* Reduce video width */
+            height: auto; /* Maintain aspect ratio */
+            max-width: 400px; /* Maximum width to ensure it's not too large */
+            display: block;
+            margin: 0px auto; /* Center video and add margin */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- First Column: Simulation -->
+        <div class="column" id="simulation">
+            <h2>Simulation</h2>
+            <ul>
+                <li><a href="https://web.facebook.com/CSI2SFMPMARRAKECH/" target="_blank">Centre de Simulation FMPM</a></li>
+                <li><a href="https://www.youtube.com/@mouhaoui/videos" target="_blank">Pr. MOUHAOUI vid's</a></li>
+                <li><a href="https://web.facebook.com/groups/pygmalion" target="_blank">PYGMALION</a></li>
+                <li><a href="https://www.youtube.com/playlist?list=PL5xfIcbLZD_HhXU5loCFdHc1HgtCC3bdn" target="_blank">HTIC 2024</a></li>
+                <li><a href="https://www.youtube.com/@MedTalkFMPC/videos" target="_blank">MedTalk FMPC</a></li>
+                <li><a href="https://www.youtube.com/playlist?list=PLnMDoG8q4zlkHG2dhEXDYsS68dpr-N_Vv" target="_blank">SIMCUP playlist</a></li>
+                <li><a href="https://www.weurgences.com/" target="_blank">WeUrgences</a></li>
+                <li><a href="https://www.moroccosim.org/" target="_blank">Morocco Sim</a></li>
+            </ul>
+            <!-- Empty section under Simulation -->
+            <div class="empty-section" style="margin-top: 20px;">
+                <!-- Add content later -->
+            </div>
+        </div>
+
+        <!-- Second Column: New Image -->
+        <div class="column" id="main-image">
+            <img src="https://raw.githubusercontent.com/achma-learning/achma-learning.github.io/refs/heads/main/images/cal.png" alt="Main Image">
+        </div>
+
+        <!-- Third Column: Resources -->
+        <div class="column" id="resources">
+            <h2>Ressources - update</h2>
+            <ul>
+                <li><a href="https://drive.google.com/drive/folders/1-Iy7CAE0kxD6JWr4rnDOYkhFjy6Rxsm6" target="_blank">Collection médicale - drive</a></li>
+                <li><a href="https://ucaacma-my.sharepoint.com/:f:/g/personal/m_acheghned2046_uca_ac_ma/EoWLrYg5C7hDoy7W8QuRkywBanVM6m4aYthpWukSmeABvQ?e=AJYV3h" target="_blank">Collèges backup</a></li>
+                <li><a href="https://ucaacma-my.sharepoint.com/personal/m_acheghned2046_uca_ac_ma/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fm%5Facheghned2046%5Fuca%5Fac%5Fma%2FDocuments%2FProjects%2Finternat%2Fmed%2FSupports%2FInternat%20drjb%2Enet%2FFes&ga=1" target="_blank">internat Fes</a></li>
+            </ul>
+            <!-- Empty section under Ressources - update -->
+            <div class="empty-section" style="margin-top: 20px;">
+                <video controls>
+                    <source src="https://raw.githubusercontent.com/achma-learning/achma-learning.github.io/main/sound%20and%20video/Une%20journ%C3%A9e%20normal%20de%20r%C3%A9vision%20en%20m%C3%A9decine%20%EF%BC%9A%20partie%203%20%EF%BF%BC-CTYB39Mf400.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
