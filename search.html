@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<title>search</title>
+	</head>
+	<body>
+<!-- Doc'CISMeF </-->
+		<form id="searchForm">
+			<input type="search" name="q" id="searchInput" placeholder="Librairie française médicale" required>
+			<input type="submit" value="Doc'CISMeF">
+		</form>
+			<script>
+  document.getElementById('searchForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Empêche l'envoi classique du formulaire
+    const query = encodeURIComponent(document.getElementById('searchInput').value.trim());
+    if (query) {
+      // Redirection vers l'URL avec fragment #q=...
+      window.location.href = 'https://doccismef.chu-rouen.fr/dc/#q=' + query;
+    }
+  });
+			</script>
+<!-- https://www.cismef.org/cismef/outils/outils-et-services/ -->
+<!-- https://www.cismef.org/cismef/aide/liste-des-abreviations-des-champs-utilises-dans-doccismef-et-lissa/ -->
+
+<!-- google search </-->	
+		<form action="https://www.google.com/search" method="get">
+			<input name="q" placeholder="Normal" type="search">
+			<input type="submit" value="Google search">
+		</form>
+
+<!-- Google Scholar </-->
+		<form action="https://scholar.google.com/scholar" method="get">
+			<input name="q" placeholder="Stand on the shoulders of giants" type="search">
+			<input type="submit" value="Google Scholar">
+		</form>
+
+<!-- These 2.0 </-->		
+		<form action="https://thesefmpm.vercel.app/search" method="get">
+			<input name="q" type="search">
+			<input type="submit" value="These 2.0">
+		</form>
+
+<!-- Perplexity AI </-->		
+		<form action="https://www.perplexity.ai/search" method="get">
+			<input name="q" placeholder="Recherche augmentée" type="search">
+			<input type="submit" value="Perplexity AI">
+		</form>
+
+<!-- google search </-->				
+	</body>
+</html>
+	
