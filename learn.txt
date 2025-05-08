@@ -1,0 +1,106 @@
+
+I added links to your comment so I can come back and easily get to everything. Thanks for your recommendations and I look forward to learning!
+
+I post this to all new devs asking this question. As a 13+ year web dev, who works FT and freelances on the side, this is what I would do if I was just starting out and didn't even know how to code.
+
+-----------------
+
+Here's a list of videos by TraversyMedia I recommend to all new web devs. There are a couple paid Udemy courses in this list, but you can omit them and just focus on some additional tutorials from TraversyMedia's channel - but if you ever have the money, I highly recommend the Udemy courses Brad puts out. Brad is the mentor I wish I had when I started 13+ years ago, and this list of videos/content is the path I wish someone had given me when I started - would have saved me a LOT of frustration, self doubt, and imposter syndrome.
+
+Even if you only get up to and through #21 on this list, you will be light years ahead of where I was 5-7 years into my career.Each item on Youtube is about an hour, unless I specified differently. Each Udemy course is between 12-20 hours but WELL worth it and could really be done instead of all the youtube videos that precede them. For example, if you ONLY took the Modern HTML & CSS from the Beginning Udemy course, you could really skip items 1-11.
+
+However by doing them all in the order I have them you will reenforce everything you learn AND have a number of small projects under your belt to tweak and use in a portfolio.If you finish this list, you will be further ahead than most bootcamp and college graduates that want to focus on Web dev.
+
+Although the Udemy courses are currently pretty expensive, they very often drop to $10-15 US so keep your eye open. Brad sometimes offers coupon codes to his subscribers in his videos or videos descriptions on Youtube. I've also read if you go to Udemy in Incognito mode of your browser, you will sometimes see the discount pricing.I know it looks daunting, but I'd say for a high cost of $720 (that assumes you never get the Udemy videos for the $10-15 US and you don't have to buy these all at once) and a time commitment of 250 hours, you will be ready for ANYTHING the average web agency/employer throws at you.
+
+Follow Brad Traversy on YouTube (TraversyMedia).
+
+Watch his videos in this order:
+
+YT HTML Crash Course
+
+YT CSS Crash Course
+
+YT CSS3 Animations and Transitions Crash Course
+
+YT Create a Website with Video Background
+
+YT Creative Agency Website from Scratch
+
+YT Full Screen Video Background - HTML & CSS
+
+YT HTML CSS Mobile UI Layout - CVS clone
+
+YT Flexbox Crash Course 2022
+
+YT CSS Grid Crash Course 2022
+
+YT Build a Responsive Website - HTML, CSS Grid, Flexbox
+
+YT SASS Crash Course
+
+$$$ Udemy Modern HTML & CSS from the Beginning
+
+YT Bootstrap 5 Crash Course
+
+YT Tailwind CSS Crash Course
+
+$$$ Udemy Tailwind CSS from Scratch
+
+YT Javascript Crash Course for Beginners
+
+YT JSON Crash Course
+
+YT Javascript OOP crash Course
+
+$$$ Udemy Modern Javascript from the Beginning
+
+$$$ Udemy 50 Projects in 50 Days - HTML, CSS, JS
+
+$$$ Udemy 20 Vanilla Javascript Projects
+
+YT NodeJs Crash Course
+
+YT React Crash Course
+
+$$$ Udemy React Front To Back 2022
+
+$$$ Udemy MERN Stack Front to Back
+
+$$$ Udemy MERN eCommerce From Front to Back
+
+YT Angular Crash Course
+
+$$$ Udemy Angular Front To Back
+
+YT VueJS Crash Course
+
+YT Git & Github Crash Course for Beginners
+
+YT PHP & PDO Crash Course
+
+YT MySQL Crash Course
+
+YT PHP for Beginners Crash Course
+
+YT PHP for Absolute Beginners
+
+YT Convert HTML to Wordpress Part 1 Part 2 (old but if you use the version of WP from the tutorial, you will learn)
+
+YT Wordpress Theme with Bootstrap Part 1 Part 2 Part 3 Part 4 Part 5 Part 6 Part 7 Part 8 Part 9 Part 10 (old but if you use the version of WP from the theme you will learn)
+
+Wordpress Website Build for Beginners
+
+Build a Wordpress Website in 1 Hour
+
+Build a useful Wordpress Widget plugin
+
+Build a portfolio of 3-5 decent sites//projects from Brad's tutorials. Tweak them to prove you can and share the link in the next step.
+
+1-15 : HTML & CSS proficiency
+16-30 : Javascript proficiency
+31-34: PHP proficiency
+34-39: Wordpress proficiency
+40: reinforce what you've learned
+
+DISCLAIMER: I have ZERO affiliation with Brad Traversy, TraversyMedia, or Udemy. As I mentioned at the beginning of this post, I think Brad is an excellent instructor. He is the mentor I wish I had had when I started 13+ years ago, and this content and specifically this path through the content is what I wish someone had given me when I started. It would have save me a LOT of frustration, self doubt, and imposter syndrome. I hope it helps someone become a better web dev than I am, and a lot sooner than it took me to get here.
