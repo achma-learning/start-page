@@ -1,0 +1,9 @@
+# https://rjshkhr.github.io/startpage/
+# like this website: add
+y: youtube search
+g: google search
+gs: google scolar
+pubmed: pubmed
+doc: cismef
+docg: doocteur
+anki: anki shareddeck
