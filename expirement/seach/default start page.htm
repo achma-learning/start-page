@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Search</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        input[type="search"] {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            outline: none;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        input[type="search"]::placeholder {
+            color: #aaa;
+        }
+        input[type="search"]:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        input[type="submit"] {
+            padding: 10px 25px;
+            font-size: 14px;
+            font-weight: 500;
+            background-color: #007aff;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #0051c4;
+        }
+        @media (max-width: 600px) {
+            input[type="search"] {
+                width: 200px;
+            }
+            .search-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="tesseract"></canvas>
+    <form action="https://www.google.com/search" method="get" class="search-container">
+        <input name="q" placeholder="Search Google" type="search" aria-label="Search query">
+        <input type="submit" value="Search">
+    </form>
+
+    <script>
+        const canvas = document.getElementById('tesseract');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Tesseract vertices in 4D
+        const vertices = [
+            [-1, -1, -1, -1], [1, -1, -1, -1], [1, 1, -1, -1], [-1, 1, -1, -1],
+            [-1, -1, 1, -1], [1, -1, 1, -1], [1, 1, 1, -1], [-1, 1, 1, -1],
+            [-1, -1, -1, 1], [1, -1, -1, 1], [1, 1, -1, 1], [-1, 1, -1, 1],
+            [-1, -1, 1, 1], [1, -1, 1, 1], [1, 1, 1, 1], [-1, 1, 1, 1]
+        ];
+
+        // Tesseract edges
+        const edges = [
+            [0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4],
+            [0, 4], [1, 5], [2, 6], [3, 7], [8, 9], [9, 10], [10, 11], [11, 8],
+            [12, 13], [13, 14], [14, 15], [15, 12], [8, 12], [9, 13], [10, 14],
+            [11, 15], [0, 8], [1, 9], [2, 10], [3, 11], [4, 12], [5, 13], [6, 14], [7, 15]
+        ];
+
+        // Minimal starfield
+        const stars = Array(100).fill().map(() => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            z: Math.random(),
+            size: Math.random() * 0.8 + 0.2,
+            speed: Math.random() * 0.1 + 0.05
+        }));
+
+        // Simplified background
+        function drawUniverse() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw stars with subtle twinkle
+            stars.forEach(star => {
+                const perspective = 1 / (1 + star.z);
+                const size = star.size * perspective;
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(Math.sin(Date.now() * 0.001)) * perspective * 0.5})`;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, size, 0, Math.PI * 2);
+                ctx.fill();
+
+                star.y += star.speed * perspective;
+                if (star.y > canvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * canvas.width;
+                    star.z = Math.random();
+                }
+            });
+        }
+
+        // 4D rotation
+        function rotate4D(vertices, angleX, angleY, angleZ, angleW) {
+            const cosX = Math.cos(angleX), sinX = Math.sin(angleX);
+            const cosY = Math.cos(angleY), sinY = Math.sin(angleY);
+            const cosZ = Math.cos(angleZ), sinZ = Math.sin(angleZ);
+            const cosW = Math.cos(angleW), sinW = Math.sin(angleW);
+
+            return vertices.map(([x, y, z, w]) => {
+                let nx = x * cosX - y * sinX;
+                let ny = x * sinX + y * cosX;
+                let nz = z * cosW - w * sinW;
+                let nw = z * sinW + w * cosW;
+                let rx = nx * cosZ - nz * sinZ;
+                nz = nx * sinZ + nz * cosZ;
+                let ry = ny * cosY - nw * sinY;
+                nw = ny * sinY + nw * cosY;
+                return [rx, ry, nz, nw];
+            });
+        }
+
+        // Project 4D to 3D
+        function projectTo3D([x, y, z, w]) {
+            const distance = 5;
+            const scale = distance / (distance - w);
+            return [x * scale, y * scale, z * scale];
+        }
+
+        // Project 3D to 2D
+        function projectTo2D([x, y, z]) {
+            const scale = 50;
+            const perspective = 5 / (5 - z);
+            return [
+                canvas.width / 2 + x * scale * perspective,
+                canvas.height / 2 - y * scale * perspective
+            ];
+        }
+
+        // Animation loop
+        let angleX = 0, angleY = 0, angleZ = 0, angleW = 0;
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawUniverse();
+
+            // Rotate and project vertices
+            const rotatedVertices = rotate4D(vertices, angleX, angleY, angleZ, angleW);
+            const projectedVertices = rotatedVertices.map(projectTo3D).map(projectTo2D);
+
+            // Draw tesseract edges with minimal glow
+            edges.forEach(([start, end]) => {
+                const [x1, y1] = projectedVertices[start];
+                const [x2, y2] = projectedVertices[end];
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+            });
+
+            angleX += 0.01;
+            angleY += 0.008;
+            angleZ += 0.006;
+            angleW += 0.004;
+
+            requestAnimationFrame(animate);
+        }
+
+        // Resize canvas
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            stars.forEach(star => {
+                star.x = Math.random() * canvas.width;
+                star.y = Math.random() * canvas.height;
+            });
+        });
+
+        animate();
+    </script>
+</body>
+</html>
