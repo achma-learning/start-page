@@ -160,7 +160,6 @@
                 name: 'ResearchGate',
                 url: 'https://www.researchgate.net/search/publication?q='
             }
-            // Add more search engines here as needed
         };
 
         // Update search source display
@@ -178,6 +177,8 @@
             }
 
             searchSource.textContent = `Search source: ${source}`;
+            // Change text color to green for valid prefixes, revert to default (#333) for unknown
+            searchSource.style.color = source === 'Unknown source' ? '#333' : 'green';
             return { prefix: matchedPrefix, query: query.slice(matchedPrefix.length) };
         }
 
