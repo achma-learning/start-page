@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Search Bar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .search-container {
+            display: flex;
+            gap: 10px;
+        }
+        #searchInput {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #searchSource {
+            font-size: 14px;
+            color: #555;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <form id="searchForm">
+            <input type="text" id="searchInput" placeholder="e.g., g:query, y:video, gs:paper" autocomplete="off">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <div id="searchSource">Enter a query to see the search source</div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        const searchSource = document.getElementById('searchSource');
+
+        // Define search engines
+        const searchEngines = {
+            'g:': {
+                name: 'Google',
+                url: 'https://www.google.com/search?q='
+            },
+            'g+:': {
+                name: 'Google Advanced',
+                url: 'https://www.google.com/advanced_search?q='
+            },
+            'y:': {
+                name: 'YouTube',
+                url: 'https://www.youtube.com/results?search_query='
+            },
+            'gs:': {
+                name: 'Google Scholar',
+                url: 'https://scholar.google.com/scholar?q='
+            },
+            'cismef:': {
+                name: 'CISMeF',
+                url: 'https://doccismef.chu-rouen.fr/dc/#q='
+            },
+            'these-fr:': {
+                name: 'Theses.fr',
+                url: 'https://theses.fr/?q='
+            },
+            'these-ma:': {
+                name: 'Toubkal',
+                url: 'https://toubkal.imist.ma/?query='
+            },
+            'pubmed:': {
+                name: 'PubMed',
+                url: 'https://pubmed.ncbi.nlm.nih.gov/?term='
+            }
+            // Add more search engines here as needed
+        };
+
+        // Update search source display
+        function updateSearchSource() {
+            const query = searchInput.value.trim();
+            let source = 'Unknown source';
+            let matchedPrefix = '';
+
+            for (const prefix in searchEngines) {
+                if (query.startsWith(prefix)) {
+                    source = searchEngines[prefix].name;
+                    matchedPrefix = prefix;
+                    break;
+                }
+            }
+
+            searchSource.textContent = `Search source: ${source}`;
+            return { prefix: matchedPrefix, query: query.slice(matchedPrefix.length) };
+        }
+
+        // Handle search
+        function performSearch(e) {
+            e.preventDefault();
+            const { prefix, query } = updateSearchSource();
+            
+            if (query && prefix in searchEngines) {
+                const searchUrl = searchEngines[prefix].url + encodeURIComponent(query);
+                window.open(searchUrl, '_blank');
+            } else if (query && !prefix) {
+                // Default to Google if no prefix is provided
+                const searchUrl = searchEngines['g:'].url + encodeURIComponent(query);
+                window.open(searchUrl, '_blank');
+            }
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', updateSearchSource);
+        searchForm.addEventListener('submit', performSearch);
+    </script>
+</body>
+</html>
