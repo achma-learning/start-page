@@ -131,18 +131,18 @@
             'g+:': {
                 name: 'Google Advanced',
                 url: 'https://www.google.com/advanced_search?q='
-			},
+            },
             'gs:': {
                 name: 'Google Scholar',
                 url: 'https://scholar.google.com/scholar?q='
             },
-			'g100:': {
-                name: 'Google 100',
-                url: 'https://www.google.com/search?q=%s&num=100'
+            'g100:': {
+                name: 'Google 100 results',
+                url: 'https://www.google.com/search?q=' // Fixed %s and ensured num=100 is handled in performSearch
+            },
             'yt:': {
                 name: 'YouTube',
                 url: 'https://www.youtube.com/results?search_query='
-
             },
             'cismef:': {
                 name: 'CISMeF',
@@ -155,16 +155,16 @@
             'these-ma:': {
                 name: 'Toubkal',
                 url: 'https://toubkal.imist.ma/?query='
-			},	
-			'these-ma-gs:': {
-                name: 'Toubkal',
-                url: 'https://www.google.com/search?q=site:toubkal.imist.ma%20'
+            },
+            'these-ma-gs:': {
+                name: 'Toubkal Google Search',
+                url: 'https://www.google.com/search?q=site:toubkal.imist.ma+' // Fixed to use + for query concatenation
             },
             'pbmd:': {
                 name: 'PubMed',
                 url: 'https://pubmed.ncbi.nlm.nih.gov/?term='
             },
-            'rs:': {
+            'rsgt:': {
                 name: 'ResearchGate',
                 url: 'https://www.researchgate.net/search/publication?q='
             },
@@ -195,12 +195,30 @@
             'hetop:': {
                 name: 'HETOP',
                 url: 'https://www.hetop.eu/hetop/fr/#q='
+            },
+            'bing:': {
+                name: 'Bing',
+                url: 'https://www.bing.com/search?q='
+            },
+            'brave:': {
+                name: 'Brave Search',
+                url: 'https://search.brave.com/search?q='
+            },
+            'wolfram:': {
+                name: 'Wolfram Alpha',
+                url: 'https://www.wolframalpha.com/input?i='
+            },
+            'ddg:': {
+                name: 'DuckDuckGo',
+                url: 'https://duckduckgo.com/?q='
+            },
+            'startpage:': {
+                name: 'Startpage',
+                url: 'https://www.startpage.com/do/dsearch?query='
             }
         };
-		// tobkal make q site:tobkral
-		// or add for all website: cismef+s = q site:cismef ...
-		// add ai.p ai.x ai.g ai.gpt ai.ntlm ai.cdflr ai.dpsk
-		// use Bing.com , brave , wolframp alpha , baidu , yandex , mojeek , duckduckgo , start-page ,
+
+//make the wiki organised in two collums, like search engin
 
         // Update search source display
         function updateSearchSource() {
@@ -228,7 +246,11 @@
             const { prefix, query } = updateSearchSource();
             
             if (query && prefix in searchEngines) {
-                const searchUrl = searchEngines[prefix].url + encodeURIComponent(query);
+                let searchUrl = searchEngines[prefix].url + encodeURIComponent(query);
+                // Special handling for g100: to append &num=100
+                if (prefix === 'g100:') {
+                    searchUrl += '&num=100';
+                }
                 window.open(searchUrl, '_blank');
             } else if (query && !prefix) {
                 // Default to Google if no prefix is provided
