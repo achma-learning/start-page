@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Search Bar</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+            background-size: cover;
+            background-color: #e0f0f5; /* Fallback calm blue */
+            position: relative;
+            overflow: hidden;
+        }
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            max-width: 90%;
+            width: 100%;
+        }
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        #searchInput {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 50vw;
+            max-width: 600px;
+            box-sizing: border-box;
+            background: #fff;
+            transition: border-color 0.3s ease;
+        }
+        #searchInput:focus {
+            outline: none;
+            border-color: #004aad;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            background: #004aad;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #003087;
+        }
+        #wikiButton {
+            background: #cb6d51;
+        }
+        #wikiButton:hover {
+            background: #a55842;
+        }
+        #searchSource {
+            font-size: 14px;
+            color: #333;
+            margin-top: 5px;
+            text-align: center;
+        }
+        #wikiContent {
+            display: none;
+            margin-top: 10px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #fff;
+            max-width: 100%;
+            font-size: 14px;
+            color: #333;
+        }
+        #wikiContent ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #wikiContent li {
+            margin-bottom: 8px;
+        }
+        #wikiContent li strong {
+            color: #004aad;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <div class="search-bar">
+            <form id="searchForm">
+                <input type="text" id="searchInput" placeholder="Research means that you don’t know, but are willing to find out" autocomplete="off">
+                <button type="submit">Learn</button>
+            </form>
+        </div>
+        <button id="wikiButton">Wiki</button>
+        <div id="searchSource">Enter a query to see the search source</div>
+        <div id="wikiContent"></div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        const searchSource = document.getElementById('searchSource');
+        const wikiButton = document.getElementById('wikiButton');
+        const wikiContent = document.getElementById('wikiContent');
+
+        // Define search engines
+        const searchEngines = {
+            'g:': {
+                name: 'Google',
+                url: 'https://www.google.com/search?q='
+            },
+            'g+:': {
+                name: 'Google Advanced',
+                url: 'https://www.google.com/advanced_search?q='
+			},
+            'gs:': {
+                name: 'Google Scholar',
+                url: 'https://scholar.google.com/scholar?q='
+            },
+			'g100:': {
+                name: 'Google',
+                url: 'https://www.google.com/search?q='
+            },
+            'yt:': {
+                name: 'YouTube',
+                url: 'https://www.youtube.com/results?search_query='
+
+            },
+            'cismef:': {
+                name: 'CISMeF',
+                url: 'https://doccismef.chu-rouen.fr/dc/#q='
+            },
+            'these-fr:': {
+                name: 'Theses.fr',
+                url: 'https://theses.fr/?q='
+            },
+            'these-ma:': {
+                name: 'Toubkal',
+                url: 'https://toubkal.imist.ma/?query='
+			},	
+			'these-ma-gs:': {
+                name: 'Toubkal',
+                url: 'https://www.google.com/search?q=site:toubkal.imist.ma'
+	
+            },
+            'pbmd:': {
+                name: 'PubMed',
+                url: 'https://pubmed.ncbi.nlm.nih.gov/?term='
+            },
+            'rs:': {
+                name: 'ResearchGate',
+                url: 'https://www.researchgate.net/search/publication?q='
+            },
+            'ndltd:': {
+                name: 'Networked Digital Library of Theses and Dissertations',
+                url: 'http://search.ndltd.org/search.php?q='
+            },
+            'cismef-th:': {
+                name: 'CISMeF Theses',
+                url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q='
+            },
+            'cismef-edn:': {
+                name: 'CISMeF EDN',
+                url: 'https://doccismef.chu-rouen.fr/dc/#env=ecn&q='
+            },
+            'cismef-bp:': {
+                name: 'CISMeF Best Practices',
+                url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q='
+            },
+            'cismef-edu:': {
+                name: 'CISMeF Education',
+                url: 'https://doccismef.chu-rouen.fr/dc/#env=unf3s&q='
+            },
+            'lissa:': {
+                name: 'LISSA',
+                url: 'https://www.lissa.fr/dc/#env=lissa&q='
+            },
+            'hetop:': {
+                name: 'HETOP',
+                url: 'https://www.hetop.eu/hetop/fr/#q='
+            }
+        };
+		// tobkal make q site:tobkral
+		// or add for all website: cismef+s = q site:cismef ...
+		// add ai.p ai.x ai.g ai.gpt ai.ntlm ai.cdflr ai.dpsk
+		// use Bing.com , brave , wolframp alpha , baidu , yandex , mojeek , duckduckgo , start-page ,
+
+        // Update search source display
+        function updateSearchSource() {
+            const query = searchInput.value.trim();
+            let source = 'Unknown source';
+            let matchedPrefix = '';
+
+            for (const prefix in searchEngines) {
+                if (query.startsWith(prefix)) {
+                    source = searchEngines[prefix].name;
+                    matchedPrefix = prefix;
+                    break;
+                }
+            }
+
+            searchSource.textContent = `Search source: ${source}`;
+            // Change text color to green for valid prefixes, revert to default (#333) for unknown
+            searchSource.style.color = source === 'Unknown source' ? '#333' : 'green';
+            return { prefix: matchedPrefix, query: query.slice(matchedPrefix.length) };
+        }
+
+        // Handle search
+        function performSearch(e) {
+            e.preventDefault();
+            const { prefix, query } = updateSearchSource();
+            
+            if (query && prefix in searchEngines) {
+                const searchUrl = searchEngines[prefix].url + encodeURIComponent(query);
+                window.open(searchUrl, '_blank');
+            } else if (query && !prefix) {
+                // Default to Google if no prefix is provided
+                const searchUrl = searchEngines['g:'].url + encodeURIComponent(query);
+                window.open(searchUrl, '_blank');
+            }
+        }
+
+        // Populate and toggle wiki content
+        function toggleWiki() {
+            if (wikiContent.style.display === 'block') {
+                wikiContent.style.display = 'none';
+            } else {
+                let content = '<ul>';
+                for (const prefix in searchEngines) {
+                    content += `<li><strong>${prefix}</strong> - ${searchEngines[prefix].name}</li>`;
+                }
+                content += '</ul>';
+                wikiContent.innerHTML = content;
+                wikiContent.style.display = 'block';
+            }
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', updateSearchSource);
+        searchForm.addEventListener('submit', performSearch);
+        wikiButton.addEventListener('click', toggleWiki);
+    </script>
+</body>
+</html>
