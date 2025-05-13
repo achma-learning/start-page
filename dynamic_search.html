@@ -107,7 +107,7 @@
         <div class="search-bar">
             <form id="searchForm">
                 <input type="text" id="searchInput" placeholder="Research means that you don’t know, but are willing to find out" autocomplete="off">
-                <button type="submit">Search</button>
+                <button type="submit">Learn</button>
             </form>
         </div>
         <button id="wikiButton">Wiki</button>
@@ -131,14 +131,18 @@
             'g+:': {
                 name: 'Google Advanced',
                 url: 'https://www.google.com/advanced_search?q='
-            },
-            'yt:': {
-                name: 'YouTube',
-                url: 'https://www.youtube.com/results?search_query='
-            },
+			},
             'gs:': {
                 name: 'Google Scholar',
                 url: 'https://scholar.google.com/scholar?q='
+            },
+			'g100:': {
+                name: 'Google 100',
+                url: 'https://www.google.com/search?q=%s&num=100'
+            'yt:': {
+                name: 'YouTube',
+                url: 'https://www.youtube.com/results?search_query='
+
             },
             'cismef:': {
                 name: 'CISMeF',
@@ -151,12 +155,16 @@
             'these-ma:': {
                 name: 'Toubkal',
                 url: 'https://toubkal.imist.ma/?query='
+			},	
+			'these-ma-gs:': {
+                name: 'Toubkal',
+                url: 'https://www.google.com/search?q=site:toubkal.imist.ma%20'
             },
             'pbmd:': {
                 name: 'PubMed',
                 url: 'https://pubmed.ncbi.nlm.nih.gov/?term='
             },
-            'rs:': {
+            'rsgt:': {
                 name: 'ResearchGate',
                 url: 'https://www.researchgate.net/search/publication?q='
             },
