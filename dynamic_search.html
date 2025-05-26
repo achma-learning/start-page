@@ -92,6 +92,9 @@
             list-style: none;
             padding: 0;
             margin: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two-column layout */
+            gap: 20px;
         }
         #wikiContent li {
             margin-bottom: 8px;
@@ -106,7 +109,10 @@
     <div class="search-container">
         <div class="search-bar">
             <form id="searchForm">
-                <input type="text" id="searchInput" placeholder="Research means that you don’t know, but are willing to find out" autocomplete="off">
+                <input type="text" id="searchInput" placeholder="Research means that you don’t know, but are willing to find out" autocomplete="off" autofocus list="searchSuggestions">
+                <datalist id="searchSuggestions">
+                    <!-- Suggestions will be populated dynamically -->
+                </datalist>
                 <button type="submit">Learn</button>
             </form>
         </div>
@@ -121,6 +127,7 @@
         const searchSource = document.getElementById('searchSource');
         const wikiButton = document.getElementById('wikiButton');
         const wikiContent = document.getElementById('wikiContent');
+        const suggestions = document.getElementById('searchSuggestions');
 
         // Define search engines
         const searchEngines = {
@@ -138,7 +145,7 @@
             },
             'g100:': {
                 name: 'Google 100 results',
-                url: 'https://www.google.com/search?q=' // Fixed %s and ensured num=100 is handled in performSearch
+                url: 'https://www.google.com/search?q='
             },
             'yt:': {
                 name: 'YouTube',
@@ -158,7 +165,7 @@
             },
             'these-ma-gs:': {
                 name: 'Toubkal Google Search',
-                url: 'https://www.google.com/search?q=site:toubkal.imist.ma+' // Fixed to use + for query concatenation
+                url: 'https://www.google.com/search?q=site:toubkal.imist.ma+'
             },
             'pbmd:': {
                 name: 'PubMed',
@@ -218,8 +225,6 @@
             }
         };
 
-//make the wiki organised in two collums, like search engin
-
         // Update search source display
         function updateSearchSource() {
             const query = searchInput.value.trim();
@@ -235,9 +240,23 @@
             }
 
             searchSource.textContent = `Search source: ${source}`;
-            // Change text color to green for valid prefixes, revert to default (#333) for unknown
             searchSource.style.color = source === 'Unknown source' ? '#333' : 'green';
             return { prefix: matchedPrefix, query: query.slice(matchedPrefix.length) };
+        }
+
+        // Handle autocomplete suggestions
+        function updateSuggestions() {
+            const query = searchInput.value.trim().toLowerCase();
+            suggestions.innerHTML = '';
+            if (query) {
+                for (const prefix in searchEngines) {
+                    if (prefix.toLowerCase().startsWith(query)) {
+                        const option = document.createElement('option');
+                        option.value = prefix;
+                        suggestions.appendChild(option);
+                    }
+                }
+            }
         }
 
         // Handle search
@@ -247,13 +266,11 @@
             
             if (query && prefix in searchEngines) {
                 let searchUrl = searchEngines[prefix].url + encodeURIComponent(query);
-                // Special handling for g100: to append &num=100
                 if (prefix === 'g100:') {
                     searchUrl += '&num=100';
                 }
                 window.open(searchUrl, '_blank');
             } else if (query && !prefix) {
-                // Default to Google if no prefix is provided
                 const searchUrl = searchEngines['g:'].url + encodeURIComponent(query);
                 window.open(searchUrl, '_blank');
             }
@@ -275,9 +292,15 @@
         }
 
         // Event listeners
-        searchInput.addEventListener('input', updateSearchSource);
+        searchInput.addEventListener('input', () => {
+            updateSearchSource();
+            updateSuggestions();
+        });
         searchForm.addEventListener('submit', performSearch);
         wikiButton.addEventListener('click', toggleWiki);
+
+        // Set focus on page load
+        searchInput.focus();
     </script>
 </body>
 </html>
