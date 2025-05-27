@@ -1,6 +1,7 @@
 remember to class them, table
 
 Source: https://osint.link/
+https://www.zillman.us/white-papers/searching-the-internet/
 
  Open Source Intelligence (OSINT) Tools & Resources
 
