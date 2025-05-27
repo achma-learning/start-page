@@ -1,3 +1,5 @@
+https://www.zillman.us/white-papers/searching-the-internet/
+
 # https://rjshkhr.github.io/startpage/
 # like this website: add
 y: youtube search
