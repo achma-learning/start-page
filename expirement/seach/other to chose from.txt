@@ -1,0 +1,476 @@
+remember to class them, table
+
+Source: https://osint.link/
+https://www.zillman.us/white-papers/searching-the-internet/
+
+ Open Source Intelligence (OSINT) Tools & Resources
+
+keyword research tools
+
+    Google AdWords
+    Keyword Tool
+    KWFinder
+    Keyword discover
+    Keyword Shitter
+    One Look: Enter a word, phrase, sentence, or pattern to search for related words.
+    Ubersuggest: Suggest keywords not available in the Google Keyword Planner.
+
+Search Engines
+General Search
+
+    Google
+    Bing
+    Yahoo
+    AOL
+    Infospace
+    Lycos
+    Exalead
+    ASK
+    Ecosia
+    entireweb
+    I Search From: simulate using Google Search from a different location or device, or perform a search with custom search settings.
+    millionshort: Allows you to remove the top of the search engine results (e.g Remove top 100,1000,10000)
+
+National Search Engines
+
+    Yandex: Russia
+    Search: Switzerland
+    Alleba: Philippines
+    Baidu | so  | bhanvad China
+    Eniro: Sweden
+    Daum: South Korea
+    Goo: Japan
+    Onet: Poland
+    Parseek: Iran
+    SAPO: Portugal
+    arabo: Arabic Search engine
+
+Privacy-oriented search engines
+
+    DuckDuckGo: Online investigators usually use it to search the surface web while using the Tor Browser.
+    Startpage: Fetch results from Google without tracking its users.
+    Qwant: Based in France.
+    Oscobo: Based in UK.
+    Swisscows:  Privacy safe WEB-search based in Switzerland.
+    Gibiru:  Uncensored and anonymous search engine.
+
+Meta search engines
+
+    Excite
+    Search
+    MetaGer
+    Zapmeta
+    etools: Compile its results from major international search engines, keep user privacy by not collecting or sharing personal information of its users. This search engine is very fast and show a summary for each search query -on the right side- detailing the source of its results.
+    All the interne: query major search engines including shopping site like Amazon and eBay.
+    izito: Aggregate data from multiple sources (Yahoo, Bing, Wikipedia, YouTube and other) to generate optimal results which includes images, videos, news and articles.
+    Metacrawler: Aggregate results from Google and Yahoo!.
+    My all search: Aggregates results through Bing, DuckDuckGo, AOL Search, Ask, Oscobo, Mojeek, ZapMeta, MetaCrawler.
+    Carrot2: Open Source Search Results Clustering Engine aggregate results from GoogleAPI, Bing API, eTools Meta Search, Lucene, SOLR, and more.
+    elocalfinder: Fetch results from Google, Yahoo!, Ask and Bing .
+    All-in-One
+    Searx
+
+FTP search engines
+
+    Global file search
+    Archie
+    File watcher
+    Mamont
+    NAPALM FTP Indexer
+
+Files Search Engines
+
+    Faganfinder
+    DOCUMENT SEARCH ENGINE
+    grayhatwarfare: Search for Open Amazon s3 Buckets and their contents.
+
+Image Search Engines
+
+    Google image search
+    Bing image search
+    Yahoo images
+    Yandex images
+    Baidu images
+    Pinterest
+    Imgur
+    Photobucket
+    Picsearch
+    creativecommons
+    Smug mug
+    lenso.ai
+    Adobe Stock
+    Depositphotos
+    Taobao search by image (App)
+    Australian Design Search
+    Trade Mark Check
+    Graphic Image Park
+    Stocksy United
+    Pond5
+    Sogou Images
+    Alibaba China
+
+Images shared across social media sites can be found in the following locations:
+
+    Flickr
+    Flicker map
+    idGettr: Find Flicker ID number (also works for groups).
+    Flickr Hive Mind: Data mining tool for the Flickr database of photography.
+    Instagram
+    Stalkture: Instagram Online Web Viewer.
+    Pinterest
+
+There are specialized sites that hold images appeared in the press and news media, to search for this type of images go to:
+
+    Gettyimages: Contains images from news, entertainment, fashion, sports and archival imagery.
+    Reuters pictures
+    News press
+    Associated Press images portal
+    PA images
+    European pressphoto agency
+    Canadian Press images archive
+
+Reverse image search
+
+    Google reverse search
+    Karmadecay
+    TinEye
+    Yandex reverse image search“
+    Bing visual search
+    REVERSE IMAGE SEARCH
+    Cam finds App: this is an App available for both Android and Apple devices. It uses visual search technology to recognize uploaded picture and give instant results about it like related images, local shopping results and a vast selection of web results.
+    Image Identification Project
+    Picsearch
+    Yahoo search engine
+
+    Pinterest Reverse Image Search
+    PicTriev Face Recognition
+    PimEyes Face Search
+    Betaface
+    Everypixel Image Recognition
+
+Faces Search Engines
+
+    Pinterest Reverse Image Search
+    PicTriev Face Recognition
+    PimEyes Face Search
+    Betaface
+    Everypixel Image Recognition
+
+Stock photo search engines
+
+    ImageFinder
+    istockphoto
+    stocksnap
+    gettyimages
+    shutterstock
+    pikwizard
+    mostphotos
+    photopin
+
+Graphics search
+
+    artage
+    graphicriver
+    freepik
+    graphicsfactory
+    clipart-library
+    kissclipart
+
+Image Upscale Tools
+
+    StockPhotos Upscaler
+    Gigapixel AI
+    VanceAI Image Upscaler
+    icons8 -Upscale Image
+    Waifu2x
+    Zyro
+    GIMP
+    A Sharper Scaling
+    Bigjpg
+
+Video Search Engines
+
+    YouTube
+    Google video
+    Yahoo video search
+    Bing videos
+    AOL videos
+    StartPage video search
+    Veoh
+    Vimeo
+    360daily
+    Official Facebook video search
+    Crowd tangle (Facebook video search)
+    Internet archive open source movies
+    Live Leak
+    Facebook live video map
+    Meta Tube
+    Geo Search Tool: Search for all movies according to a specific query entered by the user – the result set will be further filtered according to the distance from a specific location (city, village, intersection) and according to a specific time frame (past hour, past two or three hours ..etc.).
+    Earth Cam
+    Insecam
+
+Blog Search
+
+    Blogspot Blog Search
+    blogsearchengine
+    bloggingfusion
+    Blog Directory
+    Bloghub: Online blog directory.
+    blog-search
+    blogsearchengine
+
+Custom Search Engines
+
+    Google Custom Search Engines Finder
+    300+ Social Networking Sites
+    250+ Video Sharing Sites
+    File Sharing Sites Search
+    FTP and File Search Engine
+    Github Awesome Custom Search Engine
+    OSINT Tools, Resources & News Search
+    Torrent Search
+    Social Media Custom Search Engine
+    IFTTT Applet Finder
+    WordPress Content Hacker Search Engine
+    Short URL Search Engine
+    Raw Git Hacker Custom Search Engine
+
+Internet Of Things (IoT) devices search engines
+
+    Shodan: Shodan is the world’s first search engine for Internet-connected devices.
+    Criminal IP
+    Airport webcams
+    Insecam
+    Lookr
+    Earthcam
+    Openstreetcam
+    Opentopia
+    Pictimo
+    Thingful
+    Webcam.nl (NL)
+    Webcams.travel
+    Worldcam
+    censys
+
+Exploits search engines
+
+    sploitus
+    exploit-db
+    Vulnerability Assesment Platform
+    CVE Details
+    nmmapper
+    Vulmon
+    exploits.shodan
+    vulnerability-lab
+
+Dark Web Search Engines
+
+You should download the TOR Browser first before you can access sites hosted on the TOR network.
+
+    ahmia
+    Onion Search Engine
+    darksearch
+    Torch
+    Not Evil
+    Candle
+    The Uncensored Hidden Wiki
+    Parazite
+    TorLinks
+    gibiru
+    HayStack
+    TorDex
+
+News/Newspaper Search Engines
+
+    1stHeadlines: Breaking news headline.
+    Google News Archive
+    Google Newspaper Archive
+    News Now
+    Newspaper Archives: Contains Newspaper Archives 1607-2017 and Obituaries & Family History Records.
+    All you can read
+    Newspapers Search
+    Findmypast: US and world  historical( China, Denmark, France, Germany, Jamaica, and South Africa are also searchable within the collection) Newspaper archive.
+    Daily Earth
+    Search U.S. Newspaper Directory, 1690-Present
+    Newspaper Map
+    World News
+    The paperboy
+    Newsography: International relations and armed conflicts global news aggregator and historical database.
+    Online Newspapers: Online Newspaper Directory for the World.
+    YouGotTheNews: Search Engine for US News – Search thousands of national, business, and local news sources.
+    Library of Congress Newspapers directory  & 100 Years Ago Today: Search U.S. Newspaper Directory, 1690-Present using these two links from the Library of Congress.
+
+Fake News Detection
+
+    Snopes: Discovers false news, stories, urban legends and research/validate rumors to see whether it is true.
+    Hoaxy: Check the spread of false claims (like a hoax, rumor, satire, news report) across social media sites. The site derives its results from reputable fact checking organizations to return the most accurate results.
+    FactCheck: This site is partnered with Facebook to help identify and label fake news reported by its users. It also monitors different media for the false info covering a wide range of topics like health, science, hoaxes spread through Spam emails.
+    ReviewMeta: Analysis Amazon user reviews.
+    Reporter Lab: Gives a map of global fact-checking sites.
+    Truth Or Fiction: Discover fake news in different topics like politics, nature, health, space, crime, police and terrorism…etc.
+    Hoax-Slayer: Focuses on email scam and social media hoaxes.
+    Verification Handbook: A definitive guide to verifying digital content for emergency coverage available in different languages.
+    Verification junkie: This is a directory of tools for verifying, fact checking and assessing the validity of eyewitness reports and user self-published content online.
+    citizen evidence: tools and lessons to teach people how to authenticate user-generated online contents. Managed by Amnesty International.
+
+Patent Search Engines
+
+    Google Advanced Patent Search Engine
+    European Patent Office
+    Israel Patent Office Database
+    Norwegian Industrial Property Office
+    Swedish Patent and Registration Office
+    Switzerland 
+    Taiwan Intellectual Property Office
+    Japan Patent Office
+    World Intellectual Property Organization (WIPO) 
+    State Intellectual Property Office (SIPO) of the People’s Republic of China
+    Australia Patent Search
+    Canadian Intellectual Property Office
+    Danish Patent and Trademark Office
+    Finnish Patent and Registration Office
+    France Patent Search
+    Germany Patent Office
+    UK Patent Search Engine
+    India Patent Office
+    stopfakes: The International Trade Administration (ITA), U.S. Department of Commerce, manages STOPfakes.gov to assist U.S. businesses protect and enforce their intellectual property rights against counterfeits and pirated goods in the global marketplace.
+    FreePatentsOnline: Patent metadata search engine.
+    Patent Lens
+    Directory of Intellectual Property Offices Worldwide
+
+Web Directories
+
+    Search Engine Colossus
+    The Ultimate Search Engine Links Page
+    The WWW Virtual Library
+    Best of the Web
+    GoWorkable – Global Business Listing
+    01webdirectory
+
+Translation services
+
+    Google translator
+    Google Input Tools: Allows a user to enter text in any supported language using his/her English (Latin) keyboard and the text will get converted into its native script.
+    Apertium
+    DeepL Translator
+    2lingual Google Search
+    TextMagic
+    Babylon
+    Bing translate
+    Dictionary
+    Wiktionary
+    Free translator
+    WordReference.com
+    No slang
+    Textranch
+    Translate.eu
+    Yandex.Translate
+    Cevirsozluk
+    PROMT.One (Online-Translator.com)
+    Dict
+    de.pons – German/English
+    English to Indonesian Translation Tool & Dictionary
+    Mdbg
+    BEOLINGUS – Online Dictionary
+    Languages Spoken in Each Country of the World
+
+Business Search
+Business Annual Records
+
+    Annual Reports: Lists thousands of annual records from 5,333 companies worldwide.
+    Reporter Link: Contains more than 60 Million searchable tables, figures and datasets.
+    Gov.Uk
+    U.S. Securities and exchange commission
+    Sedar
+    Company registration around the world: Give a list of government, commercial registers websites around the globe.
+
+Business Profiles
+
+    Open corporates: The largest open database of companies in the world.
+    crunchbase
+    Zoom info: List companies in the U.S categorized by industry and offer information
+    corporationwiki: Allows you to search for any company and visualize the connection between people working within it
+    Kompass: This is a global B2B portal with information about companies in more than 60 countries.
+    Infobel
+    Orbis directory
+    Manta: Business directory for U.S businesses
+    Canadian Company Capabilities
+    Canadian Importers Database
+    LittleSisThis is a powerful profiling website that lists a wealth of information about 185,000 people and 67,000 organizations in varying stages of completion.
+    Companies House
+    EUROPAGES
+    Vault
+    Owler
+    The United Kingdom Limited Liability Company list
+    International White and Yellow Pages
+    Google finance
+
+Grey literature
+
+Grey information includes the following -and more (Academic papers, preprints, proceedings, conference & discussion papers, research reports, marketing reports, technical specifications and standards, dissertations, theses, trade publications, memoranda, government reports and documents not published commercially, translations, newsletters, market survey, draft version of books, articles.
+
+Most important Grey literature (academic and scholarly resources) websites can be found in the following list:
+
+    Academia
+    VLRC
+    Academic torrents
+    American Doctoral Dissertations
+    ArchiveGrid
+    Google scholar
+    Bielefeld academic search engine
+    Archive portal Europe
+    Social Science Research Network
+    National library of Australia
+    ScienceDirect
+    PQDT Open
+    The national archive of the United Kingdom
+    Oxford academic
+    Page Press
+    CERN Document Server
+    High wire
+    Grey guide
+    Beyond citation
+    Crossref
+
+Data Leak Websites
+
+    Facebook Data Breach Checker: Check if your telephone number is present within the Facebook data breach.
+    TINFOLEAK: Search for Twitter users’ leaks.
+    Leak.sx
+    breachchecker
+    Intelligence X
+    4iq
+    leak-lookup
+    leakcheck
+    nuclearleaks
+    weleakinfo
+    leakpeek
+    haveibeenpwned
+    snusbase
+    Have I Been Sold?
+    leakedsource
+    WikiLeaks
+    Joe Black Security
+    Black Kite
+    scatteredsecrets
+    dehashed
+    Cryptome
+    GlobaLeaks: is an open-source, free software intended to enable secure and anonymous whistleblowing initiatives
+    Al Jazeera’s Investigative Unit
+    ghostproject
+    Have I Been Facebooked? : Check if your data was part of the Facebook April 2021 breach.
+    spycloud
+    raidforums
+    Have I Been Zucked? : Check if your details are included in the 2019 Facebook data breach.
+    leakhispano
+    Fasterbroadband
+    F-Secure Identity Theft Checker
+    Firefox Monitor
+    Amibreached
+    inoitsu
+    Password Checkup by Google
+
+Pastebin sites
+
+    Pastebin
+    PasteLert: A Pastebin alerting service dedicated for Pastebin.com website.
