@@ -1,0 +1,302 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A dynamic search bar for researching across multiple search engines and databases">
+    <meta name="keywords" content="search, research, Google, Wikipedia, PubMed, theses, academic">
+    <meta name="author" content="Dynamic Search Bar Creator">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dynamic Search Bar</title>
+    <link rel="icon" type="image/gif" href="https://media.tenor.com/5aD6I5j6J6wAAAAC/loop-loading.gif">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #004aad;
+            --primary-hover: #003087;
+            --wiki-color: #cb6d51;
+            --wiki-hover: #a55842;
+            --background-fallback: #e0f0f5;
+            --text-color: #333;
+            --border-color: #ccc;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: url('https://raw.githubusercontent.com/achma-learning/start-page/main/images/ocean.png?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+            background-size: cover;
+            background-color: var(--background-fallback);
+            position: relative;
+            overflow-x: hidden;
+        }
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            z-index: 1;
+            max-width: 90%;
+            width: 100%;
+        }
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        #searchInput {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 50vw;
+            max-width: 600px;
+            background: #fff;
+            transition: border-color 0.3s ease;
+        }
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: var(--primary-hover);
+        }
+        #wikiButton {
+            background: var(--wiki-color);
+        }
+        #wikiButton:hover {
+            background: var(--wiki-hover);
+        }
+        #searchSource {
+            font-size: 14px;
+            color: var(--text-color);
+            margin-top: 5px;
+            text-align: center;
+        }
+        #wikiContent {
+            display: none;
+            margin-top: 10px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: #fff;
+            max-width: 100%;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+        #wikiContent ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        #wikiContent li {
+            margin-bottom: 8px;
+        }
+        #wikiContent li strong {
+            color: var(--primary-color);
+        }
+        @media (max-width: 600px) {
+            #searchInput {
+                width: 70vw;
+            }
+            #wikiContent ul {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <div class="search-bar" role="search">
+            <input type="text" id="searchInput" placeholder="Research means that you don’t know, but are willing to learn the good" autocomplete="off" autofocus list="searchSuggestions" aria-label="Search query input">
+            <datalist id="searchSuggestions">
+                <!-- Suggestions will be populated dynamically -->
+            </datalist>
+            <button type="button" onclick="performSearch()">Learn</button>
+        </div>
+        <button id="wikiButton" type="button" aria-label="Toggle search engine wiki">Wiki</button>
+        <div id="searchSource" aria-live="polite">Enter a query to see the search source</div>
+        <div id="wikiContent" aria-hidden="true"></div>
+    </div>
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchSource = document.getElementById('searchSource');
+        const wikiButton = document.getElementById('wikiButton');
+        const wikiContent = document.getElementById('wikiContent');
+        const suggestions = document.getElementById('searchSuggestions');
+
+        const searchEngines = {
+            'g:': { name: 'Google', url: 'https://www.google.com/search?q=' },
+            'g+:': { name: 'Google Advanced', url: 'https://www.google.com/advanced_search?q=' },
+            'gs:': { name: 'Google Scholar', url: 'https://scholar.google.com/scholar?q=' },
+            'g100:': { name: 'Google 100 results', url: 'https://www.google.com/search?q=' },
+            'yt:': { name: 'YouTube', url: 'https://www.youtube.com/results?search_query=' },
+            'cismef:': { name: 'CISMeF', url: 'https://doccismef.chu-rouen.fr/dc/#q=' },
+            'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/?q=' },
+            'these2.0:': { name: 'These2.0', url: 'https://thesefmpm.vercel.app/search?page=1&search=' },
+            'these-ma:': { name: 'Toubkal', url: 'https://toubkal.imist.ma/?query=' },
+            'these-ma-gs:': { name: 'Toubkal Google Search', url: 'https://www.google.com/search?q=site:toubkal.imist.ma+' },
+            'pbmd:': { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=' },
+            'rgt:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=' },
+            'ndltd:': { name: 'Networked Digital Library of Theses and Dissertations', url: 'http://search.ndltd.org/search.php?q=' },
+            'has:': { name: 'Haute Autorité de Santé', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=' },
+            'cismef-th:': { name: 'CISMeF Theses', url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q=' },
+            'cismef-edn:': { name: 'CISMeF EDN', url: 'https://doccismef.chu-rouen.fr/dc/#env=ecn&q=' },
+            'cismef-bp:': { name: 'CISMeF Best Practices', url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q=' },
+            'cismef-edu:': { name: 'CISMeF Education', url: 'https://doccismef.chu-rouen.fr/dc/#env=unf3s&q=' },
+            'lissa:': { name: 'LISSA', url: 'https://www.lissa.fr/dc/#env=lissa&q=' },
+            'hetop:': { name: 'HETOP', url: 'https://www.hetop.eu/hetop/fr/#q=' },
+            'bing:': { name: 'Bing', url: 'https://www.bing.com/search?q=' },
+            'brave:': { name: 'Brave Search', url: 'https://search.brave.com/search?q=' },
+            'wolfram:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=' },
+            'ddg:': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
+            'gpt:': { name: 'ChatGPT', url: 'https://chat.openai.com/?q=' },
+            'x.ai:': { name: 'Grok', url: 'https://www.x.ai/grok?q=' },
+            'g.ai:': { name: 'Gemini', url: 'https://gemini.google.com/?q=' },
+            'p.ai:': { name: 'Perplexity', url: 'https://www.perplexity.ai/search?q=' }
+        };
+
+        function updateSearchSource() {
+            const query = searchInput.value.trim();
+            let source = 'Unknown source';
+            let matchedPrefix = '';
+
+            for (const prefix in searchEngines) {
+                if (query.startsWith(prefix)) {
+                    source = searchEngines[prefix].name;
+                    matchedPrefix = prefix;
+                    break;
+                }
+            }
+
+            searchSource.textContent = `Search source: ${source}`;
+            searchSource.style.color = source === 'Unknown source' ? 'var(--text-color)' : 'green';
+            return { prefix: matchedPrefix, query: query.slice(matchedPrefix.length) };
+        }
+
+        function updateSuggestions() {
+            const query = searchInput.value.trim().toLowerCase();
+            suggestions.innerHTML = '';
+            if (query) {
+                for (const prefix in searchEngines) {
+                    if (prefix.toLowerCase().startsWith(query)) {
+                        const option = document.createElement('option');
+                        option.value = prefix;
+                        suggestions.appendChild(option);
+                    }
+                }
+            }
+        }
+
+        function performSearch() {
+            const { prefix, query } = updateSearchSource();
+            
+            if (query && prefix in searchEngines) {
+                let searchUrl = searchEngines[prefix].url + encodeURIComponent(query);
+                if (prefix === 'g100:') {
+                    searchUrl += '&num=100';
+                }
+                window.open(searchUrl, '_blank');
+            } else if (query && !prefix) {
+                const searchUrl = searchEngines['g:'].url + encodeURIComponent(query);
+                window.open(searchUrl, '_blank');
+            }
+        }
+
+        function toggleWiki() {
+            if (wikiContent.style.display === 'block') {
+                wikiContent.style.display = 'none';
+                wikiContent.setAttribute('aria-hidden', 'true');
+            } else {
+                let content = '<ul>';
+                for (const prefix in searchEngines) {
+                    content += `<li><strong>${prefix}</strong> - ${searchEngines[prefix].name}</li>`;
+                }
+                content += '</ul>';
+                wikiContent.innerHTML = content;
+                wikiContent.style.display = 'block';
+                wikiContent.setAttribute('aria-hidden', 'false');
+            }
+        }
+
+        searchInput.addEventListener('input', () => {
+            updateSearchSource();
+            updateSuggestions();
+        });
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        wikiButton.addEventListener('click', toggleWiki);
+        searchInput.focus();
+    </script>
+</body>
+</html>
