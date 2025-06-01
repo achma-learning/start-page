@@ -9,3 +9,14 @@ pubmed: pubmed
 doc: cismef
 docg: doocteur
 anki: anki shareddeck
+
+<!-- https://www.cismef.org/cismef/outils/outils-et-services/ -->
+<!-- https://www.cismef.org/cismef/aide/liste-des-abreviations-des-champs-utilises-dans-doccismef-et-lissa/ -->
+
+======
+grp by domaine, 5group
+1. normal search: google, ddg, bing, 
+2. health source French: these
+3. health source English
+4. ai
+5. other search tools: wolf ramp alpha
