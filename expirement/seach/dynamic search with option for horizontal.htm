@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Search Bar</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: url('https://raw.githubusercontent.com/achma-learning/start-page/main/images/ocean.png?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+            background-size: cover;
+            background-color: #e0f0f5; /* Fallback calm blue */
+            position: relative;
+            overflow: hidden;
+        }
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            max-width: 90%;
+            width: 100%;
+        }
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        #searchInput {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 50vw;
+            max-width: 600px;
+            box-sizing: border-box;
+            background: #fff;
+            transition: border-color 0.3s ease;
+        }
+        #searchInput:focus {
+            outline: none;
+            border-color: #004aad;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            background: #004aad;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #003087;
+        }
+        #wikiButton {
+            background: #cb6d51;
+        }
+        #wikiButton:hover {
+            background: #a55842;
+        }
+        #searchSource {
+            font-size: 14px;
+            color: #333;
+            margin-top: 5px;
+            text-align: center;
+        }
+        #wikiContent {
+            display: none;
+            margin-top: 10px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #fff;
+            max-width: 90%;
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 14px;
+            color: #333;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .wiki-group {
+            flex: 1;
+            min-width: 200px;
+            max-width: 250px;
+        }
+        .wiki-group ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .wiki-group li {
+            margin-bottom: 8px;
+        }
+        .wiki-group li strong {
+            color: #004aad;
+        }
+        .wiki-group h3 {
+            color: #004aad;
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: 500;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="search-container">
+        <div class="search-bar">
+            <form id="searchForm">
+                <input type="text" id="searchInput" placeholder="Research means that you don’t know, but are willing to learn the good" autocomplete="off" autofocus list="searchSuggestions">
+                <datalist id="searchSuggestions">
+                    <!-- Suggestions will be populated dynamically -->
+                </datalist>
+                <button type="submit">Learn</button>
+            </form>
+        </div>
+        <button id="wikiButton">Wiki</button>
+        <div id="searchSource">Enter a query to see the search source</div>
+        <div id="wikiContent"></div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        const searchSource = document.getElementById('searchSource');
+        const wikiButton = document.getElementById('wikiButton');
+        const wikiContent = document.getElementById('wikiContent');
+        const suggestions = document.getElementById('searchSuggestions');
+
+        // Define search engines
+        const searchEngines = {
+            'g:': {
+                name: 'Google',
+                url: 'https://www.google.com/search?q='
+            },
+            'g+:': {
+                name: 'Google Advanced',
+                url: 'https://www.google.com/advanced_search?q='
+            },
+            'gs:': {
+                name: 'Google Scholar',
+                url: 'https://scholar.google.com/scholar?q='
+            },
+            'g100:': {
+                name: 'Google 100 results',
+                url: 'https://www.google.com/search?q='
+            },           
+            'yt:': {
+                name: 'YouTube',
+                url: 'https://www.youtube.com/results?search_query='
+            },
+            'cismef:': {
+                name: 'CISMeF',
+                url: 'https://doccismef.chu-rouen.fr/dc/#q='
+            },
+            'these-fr:': {
+                name: 'Theses.fr',
+                url: 'https://theses.fr/?q='
+            },
+            'these2.0:': {
+                name: 'These2.0',
+                url: 'https://thesefmpm.vercel.app/search?page=1&search='
+            },
+            'these-ma:': {
+                name: 'Toubkal',
+                url: 'https://toubkal.imist.ma/?query='
+            },
+            'these-ma-gs:': {
+                name: 'Toubkal Google Search',
+                url: 'https://www.google.com/search?q=site:toubkal.imist.ma+'
+            },
+            'pbmd:': {
+                name: 'PubMed',
+                url: 'https://pubmed.ncbi.nlm.nih.gov/?term='
+            },
+            'rgt:': {
+                name: 'ResearchGate',
+                url: 'https://www.researchgate.net/search/publication?q='
+            },
+            'ndltd:': {
+                name: 'Networked Digital Library of Theses and Dissertations',
+                url: 'http://search.ndltd.org/search.php?q='
+            },
+            'cismef-th:': {
+                name: 'CISMeF Theses',
+                url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q='
+            },
+            'cismef-edn:': {
+                name: 'CISMeF EDN',
+                url: 'https://doccismef.chu-rouen.fr/dc/#env=ecn&q='
+            },
+            'cismef-bp:': {
+                name: 'CISMeF Best Practices',
+                url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q='
+            },
+            'cismef-edu:': {
+                name: 'CISMeF Education',
+                url: 'https://doccismef.chu-rouen.fr/dc/#env=unf3s&q='
+            },
+            'lissa:': {
+                name: 'LISSA',
+                url: 'https://www.lissa.fr/dc/#env=lissa&q='
+            },
+            'hetop:': {
+                name: 'HETOP',
+                url: 'https://www.hetop.eu/hetop/fr/#q='
+            },
+            'bing:': {
+                name: 'Bing',
+                url: 'https://www.bing.com/search?q='
+            },
+            'brave:': {
+                name: 'Brave Search',
+                url: 'https://search.brave.com/search?q='
+            },
+            'wolfram:': {
+                name: 'Wolfram Alpha',
+                url: 'https://www.wolframalpha.com/input?i='
+            },
+            'ddg:': {
+                name: 'DuckDuckGo',
+                url: 'https://duckduckgo.com/?q='
+            },
+            'gpt:': {
+                name: 'ChatGPT',
+                url: 'https://chat.openai.com/?q='
+            },
+            'x.ai:': {
+                name: 'Grok',
+                url: 'https://www.x.ai/grok?q='
+            },
+            'g.ai:': {
+                name: 'Gemini',
+                url: 'https://gemini.google.com/?q='
+            },
+            'p.ai:': {
+                name: 'Perplexity',
+                url: 'https://www.perplexity.ai/search?q='
+            }
+        };
+
+        // Define grouped search engines
+        const groupedEngines = {
+            'General Search': ['g:', 'g+:', 'gs:', 'g100:', 'bing:', 'brave:', 'ddg:'],
+            'Health Source French': ['cismef:', 'cismef-th:', 'cismef-edn:', 'cismef-bp:', 'cismef-edu:', 'lissa:', 'hetop:'],
+            'Health Source English': ['pbmd:'],
+            'AI': ['gpt:', 'x.ai:', 'g.ai:', 'p.ai:'],
+            'Other Search Tools': ['yt:', 'these-fr:', 'these2.0:', 'these-ma:', 'these-ma-gs:', 'rgt:', 'ndltd:', 'wolfram:']
+        };
+
+        // Update search source display
+        function updateSearchSource() {
+            const query = searchInput.value.trim();
+            let source = 'Unknown source';
+            let matchedPrefix = '';
+
+            for (const prefix in searchEngines) {
+                if (query.startsWith(prefix)) {
+                    source = searchEngines[prefix].name;
+                    matchedPrefix = prefix;
+                    break;
+                }
+            }
+
+            searchSource.textContent = `Search source: ${source}`;
+            searchSource.style.color = source === 'Unknown source' ? '#333' : 'green';
+            return { prefix: matchedPrefix, query: query.slice(matchedPrefix.length) };
+        }
+
+        // Handle autocomplete suggestions
+        function updateSuggestions() {
+            const query = searchInput.value.trim().toLowerCase();
+            suggestions.innerHTML = '';
+            if (query) {
+                for (const prefix in searchEngines) {
+                    if (prefix.toLowerCase().startsWith(query)) {
+                        const option = document.createElement('option');
+                        option.value = prefix;
+                        suggestions.appendChild(option);
+                    }
+                }
+            }
+        }
+
+        // Handle search
+        function performSearch(e) {
+            e.preventDefault();
+            const { prefix, query } = updateSearchSource();
+            
+            if (query && prefix in searchEngines) {
+                let searchUrl = searchEngines[prefix].url + encodeURIComponent(query);
+                if (prefix === 'g100:') {
+                    searchUrl += '&num=100';
+                }
+                window.open(searchUrl, '_blank');
+            } else if (query && !prefix) {
+                const searchUrl = searchEngines['g:'].url + encodeURIComponent(query);
+                window.open(searchUrl, '_blank');
+            }
+        }
+
+        // Populate and toggle wiki content
+        function toggleWiki() {
+            if (wikiContent.style.display === 'flex') {
+                wikiContent.style.display = 'none';
+            } else {
+                let content = '';
+                for (const group in groupedEngines) {
+                    content += `<div class="wiki-group"><h3>${group}</h3><ul>`;
+                    groupedEngines[group].forEach(prefix => {
+                        if (searchEngines[prefix]) {
+                            content += `<li><strong>${prefix}</strong> - ${searchEngines[prefix].name}</li>`;
+                        }
+                    });
+                    content += '</ul></div>';
+                }
+                wikiContent.innerHTML = content;
+                wikiContent.style.display = 'flex';
+            }
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', () => {
+            updateSearchSource();
+            updateSuggestions();
+        });
+        searchForm.addEventListener('submit', performSearch);
+        wikiButton.addEventListener('click', toggleWiki);
+
+        // Set focus on page load
+        searchInput.focus();
+    </script>
+</body>
+</html>
