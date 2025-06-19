@@ -1,1 +1,3 @@
 add this: https://www.academie-medecine.fr/le-dictionnaire/index.php?q=an%C3%A9vrisme%20mycotique
+
+robocopy "C:\Utilisateurs\VotreNom\Documents\Travail" "D:\Sauvegardes\Travail" /MIR
