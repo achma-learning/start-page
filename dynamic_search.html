@@ -1,10 +1,49 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Search Bar</title>
-	<link rel="icon" type="image/gif" href="https://tenor.com/view/loop-loading-searching-gif-25030402">
+    <link rel="icon" type="image/gif" href="https://tenor.com/view/loop-loading-searching-gif-25030402">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -15,7 +54,7 @@
             margin: 0;
             background: url('https://raw.githubusercontent.com/achma-learning/start-page/main/images/ocean.png?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
             background-size: cover;
-            background-color: #e0f0f5; /* Fallback calm blue */
+            background-color: #e0f0f5;
             position: relative;
             overflow: hidden;
         }
@@ -94,16 +133,26 @@
             padding: 0;
             margin: 0;
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Two-column layout */
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
         #wikiContent li {
             margin-bottom: 8px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        #wikiContent li:hover {
+            background: #f0f0f0;
+        }
+        #wikiContent li.selected {
+            background: #e0f0ff;
+            font-weight: bold;
         }
         #wikiContent li strong {
             color: #004aad;
         }
-		
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
@@ -187,7 +236,7 @@
             'has:': {
                 name: 'Haute Autorité de Santé',
                 url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text='
-			},
+            },
             'cismef-th:': {
                 name: 'CISMeF Theses',
                 url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q='
@@ -304,11 +353,29 @@
             } else {
                 let content = '<ul>';
                 for (const prefix in searchEngines) {
-                    content += `<li><strong>${prefix}</strong> - ${searchEngines[prefix].name}</li>`;
+                    content += `<li data-prefix="${prefix}"><strong>${prefix}</strong> - ${searchEngines[prefix].name}</li>`;
                 }
                 content += '</ul>';
                 wikiContent.innerHTML = content;
                 wikiContent.style.display = 'block';
+
+                // Add click event listeners to list items
+                const listItems = wikiContent.querySelectorAll('li');
+                listItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        // Remove selected class from all items
+                        listItems.forEach(i => i.classList.remove('selected'));
+                        // Add selected class to clicked item
+                        item.classList.add('selected');
+                        // Add prefix to search input
+                        const prefix = item.getAttribute('data-prefix');
+                        searchInput.value = prefix;
+                        updateSearchSource();
+                        searchInput.focus();
+                        // Close wiki content after selection
+                        wikiContent.style.display = 'none';
+                    });
+                });
             }
         }
 
