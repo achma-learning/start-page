@@ -129,16 +129,6 @@
         .category-section li strong {
             color: #004aad;
         }
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 14px;
-            color: #333;
-        }
-        #closeWikiCheckbox {
-            cursor: pointer;
-        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
@@ -154,10 +144,6 @@
             </form>
         </div>
         <button id="wikiButton">Wiki</button>
-        <div class="checkbox-container">
-            <input type="checkbox" id="closeWikiCheckbox" checked>
-            <label for="closeWikiCheckbox">Close wiki after selection</label>
-        </div>
         <div id="searchSource">Enter a query to see the search source</div>
         <div id="wikiContent"></div>
     </div>
@@ -168,7 +154,6 @@
         const wikiButton = document.getElementById('wikiButton');
         const wikiContent = document.getElementById('wikiContent');
         const suggestions = document.getElementById('searchSuggestions');
-        const closeWikiCheckbox = document.getElementById('closeWikiCheckbox');
 
         // Define search engines with categories
         const internationale_search = {
@@ -320,10 +305,8 @@
                         searchInput.value = prefix;
                         updateSearchSource();
                         searchInput.focus();
-                        // Close wiki content after selection if checkbox is checked
-                        if (closeWikiCheckbox.checked) {
-                            wikiContent.style.display = 'none';
-                        }
+                        // Close wiki content after selection
+                        wikiContent.style.display = 'none';
                     });
                 });
             }

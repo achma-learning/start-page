@@ -1,4 +1,43 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -102,9 +141,7 @@
         }
         .category-title {
             font-weight: bold;
-            color: #000000;
-            font-style: italic;
-            text-decoration: underline;
+            color: #004aad;
             margin-bottom: 10px;
         }
         .category-section ul {
@@ -129,16 +166,6 @@
         .category-section li strong {
             color: #004aad;
         }
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 14px;
-            color: #333;
-        }
-        #closeWikiCheckbox {
-            cursor: pointer;
-        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
@@ -154,10 +181,6 @@
             </form>
         </div>
         <button id="wikiButton">Wiki</button>
-        <div class="checkbox-container">
-            <input type="checkbox" id="closeWikiCheckbox" checked>
-            <label for="closeWikiCheckbox">Close wiki after selection</label>
-        </div>
         <div id="searchSource">Enter a query to see the search source</div>
         <div id="wikiContent"></div>
     </div>
@@ -168,7 +191,6 @@
         const wikiButton = document.getElementById('wikiButton');
         const wikiContent = document.getElementById('wikiContent');
         const suggestions = document.getElementById('searchSuggestions');
-        const closeWikiCheckbox = document.getElementById('closeWikiCheckbox');
 
         // Define search engines with categories
         const internationale_search = {
@@ -320,10 +342,8 @@
                         searchInput.value = prefix;
                         updateSearchSource();
                         searchInput.focus();
-                        // Close wiki content after selection if checkbox is checked
-                        if (closeWikiCheckbox.checked) {
-                            wikiContent.style.display = 'none';
-                        }
+                        // Close wiki content after selection
+                        wikiContent.style.display = 'none';
                     });
                 });
             }
