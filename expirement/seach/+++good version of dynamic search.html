@@ -1,0 +1,426 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Search Bar</title>
+    <link rel="icon" type="image/gif" href="https://raw.githubusercontent.com/achma-learning/start-page/main/images/search.gif">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+        }
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        #searchInput {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 300px;
+            box-sizing: border-box;
+        }
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .category-section {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+        .category-title {
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 5px;
+        }
+        .category-section .radio-group {
+            margin-top: 5px;
+        }
+        .radio-group label {
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .radio-group label:hover {
+            background: #f0f0f0;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+            border: none;
+            background: #4285f4;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #3267d6;
+        }
+        #wikiButton {
+            background: #cb6d51;
+        }
+        #wikiButton:hover {
+            background: #a55842;
+        }
+        #searchSource {
+            font-size: 12px;
+            color: #333;
+            margin-top: 5px;
+        }
+        #wikiContent {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            max-width: 100%;
+            font-size: 12px;
+            color: #333;
+        }
+        #wikiContent .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: #333;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="search-container">
+        <div class="search-bar">
+            <form id="searchForm">
+                <input type="text" id="searchInput" placeholder="Research means that you don’t know, but are willing to learn the good" autocomplete="off" autofocus list="searchSuggestions">
+                <datalist id="searchSuggestions">
+                    <!-- Suggestions will be populated dynamically -->
+                </datalist>
+                <button type="submit">Rechercher</button>
+            </form>
+        </div>
+        <div class="category-section">
+            <div class="category-title">Group1: General Search</div>
+            <div class="radio-group">
+                <label><input type="radio" name="searchEngine" value="g:" checked>Google</label>
+                <label><input type="radio" name="searchEngine" value="yt:">YouTube</label>
+                <label><input type="radio" name="searchEngine" value="brave:">Brave Search</label>
+                <label><input type="radio" name="searchEngine" value="ddg:">DuckDuckGo</label>
+                <label><input type="radio" name="searchEngine" value="yadx:">Yandex</label>
+                <label><input type="radio" name="searchEngine" value="bing:">Bing</label>
+                <label><input type="radio" name="searchEngine" value="g100:">Google 100 results</label>
+                <label><input type="radio" name="searchEngine" value="g+:">Google Advanced</label>
+            </div>
+        </div>
+        <div class="category-section">
+            <div class="category-title">Group2: Academic/Thesis Search</div>
+            <div class="radio-group">
+                <label><input type="radio" name="searchEngine" value="these-fr:">Theses.fr</label>
+                <label><input type="radio" name="searchEngine" value="these2.0:">These2.0</label>
+                <label><input type="radio" name="searchEngine" value="these-ma:">Toubkal</label>
+                <label><input type="radio" name="searchEngine" value="these-ma-gs:">Toubkal - Google Search</label>
+                <label><input type="radio" name="searchEngine" value="cismef-th:">CISMeF Theses</label>
+                <label><input type="radio" name="searchEngine" value="gs:">Google Scholar</label>
+                <label><input type="radio" name="searchEngine" value="rgt:">ResearchGate</label>
+                <label><input type="radio" name="searchEngine" value="ndltd:">Networked Digital Library of Theses and Dissertations</label>
+            </div>
+        </div>
+        <div class="category-section">
+            <div class="category-title">Group3: Medical/Health Search</div>
+            <div class="radio-group">
+                <label><input type="radio" name="searchEngine" value="pbmd:">PubMed</label>
+                <label><input type="radio" name="searchEngine" value="cismef:">CISMeF</label>
+                <label><input type="radio" name="searchEngine" value="cismef-edn:">CISMeF EDN</label>
+                <label><input type="radio" name="searchEngine" value="cismef-bp:">CISMeF Best Practices</label>
+                <label><input type="radio" name="searchEngine" value="cismef-edu:">CISMeF Education</label>
+                <label><input type="radio" name="searchEngine" value="lissa:">LISSA</label>
+                <label><input type="radio" name="searchEngine" value="hetop:">HETOP</label>
+                <label><input type="radio" name="searchEngine" value="has:">Haute Autorité de Santé</label>
+                <label><input type="radio" name="searchEngine" value="openmd:">OpenMD</label>
+            </div>
+        </div>
+        <div class="category-section">
+            <div class="category-title">Group4: AI/Advanced Search</div>
+            <div class="radio-group">
+                <label><input type="radio" name="searchEngine" value="wolfram:">Wolfram Alpha</label>
+                <label><input type="radio" name="searchEngine" value="gpt:">ChatGPT</label>
+                <label><input type="radio" name="searchEngine" value="x.ai:">Grok</label>
+                <label><input type="radio" name="searchEngine" value="g.ai:">Gemini</label>
+                <label><input type="radio" name="searchEngine" value="p.ai:">Perplexity</label>
+            </div>
+        </div>
+        <div class="category-section">
+            <div class="category-title">Group5: American or European Societies</div>
+            <div class="radio-group">
+                <label><input type="radio" name="searchEngine" value="ama:">American Medical Association</label>
+                <label><input type="radio" name="searchEngine" value="ema:">European Medicines Agency</label>
+                <label><input type="radio" name="searchEngine" value="acp:">American College of Physicians</label>
+                <label><input type="radio" name="searchEngine" value="rcp:">Royal College of Physicians</label>
+            </div>
+        </div>
+        <button id="wikiButton">Wiki</button>
+        <div class="checkbox-container">
+            <input type="checkbox" id="keepWikiOpenCheckbox">
+            <label for="keepWikiOpenCheckbox">Keep wiki open</label>
+        </div>
+        <div id="wikiContent"></div>
+        <div id="searchSource">Enter a query to see the search source</div>
+    </div>
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        const searchSource = document.getElementById('searchSource');
+        const suggestions = document.getElementById('searchSuggestions');
+        const radioButtons = document.querySelectorAll('input[name="searchEngine"]');
+        const wikiButton = document.getElementById('wikiButton');
+        const wikiContent = document.getElementById('wikiContent');
+        const keepWikiOpenCheckbox = document.getElementById('keepWikiOpenCheckbox');
+
+        // Define search engines with categories
+        const internationale_search = {
+            general: {
+                'g:': { name: 'Google', url: 'https://www.google.com/search?q=' },
+                'yt:': { name: 'YouTube', url: 'https://www.youtube.com/results?search_query=' },
+                'brave:': { name: 'Brave Search', url: 'https://search.brave.com/search?q=' },
+                'ddg:': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
+                'yadx:': { name: 'Yandex', url: 'https://yandex.com/search/?text=' },
+                'bing:': { name: 'Bing', url: 'https://www.bing.com/search?q=' },
+                'g100:': { name: 'Google 100 results', url: 'https://www.google.com/search?q=' },
+                'g+:': { name: 'Google Advanced', url: 'https://www.google.com/advanced_search?q=' }
+            },
+            academic: {
+                'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/?q=' },
+                'these2.0:': { name: 'These2.0', url: 'https://thesefmpm.vercel.app/search?page=1&search=' },
+                'these-ma:': { name: 'Toubkal', url: 'https://toubkal.imist.ma/?query=' },
+                'these-ma-gs:': { name: 'Toubkal Google Search', url: 'https://www.google.com/search?q=site:toubkal.imist.ma+' },
+                'cismef-th:': { name: 'CISMeF Theses', url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q=' },
+                'gs:': { name: 'Google Scholar', url: 'https://scholar.google.com/scholar?q=' },
+                'rgt:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=' },
+                'ndltd:': { name: 'Networked Digital Library of Theses and Dissertations', url: 'http://search.ndltd.org/search.php?q=' }
+            },
+            medical: {
+                'pbmd:': { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=' },
+                'cismef:': { name: 'CISMeF', url: 'https://doccismef.chu-rouen.fr/dc/#q=' },
+                'cismef-edn:': { name: 'CISMeF EDN', url: 'https://doccismef.chu-rouen.fr/dc/#env=ecn&q=' },
+                'cismef-bp:': { name: 'CISMeF Best Practices', url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q=' },
+                'cismef-edu:': { name: 'CISMeF Education', url: 'https://doccismef.chu-rouen.fr/dc/#env=unf3s&q=' },
+                'lissa:': { name: 'LISSA', url: 'https://www.lissa.fr/dc/#env=lissa&q=' },
+                'hetop:': { name: 'HETOP', url: 'https://www.hetop.eu/hetop/fr/#q=' },
+                'has:': { name: 'Haute Autorité de Santé', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=' },
+                'openmd:': { name: 'OpenMD', url: 'https://openmd.com/search?q=' }
+            },
+            ai: {
+                'wolfram:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=' },
+                'gpt:': { name: 'ChatGPT', url: 'https://chat.openai.com/?q=' },
+                'x.ai:': { name: 'Grok', url: 'https://www.x.ai/grok?q=' },
+                'g.ai:': { name: 'Gemini', url: 'https://gemini.google.com/?q=' },
+                'p.ai:': { name: 'Perplexity', url: 'https://www.perplexity.ai/search?q=' }
+            },
+            societies: {
+                'ama:': { name: 'American Medical Association', url: 'https://www.ama-assn.org/search?q=' },
+                'ema:': { name: 'European Medicines Agency', url: 'https://www.ema.europa.eu/en/search/all?search_api_views_fulltext=' },
+                'acp:': { name: 'American College of Physicians', url: 'https://www.acponline.org/search?search_api_fulltext=' },
+                'rcp:': { name: 'Royal College of Physicians', url: 'https://www.rcplondon.ac.uk/search?search_api_fulltext=' }
+            }
+        };
+
+        // Update search source display and sync radio selection
+        function updateSearchSource() {
+            const query = searchInput.value.trim();
+            let source = 'Unknown source';
+            let matchedPrefix = '';
+
+            // Check for typed prefix and sync radio
+            for (const category in internationale_search) {
+                for (const prefix in internationale_search[category]) {
+                    if (query.startsWith(prefix)) {
+                        source = internationale_search[category][prefix].name;
+                        matchedPrefix = prefix;
+                        const radio = document.querySelector(`input[name="searchEngine"][value="${prefix}"]`);
+                        if (radio) radio.checked = true;
+                        break;
+                    }
+                }
+                if (matchedPrefix) break;
+            }
+
+            // If no prefix is typed, use the selected radio button
+            if (!matchedPrefix && query === '') {
+                const selectedEngine = document.querySelector('input[name="searchEngine"]:checked').value;
+                for (const category in internationale_search) {
+                    if (internationale_search[category][selectedEngine]) {
+                        source = internationale_search[category][selectedEngine].name;
+                        matchedPrefix = selectedEngine;
+                        break;
+                    }
+                }
+            }
+
+            searchSource.textContent = `Search source: ${source}`;
+            searchSource.style.color = source === 'Unknown source' ? '#333' : 'green';
+            return { prefix: matchedPrefix, query: query.slice(matchedPrefix.length) };
+        }
+
+        // Handle autocomplete suggestions
+        function updateSuggestions() {
+            const query = searchInput.value.trim().toLowerCase();
+            suggestions.innerHTML = '';
+            if (query) {
+                for (const category in internationale_search) {
+                    for (const prefix in internationale_search[category]) {
+                        if (prefix.toLowerCase().startsWith(query)) {
+                            const option = document.createElement('option');
+                            option.value = prefix;
+                            suggestions.appendChild(option);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Handle search
+        function performSearch(e) {
+            e.preventDefault();
+            const selectedEngine = document.querySelector('input[name="searchEngine"]:checked').value;
+            const { prefix, query } = updateSearchSource();
+            
+            let searchUrl;
+            if (query && prefix) {
+                for (const category in internationale_search) {
+                    if (prefix in internationale_search[category]) {
+                        searchUrl = internationale_search[category][prefix].url + encodeURIComponent(query);
+                        if (prefix === 'g100:') {
+                            searchUrl += '&num=100';
+                        }
+                        break;
+                    }
+                }
+            } else if (query && !prefix) {
+                searchUrl = internationale_search[Object.keys(internationale_search).find(category => internationale_search[category][selectedEngine])][selectedEngine].url + encodeURIComponent(query);
+            }
+            if (searchUrl) {
+                window.open(searchUrl, '_blank');
+            }
+        }
+
+        // Populate and toggle wiki content
+        function toggleWiki() {
+            if (wikiContent.style.display === 'block') {
+                wikiContent.style.display = 'none';
+            } else {
+                let content = `
+                    <div class="radio-group">
+                        ${Object.keys(internationale_search.general).map(prefix => `
+                            <label><input type="radio" name="wikiSelection" value="${prefix}"> ${prefix} - ${internationale_search.general[prefix].name}</label>
+                        `).join('')}
+                        ${Object.keys(internationale_search.academic).map(prefix => `
+                            <label><input type="radio" name="wikiSelection" value="${prefix}"> ${prefix} - ${internationale_search.academic[prefix].name}</label>
+                        `).join('')}
+                        ${Object.keys(internationale_search.medical).map(prefix => `
+                            <label><input type="radio" name="wikiSelection" value="${prefix}"> ${prefix} - ${internationale_search.medical[prefix].name}</label>
+                        `).join('')}
+                        ${Object.keys(internationale_search.ai).map(prefix => `
+                            <label><input type="radio" name="wikiSelection" value="${prefix}"> ${prefix} - ${internationale_search.ai[prefix].name}</label>
+                        `).join('')}
+                        ${Object.keys(internationale_search.societies).map(prefix => `
+                            <label><input type="radio" name="wikiSelection" value="${prefix}"> ${prefix} - ${internationale_search.societies[prefix].name}</label>
+                        `).join('')}
+                    </div>
+                `;
+                wikiContent.innerHTML = content;
+                wikiContent.style.display = 'block';
+
+                // Add click event listeners to radio inputs
+                const wikiRadioInputs = wikiContent.querySelectorAll('input[type="radio"]');
+                wikiRadioInputs.forEach(input => {
+                    input.addEventListener('change', () => {
+                        if (input.checked) {
+                            searchInput.value = input.value;
+                            updateSearchSource(); // Syncs radio selection
+                            searchInput.focus();
+                            if (!keepWikiOpenCheckbox.checked) {
+                                wikiContent.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            }
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', updateSearchSource);
+        searchInput.addEventListener('input', updateSuggestions);
+        searchForm.addEventListener('submit', performSearch);
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', updateSearchSource);
+        });
+        wikiButton.addEventListener('click', toggleWiki);
+
+        // Set focus and initial source on page load
+        searchInput.focus();
+        updateSearchSource();
+    </script>
+</body>
+</html>
