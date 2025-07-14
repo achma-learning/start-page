@@ -1,0 +1,4 @@
+how about a start page for medical consultation,
+a collumns, where you have link to cloud document, like observation, mise au point and other
+a collums for commun used score, SFMU ou MDcalc,
+a collums for a todo list, make it an embeded
