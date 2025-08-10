@@ -1,3 +1,8 @@
+in search page, add a 5th group about emergency society, European or amercian local and usful website to search inside site:X.... 
+
+how about to add a checkbox pdf = filetype:pdf
+or add: document wiki. where useful filetype ppt, docs ..., and selecting one add a search input to adjust the search input
+
 add this: https://www.academie-medecine.fr/le-dictionnaire/index.php?q=an%C3%A9vrisme%20mycotique
 
 robocopy "C:\Utilisateurs\VotreNom\Documents\Travail" "D:\Sauvegardes\Travail" /MIR
