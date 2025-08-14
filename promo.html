@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/gif" href="https://raw.githubusercontent.com/achma-learning/start-page/main/images/search.gif" />
     <style>
+        /* Styles initiaux inchangés */
         body {
             font-family: Arial, sans-serif;
             background: #f0f0f0;
@@ -155,24 +156,77 @@
             gap: 6px;
             color: #333;
         }
-        @media (max-width: 1290px) {
-            .search-container { width: 980px; }
+
+        /* Nouveau style pour bouton filetypes */
+        #filetypesBtn {
+            background: #4caf50;
+            padding: 9px 16px;
+            white-space: nowrap;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        #filetypesBtn:hover {
+            background: #3a9d3a;
+        }
+
+        /* Popup filetypes similaire au wikiContent mais décalé */
+        #filetypesPopup {
+            position: absolute;
+            top: 42px; /* un peu sous la barre de boutons */
+            right: 100px; /* à gauche du bouton filetypes */
+            width: 320px;
+            max-height: 350px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: #333;
+            display: none;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+            z-index: 1100;
+            user-select: none;
+        }
+        #filetypesPopup h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3rem;
+            user-select: text;
+        }
+        #filetypesPopup ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        #filetypesPopup li.category {
+            font-weight: bold;
+            margin-top: 0.8rem;
+            cursor: default;
+            user-select: text;
+        }
+        #filetypesPopup li.item {
+            cursor: pointer;
+            padding: 0.3rem 0.2rem;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s ease;
+        }
+        #filetypesPopup li.item:hover {
+            background-color: #e0f0ff;
         }
         @media (max-width: 1090px) {
-            .search-container { width: 98vw; }
-            .category-row { flex-wrap: wrap; }
-            .category-section { min-width: 200px; }
-            #searchInput { width: 100%; max-width: none; }
-        }
-        @media (max-width: 800px) {
-            .category-row { flex-direction: column; gap: 16px;}
-            .category-section { min-width: 96vw; }
-            .search-bar { flex-direction: column; gap: 8px; }
-            #searchInput { width: 98vw; }
-            #wikiToggleBtn {
-                width: 100%;
-                padding: 10px 0;
-            }
+          /* Ajustement popup en responsive */
+          #filetypesPopup {
+            right: 10px;
+            width: 90vw;
+            max-height: 300px;
+            top: 60px;
+          }
         }
     </style>
 </head>
@@ -230,12 +284,13 @@
         </div>
       </div>
     </div>
-
     <div class="search-bar">
       <form id="searchForm" style="display:flex; align-items:center; gap:6px; width: 100%; justify-content: center;">
         <input type="text" id="searchInput" autocomplete="off" placeholder="Apprendre est un chemin qui nous permet d’oublier nos soucis, tout en nous rendant compétents et humbles devant l’œuvre magnifique de la Création divine" />
         <button type="submit">Rechercher</button>
         <button type="button" id="wikiToggleBtn" aria-expanded="false" aria-controls="wikiContent">Wiki</button>
+        <!-- Nouveau bouton filetypes -->
+        <button type="button" id="filetypesBtn" aria-expanded="false" aria-controls="filetypesPopup" aria-haspopup="true">filetypes:</button>
       </form>
     </div>
     <div id="searchSource" aria-live="polite" role="status">Entrez une requête pour afficher la source</div>
@@ -284,9 +339,86 @@
         <li><b>p.ai:</b> Perplexity</li>
       </ul>
     </div>
+
+    <!-- Popup filetypes injectée ici -->
+    <div id="filetypesPopup" role="dialog" aria-modal="true" aria-labelledby="filetypesTitle">
+      <h3 id="filetypesTitle">Types de fichiers indexables par Google</h3>
+      <p>Cliquez sur un type de fichier pour l'ajouter à la recherche (filetype:"...").</p>
+      <ul id="filetypeList"></ul>
+    </div>
   </div>
 
 <script>
+  // Données types de fichiers indexables by Google
+  const filetypesWiki = {
+    "Documents": [
+      {name: "Adobe Portable Document Format", ext: "pdf"},
+      {name: "Adobe PostScript", ext: "ps"},
+      {name: "Comma-Separated Values", ext: "csv"},
+      {name: "Electronic Publication", ext: "epub"},
+      {name: "Microsoft Word", ext: "doc"},
+      {name: "Microsoft Word (docx)", ext: "docx"},
+      {name: "Microsoft Excel", ext: "xls"},
+      {name: "Microsoft Excel (xlsx)", ext: "xlsx"},
+      {name: "Microsoft PowerPoint", ext: "ppt"},
+      {name: "Microsoft PowerPoint (pptx)", ext: "pptx"},
+      {name: "OpenOffice presentation", ext: "odp"},
+      {name: "OpenOffice spreadsheet", ext: "ods"},
+      {name: "OpenOffice text", ext: "odt"},
+      {name: "Rich Text Format", ext: "rtf"},
+      {name: "TeX/LaTeX", ext: "tex"},
+      {name: "Text", ext: "txt"},
+      {name: "Text (text)", ext: "text"},
+      {name: "Basic source code", ext: "bas"},
+      {name: "C/C++ source code", ext: "c"},
+      {name: "C++ source code (cpp)", ext: "cpp"},
+      {name: "C++ source code (cc)", ext: "cc"},
+      {name: "C++ source code (cxx)", ext: "cxx"},
+      {name: "C/C++ header (h)", ext: "h"},
+      {name: "C++ header (hpp)", ext: "hpp"},
+      {name: "C# source code", ext: "cs"},
+      {name: "Java source code", ext: "java"},
+      {name: "Perl source code", ext: "pl"},
+      {name: "Python source code", ext: "py"}
+    ],
+    "Formats géographiques": [
+      {name: "Google Earth", ext: "kml"},
+      {name: "Google Earth (kmz)", ext: "kmz"},
+      {name: "GPS eXchange Format", ext: "gpx"},
+      {name: "Hancom Hanword", ext: "hwp"}
+    ],
+    "Web & Markup": [
+      {name: "HTML (htm)", ext: "htm"},
+      {name: "HTML (html)", ext: "html"},
+      {name: "Wireless Markup Language", ext: "wml"},
+      {name: "Wireless Markup Language (wap)", ext: "wap"},
+      {name: "XML", ext: "xml"}
+    ],
+    "Images": [
+      {name: "BMP", ext: "bmp"},
+      {name: "GIF", ext: "gif"},
+      {name: "JPEG", ext: "jpeg"},
+      {name: "JPEG (jpg)", ext: "jpg"},
+      {name: "PNG", ext: "png"},
+      {name: "WebP", ext: "webp"},
+      {name: "SVG", ext: "svg"},
+      {name: "AVIF", ext: "avif"}
+    ],
+    "Vidéos": [
+      {name: "3GP", ext: "3gp"},
+      {name: "AVI", ext: "avi"},
+      {name: "MOV", ext: "mov"},
+      {name: "MP4", ext: "mp4"},
+      {name: "MKV", ext: "mkv"},
+      {name: "WebM", ext: "webm"},
+      {name: "WMV", ext: "wmv"},
+      {name: "ASF", ext: "asf"},
+      {name: "DivX", ext: "divx"},
+      {name: "MPEG", ext: "mpeg"},
+      {name: "OGV", ext: "ogv"}
+    ]
+  };
+
   const searchInput = document.getElementById('searchInput');
   const searchForm = document.getElementById('searchForm');
   const searchSource = document.getElementById('searchSource');
@@ -295,37 +427,42 @@
   const wikiContent = document.getElementById('wikiContent');
   const keepWikiOpenCheckbox = document.getElementById('keepWikiOpenCheckbox');
 
+  const filetypesBtn = document.getElementById('filetypesBtn');
+  const filetypesPopup = document.getElementById('filetypesPopup');
+  const filetypeList = document.getElementById('filetypeList');
+
+  // --- Fonction utilitaire pour afficher source de recherche (reste inchangée) ---
   const internationale_search = {
-      'g:': { name: 'Google', url: 'https://www.google.com/search?q=' },
-      'yt:': { name: 'YouTube', url: 'https://www.youtube.com/results?search_query=' },
-      'brave:': { name: 'Brave Search', url: 'https://search.brave.com/search?q=' },
-      'ddg:': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
-      'yadx:': { name: 'Yandex', url: 'https://yandex.com/search/?text=' },
-      'bing:': { name: 'Bing', url: 'https://www.bing.com/search?q=' },
-      'g100:': { name: 'Google 100 results', url: 'https://www.google.com/search?q=' },
-      'g+:': { name: 'Google Advanced', url: 'https://www.google.com/advanced_search?q=' },
-      'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/?q=' },
-      'these2.0:': { name: 'These2.0', url: 'https://thesefmpm.vercel.app/search?page=1&search=' },
-      'these-ma:': { name: 'Toubkal', url: 'https://toubkal.imist.ma/?query=' },
-      'these-ma-gs:': { name: 'Toubkal Google Search', url: 'https://www.google.com/search?q=site:toubkal.imist.ma+' },
-      'cismef-th:': { name: 'CISMeF Thèses', url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q=' },
-      'gs:': { name: 'Google Scholar', url: 'https://scholar.google.com/scholar?q=' },
-      'rgt:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=' },
-      'ndltd:': { name: 'NDLTD', url: 'http://search.ndltd.org/search.php?q=' },
-      'pbmd:': { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=' },
-      'cismef:': { name: 'CISMeF', url: 'https://doccismef.chu-rouen.fr/dc/#q=' },
-      'cismef-edn:': { name: 'CISMeF EDN', url: 'https://doccismef.chu-rouen.fr/dc/#env=ecn&q=' },
-      'cismef-bp:': { name: 'CISMeF Best Practices', url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q=' },
-      'cismef-edu:': { name: 'CISMeF Education', url: 'https://doccismef.chu-rouen.fr/dc/#env=unf3s&q=' },
-      'lissa:': { name: 'LISSA', url: 'https://www.lissa.fr/dc/#env=lissa&q=' },
-      'hetop:': { name: 'HETOP', url: 'https://www.hetop.eu/hetop/fr/#q=' },
-      'has:': { name: 'Haute Autorité de Santé', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=' },
-      'openmd:': { name: 'OpenMD', url: 'https://openmd.com/search?q=' },
-      'wolfram:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=' },
-      'gpt:': { name: 'ChatGPT', url: 'https://chat.openai.com/?q=' },
-      'x.ai:': { name: 'Grok', url: 'https://www.x.ai/grok?q=' },
-      'g.ai:': { name: 'Gemini', url: 'https://gemini.google.com/?q=' },
-      'p.ai:': { name: 'Perplexity', url: 'https://www.perplexity.ai/search?q=' }
+    'g:': { name: 'Google', url: 'https://www.google.com/search?q=' },
+    'yt:': { name: 'YouTube', url: 'https://www.youtube.com/results?search_query=' },
+    'brave:': { name: 'Brave Search', url: 'https://search.brave.com/search?q=' },
+    'ddg:': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
+    'yadx:': { name: 'Yandex', url: 'https://yandex.com/search/?text=' },
+    'bing:': { name: 'Bing', url: 'https://www.bing.com/search?q=' },
+    'g100:': { name: 'Google 100 results', url: 'https://www.google.com/search?q=' },
+    'g+:': { name: 'Google Advanced', url: 'https://www.google.com/advanced_search?q=' },
+    'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/?q=' },
+    'these2.0:': { name: 'These2.0', url: 'https://thesefmpm.vercel.app/search?page=1&search=' },
+    'these-ma:': { name: 'Toubkal', url: 'https://toubkal.imist.ma/?query=' },
+    'these-ma-gs:': { name: 'Toubkal Google Search', url: 'https://www.google.com/search?q=site:toubkal.imist.ma+' },
+    'cismef-th:': { name: 'CISMeF Thèses', url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q=' },
+    'gs:': { name: 'Google Scholar', url: 'https://scholar.google.com/scholar?q=' },
+    'rgt:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=' },
+    'ndltd:': { name: 'NDLTD', url: 'http://search.ndltd.org/search.php?q=' },
+    'pbmd:': { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=' },
+    'cismef:': { name: 'CISMeF', url: 'https://doccismef.chu-rouen.fr/dc/#q=' },
+    'cismef-edn:': { name: 'CISMeF EDN', url: 'https://doccismef.chu-rouen.fr/dc/#env=ecn&q=' },
+    'cismef-bp:': { name: 'CISMeF Best Practices', url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q=' },
+    'cismef-edu:': { name: 'CISMeF Education', url: 'https://doccismef.chu-rouen.fr/dc/#env=unf3s&q=' },
+    'lissa:': { name: 'LISSA', url: 'https://www.lissa.fr/dc/#env=lissa&q=' },
+    'hetop:': { name: 'HETOP', url: 'https://www.hetop.eu/hetop/fr/#q=' },
+    'has:': { name: 'Haute Autorité de Santé', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=' },
+    'openmd:': { name: 'OpenMD', url: 'https://openmd.com/search?q=' },
+    'wolfram:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=' },
+    'gpt:': { name: 'ChatGPT', url: 'https://chat.openai.com/?q=' },
+    'x.ai:': { name: 'Grok', url: 'https://www.x.ai/grok?q=' },
+    'g.ai:': { name: 'Gemini', url: 'https://gemini.google.com/?q=' },
+    'p.ai:': { name: 'Perplexity', url: 'https://www.perplexity.ai/search?q=' }
   };
 
   function updateSearchSource() {
@@ -333,7 +470,6 @@
     let color = "#333";
     let prefix = "";
     let value = searchInput.value.trim();
-
     for (const [key, obj] of Object.entries(internationale_search)) {
       if (value.startsWith(key)) {
         source = "Source de recherche : " + obj.name;
@@ -364,11 +500,11 @@
   }
 
   searchInput.addEventListener('input', updateSearchSource);
+
   radioButtons.forEach(radio => {
     radio.addEventListener('change', function() {
       radioButtons.forEach(r => r.parentElement.classList.remove('selected'));
       radio.parentElement.classList.add('selected');
-
       let val = searchInput.value.trim();
       let selectedPrefix = radio.value;
       for (const key of Object.keys(internationale_search)) {
@@ -390,7 +526,7 @@
     for (const key of Object.keys(internationale_search)) {
       if (value.startsWith(key)) {
         prefix = key;
-        query = value.substring(key.length).trim();
+        query = value.substring(prefix.length).trim();
         break;
       }
     }
@@ -406,11 +542,10 @@
     }
   });
 
-  // Gestion du Wiki toggle et case "Keep wiki open"
+  // Wiki toggle (inchangé)
   wikiToggleBtn.addEventListener('click', () => {
     if (wikiContent.style.display === 'block') {
       if (keepWikiOpenCheckbox.checked) {
-        // Si coche activée, ne ferme pas le wiki
         return;
       }
       wikiContent.style.display = 'none';
@@ -422,11 +557,116 @@
     }
   });
 
-  // Focus automatique au chargement
+  // Focus auto au load
   window.addEventListener('load', () => {
     updateSearchSource();
     searchInput.focus();
   });
+
+  // ----- Partie spécifique au bouton filetypes ------
+
+  // Création dynamique de la liste filetypes dans le popup
+  function renderFiletypesList() {
+    filetypeList.innerHTML = ''; // Clear
+    for (const [category, types] of Object.entries(filetypesWiki)) {
+      const catLi = document.createElement('li');
+      catLi.classList.add('category');
+      catLi.textContent = category;
+      filetypeList.appendChild(catLi);
+
+      types.forEach(ft => {
+        const itemLi = document.createElement('li');
+        itemLi.classList.add('item');
+        // Affichage : Nom (extension entre parenthèses)
+        itemLi.textContent = `${ft.name} (${ft.ext})`;
+        itemLi.setAttribute('data-ext', ft.ext);
+        itemLi.tabIndex = 0; // pour accessibilité clavier
+
+        // Au clic, on insère filetype:"ext" dans barre de recherche
+        itemLi.addEventListener('click', () => {
+          insertOrReplaceFiletype(ft.ext);
+          fadeOutFiletypesPopup();
+          searchInput.focus();
+        });
+
+        // Interaction clavier (Enter ou Espace)
+        itemLi.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            itemLi.click();
+          }
+        });
+
+        filetypeList.appendChild(itemLi);
+      });
+    }
+  }
+
+  // Affichage/caché du popup filetypes
+  filetypesBtn.addEventListener('click', () => {
+    if (filetypesPopup.style.display === 'block') {
+      fadeOutFiletypesPopup();
+    } else {
+      renderFiletypesList();
+      filetypesPopup.style.display = 'block';
+      filetypesPopup.style.opacity = '1';
+      filetypesBtn.setAttribute('aria-expanded', 'true');
+      // Positionnement précis si besoin (ici fixed dans CSS)
+      filetypesPopup.focus();
+    }
+  });
+
+  // Fonction fade out
+  function fadeOutFiletypesPopup() {
+    filetypesPopup.style.opacity = '0';
+    filetypesBtn.setAttribute('aria-expanded', 'false');
+    setTimeout(() => {
+      filetypesPopup.style.display = 'none';
+    }, 600);
+  }
+
+  // Fonction pour insérer ou remplacer un filtre filetype:"xxx"
+    function insertOrReplaceFiletype(ext) {
+     let val = searchInput.value.trim();
+
+  // Regex pour détecter un filtre filetype déjà existant (sans guillemets)
+      const filetypeRegex = /filetype:([^\s]+)/i;
+      if (filetypeRegex.test(val)) {
+    // Remplacer l'ancien filetype
+        val = val.replace(filetypeRegex, `filetype:${ext}`);
+      } else {
+    // Ajouter à la fin (avec espace si besoin)
+       if (val.length > 0) val += ' ';
+       val += `filetype:${ext}`;
+     }
+     searchInput.value = val;
+      updateSearchSource();
+    }
+
+  // Pour fermeture popup si clic dehors
+  document.addEventListener('click', (e) => {
+    if (!filetypesPopup.contains(e.target) && e.target !== filetypesBtn) {
+      if (filetypesPopup.style.display === 'block') {
+        fadeOutFiletypesPopup();
+      }
+    }
+    // Pour wikiContent aussi
+    if (!wikiContent.contains(e.target) && e.target !== wikiToggleBtn) {
+      if (wikiContent.style.display === 'block' && !keepWikiOpenCheckbox.checked) {
+        wikiContent.style.display = 'none';
+        wikiToggleBtn.setAttribute('aria-expanded', 'false');
+      }
+    }
+  });
+
+  // Fermeture popup filetypes avec Esc
+  filetypesPopup.addEventListener('keydown', e => {
+    if(e.key === 'Escape') {
+      fadeOutFiletypesPopup();
+      filetypesBtn.focus();
+    }
+  });
+
 </script>
 </body>
 </html>
