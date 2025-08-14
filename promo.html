@@ -156,7 +156,6 @@
             gap: 6px;
             color: #333;
         }
-
         /* Nouveau style pour bouton filetypes */
         #filetypesBtn {
             background: #4caf50;
@@ -171,20 +170,19 @@
         #filetypesBtn:hover {
             background: #3a9d3a;
         }
-
         /* Popup filetypes similaire au wikiContent mais décalé */
         #filetypesPopup {
             position: absolute;
             top: 42px; /* un peu sous la barre de boutons */
             right: 100px; /* à gauche du bouton filetypes */
-            width: 320px;
-            max-height: 350px;
+            width: 440px;          /* agrandi */
+            max-height: 450px;     /* agrandi */
             overflow-y: auto;
             background: white;
             border-radius: 8px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.25);
-            padding: 1rem;
-            font-size: 0.9rem;
+            padding: 1.5rem;       /* plus d'espace */
+            font-size: 1rem;       /* texte un peu plus grand */
             color: #333;
             display: none;
             opacity: 1;
@@ -212,9 +210,11 @@
         }
         #filetypesPopup li.item {
             cursor: pointer;
-            padding: 0.3rem 0.2rem;
+            padding: 0.6rem 0.4rem; /* agrandi la zone cliquable */
+            font-size: 1rem;       /* plus grande lisibilité */
             border-bottom: 1px solid #eee;
             transition: background-color 0.2s ease;
+            user-select: text;     /* permet la sélection */
         }
         #filetypesPopup li.item:hover {
             background-color: #e0f0ff;
@@ -222,9 +222,9 @@
         @media (max-width: 1090px) {
           /* Ajustement popup en responsive */
           #filetypesPopup {
-            right: 10px;
-            width: 90vw;
-            max-height: 300px;
+            right: 5px;
+            width: 95vw;          /* élargit pour petits écrans */
+            max-height: 350px;
             top: 60px;
           }
         }
@@ -250,7 +250,6 @@
         <div class="category-title">Group2: Academic/Thesis</div>
         <div class="radio-group" id="group2">
            <label><input type="radio" name="searchEngine" value="gs:">Google Scholar</label>
-          
           <label><input type="radio" name="searchEngine" value="these2.0:">These2.0</label>
           <label><input type="radio" name="searchEngine" value="cismef-th:">CISMeF Thèses</label>
           <label><input type="radio" name="searchEngine" value="these-ma:">Toubkal</label>
@@ -292,10 +291,13 @@
         <button type="button" id="wikiToggleBtn" aria-expanded="false" aria-controls="wikiContent">Wiki</button>
         <!-- Nouveau bouton filetypes -->
         <button type="button" id="filetypesBtn" aria-expanded="false" aria-controls="filetypesPopup" aria-haspopup="true">filetypes:</button>
+        <label for="siteCheckbox" style="font-size: 13px; margin-left: 8px; cursor: pointer; user-select: none;">
+          <input type="checkbox" id="siteCheckbox" style="margin-right: 4px; vertical-align: middle;">
+          site
+        </label>
       </form>
     </div>
     <div id="searchSource" aria-live="polite" role="status">Entrez une requête pour afficher la source</div>
-
     <div id="wikiContent" role="region" aria-label="Wiki des préfixes et moteurs" tabindex="0" >
       <div class="checkbox-container">
         <input type="checkbox" id="keepWikiOpenCheckbox" />
@@ -340,15 +342,13 @@
         <li><b>p.ai:</b> Perplexity</li>
       </ul>
     </div>
-
     <!-- Popup filetypes injectée ici -->
-    <div id="filetypesPopup" role="dialog" aria-modal="true" aria-labelledby="filetypesTitle">
-      <h3 id="filetypesTitle">Types de fichiers indexables par Google</h3>
-      <p>Cliquez sur un type de fichier pour l'ajouter à la recherche (filetype:"...").</p>
+    <div id="filetypesPopup" role="dialog" aria-modal="true" aria-labelledby="filetypesTitle" tabindex="-1">
+      <h3 id="filetypesTitle">Fichiers indexables par Google</h3>
+      <p>Cliquez sur un type de fichier.</p>
       <ul id="filetypeList"></ul>
     </div>
   </div>
-
 <script>
   // Données types de fichiers indexables by Google
   const filetypesWiki = {
@@ -419,7 +419,6 @@
       {name: "OGV", ext: "ogv"}
     ]
   };
-
   const searchInput = document.getElementById('searchInput');
   const searchForm = document.getElementById('searchForm');
   const searchSource = document.getElementById('searchSource');
@@ -427,11 +426,10 @@
   const wikiToggleBtn = document.getElementById('wikiToggleBtn');
   const wikiContent = document.getElementById('wikiContent');
   const keepWikiOpenCheckbox = document.getElementById('keepWikiOpenCheckbox');
-
   const filetypesBtn = document.getElementById('filetypesBtn');
   const filetypesPopup = document.getElementById('filetypesPopup');
   const filetypeList = document.getElementById('filetypeList');
-
+  const siteCheckbox = document.getElementById('siteCheckbox');
   // --- Fonction utilitaire pour afficher source de recherche (reste inchangée) ---
   const internationale_search = {
     'g:': { name: 'Google', url: 'https://www.google.com/search?q=' },
@@ -465,7 +463,6 @@
     'g.ai:': { name: 'Gemini', url: 'https://gemini.google.com/?q=' },
     'p.ai:': { name: 'Perplexity', url: 'https://www.perplexity.ai/search?q=' }
   };
-
   function updateSearchSource() {
     let source = "Entrez une requête pour afficher la source";
     let color = "#333";
@@ -499,9 +496,7 @@
     searchSource.textContent = source;
     searchSource.style.color = color;
   }
-
   searchInput.addEventListener('input', updateSearchSource);
-
   radioButtons.forEach(radio => {
     radio.addEventListener('change', function() {
       radioButtons.forEach(r => r.parentElement.classList.remove('selected'));
@@ -518,7 +513,6 @@
       updateSearchSource();
     });
   });
-
   searchForm.addEventListener('submit', function(e) {
     e.preventDefault();
     let value = searchInput.value.trim();
@@ -536,13 +530,36 @@
       if (selected) prefix = selected.value;
       query = value;
     }
+
+    if (siteCheckbox.checked) {
+      // If site checkbox checked, override to Google site search restricted to selected radio's site
+      const selectedRadio = document.querySelector('input[name="searchEngine"]:checked');
+      if (selectedRadio && selectedRadio.value && internationale_search[selectedRadio.value]) {
+        // Extract site URL domain from the selected search engine url
+        let siteUrl = internationale_search[selectedRadio.value].url;
+        try {
+          // Use URL constructor to isolate hostname
+          let urlObj = new URL(siteUrl);
+          siteUrl = urlObj.hostname;
+        } catch (err) {
+          // Fallback parsing
+          siteUrl = siteUrl.replace(/^https?:\/\//, '').split(/[/?#]/)[0];
+        }
+        // Construct Google search with site:domain + query
+        const googleSearchUrl = 'https://www.google.com/search?q=';
+        let googleQuery = encodeURIComponent(`site:${siteUrl} ${query}`);
+        window.open(googleSearchUrl + googleQuery, '_blank');
+        return; // exit early, already handled
+      }
+    }
+
+    // Normal search behavior
     if (prefix && query) {
       let url = internationale_search[prefix].url + encodeURIComponent(query);
       if (prefix === 'g100:') url += '&num=100';
       window.open(url, '_blank');
     }
   });
-
   // Wiki toggle (inchangé)
   wikiToggleBtn.addEventListener('click', () => {
     if (wikiContent.style.display === 'block') {
@@ -557,15 +574,12 @@
       wikiContent.focus();
     }
   });
-
   // Focus auto au load
   window.addEventListener('load', () => {
     updateSearchSource();
     searchInput.focus();
   });
-
   // ----- Partie spécifique au bouton filetypes ------
-
   // Création dynamique de la liste filetypes dans le popup
   function renderFiletypesList() {
     filetypeList.innerHTML = ''; // Clear
@@ -574,7 +588,6 @@
       catLi.classList.add('category');
       catLi.textContent = category;
       filetypeList.appendChild(catLi);
-
       types.forEach(ft => {
         const itemLi = document.createElement('li');
         itemLi.classList.add('item');
@@ -582,14 +595,12 @@
         itemLi.textContent = `${ft.name} (${ft.ext})`;
         itemLi.setAttribute('data-ext', ft.ext);
         itemLi.tabIndex = 0; // pour accessibilité clavier
-
         // Au clic, on insère filetype:"ext" dans barre de recherche
         itemLi.addEventListener('click', () => {
           insertOrReplaceFiletype(ft.ext);
           fadeOutFiletypesPopup();
           searchInput.focus();
         });
-
         // Interaction clavier (Enter ou Espace)
         itemLi.addEventListener('keydown', e => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -597,12 +608,10 @@
             itemLi.click();
           }
         });
-
         filetypeList.appendChild(itemLi);
       });
     }
   }
-
   // Affichage/caché du popup filetypes
   filetypesBtn.addEventListener('click', () => {
     if (filetypesPopup.style.display === 'block') {
@@ -616,7 +625,6 @@
       filetypesPopup.focus();
     }
   });
-
   // Fonction fade out
   function fadeOutFiletypesPopup() {
     filetypesPopup.style.opacity = '0';
@@ -625,25 +633,22 @@
       filetypesPopup.style.display = 'none';
     }, 600);
   }
-
   // Fonction pour insérer ou remplacer un filtre filetype:"xxx"
-    function insertOrReplaceFiletype(ext) {
-     let val = searchInput.value.trim();
-
-  // Regex pour détecter un filtre filetype déjà existant (sans guillemets)
-      const filetypeRegex = /filetype:([^\s]+)/i;
-      if (filetypeRegex.test(val)) {
-    // Remplacer l'ancien filetype
-        val = val.replace(filetypeRegex, `filetype:${ext}`);
-      } else {
-    // Ajouter à la fin (avec espace si besoin)
-       if (val.length > 0) val += ' ';
-       val += `filetype:${ext}`;
-     }
-     searchInput.value = val;
-      updateSearchSource();
+  function insertOrReplaceFiletype(ext) {
+    let val = searchInput.value.trim();
+    // Regex pour détecter un filtre filetype déjà existant (sans guillemets)
+    const filetypeRegex = /filetype:([^\s]+)/i;
+    if (filetypeRegex.test(val)) {
+      // Remplacer l'ancien filetype
+      val = val.replace(filetypeRegex, `filetype:${ext}`);
+    } else {
+      // Ajouter à la fin (avec espace si besoin)
+      if (val.length > 0) val += ' ';
+      val += `filetype:${ext}`;
     }
-
+    searchInput.value = val;
+    updateSearchSource();
+  }
   // Pour fermeture popup si clic dehors
   document.addEventListener('click', (e) => {
     if (!filetypesPopup.contains(e.target) && e.target !== filetypesBtn) {
@@ -659,7 +664,6 @@
       }
     }
   });
-
   // Fermeture popup filetypes avec Esc
   filetypesPopup.addEventListener('keydown', e => {
     if(e.key === 'Escape') {
@@ -667,7 +671,6 @@
       filetypesBtn.focus();
     }
   });
-
 </script>
 </body>
 </html>
