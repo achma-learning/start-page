@@ -354,52 +354,27 @@
   const filetypesWiki = {
     "Documents": [
       {name: "Adobe Portable Document Format", ext: "pdf"},
-      {name: "Adobe PostScript", ext: "ps"},
-      {name: "Comma-Separated Values", ext: "csv"},
-      {name: "Electronic Publication", ext: "epub"},
       {name: "Microsoft Word", ext: "doc"},
-      {name: "Microsoft Word (docx)", ext: "docx"},
-      {name: "Microsoft Excel", ext: "xls"},
-      {name: "Microsoft Excel (xlsx)", ext: "xlsx"},
+      {name: "Microsoft Word-2", ext: "docx"},
+      {name: "Rich Text Format", ext: "rtf"},
       {name: "Microsoft PowerPoint", ext: "ppt"},
-      {name: "Microsoft PowerPoint (pptx)", ext: "pptx"},
+      {name: "Microsoft PowerPoint-2", ext: "pptx"},
+      {name: "Microsoft Excel", ext: "xls"},
+      {name: "Microsoft Excel-2", ext: "xlsx"},
+      {name: "Comma-Separated Values", ext: "csv"},
+      {name: "TeX/LaTeX", ext: "tex"},
+      {name: "Electronic Publication", ext: "epub"},
+      {name: "OpenOffice text", ext: "odt"},
       {name: "OpenOffice presentation", ext: "odp"},
       {name: "OpenOffice spreadsheet", ext: "ods"},
-      {name: "OpenOffice text", ext: "odt"},
-      {name: "Rich Text Format", ext: "rtf"},
-      {name: "TeX/LaTeX", ext: "tex"},
       {name: "Text", ext: "txt"},
-      {name: "Text (text)", ext: "text"},
-      {name: "Basic source code", ext: "bas"},
-      {name: "C/C++ source code", ext: "c"},
-      {name: "C++ source code (cpp)", ext: "cpp"},
-      {name: "C++ source code (cc)", ext: "cc"},
-      {name: "C++ source code (cxx)", ext: "cxx"},
-      {name: "C/C++ header (h)", ext: "h"},
-      {name: "C++ header (hpp)", ext: "hpp"},
-      {name: "C# source code", ext: "cs"},
-      {name: "Java source code", ext: "java"},
-      {name: "Perl source code", ext: "pl"},
-      {name: "Python source code", ext: "py"}
-    ],
-    "Formats géographiques": [
-      {name: "Google Earth", ext: "kml"},
-      {name: "Google Earth (kmz)", ext: "kmz"},
-      {name: "GPS eXchange Format", ext: "gpx"},
-      {name: "Hancom Hanword", ext: "hwp"}
-    ],
-    "Web & Markup": [
-      {name: "HTML (htm)", ext: "htm"},
-      {name: "HTML (html)", ext: "html"},
-      {name: "Wireless Markup Language", ext: "wml"},
-      {name: "Wireless Markup Language (wap)", ext: "wap"},
-      {name: "XML", ext: "xml"}
-    ],
-    "Images": [
+      {name: "Text-2", ext: "text"},
+    ],  
+          "Images": [
       {name: "BMP", ext: "bmp"},
       {name: "GIF", ext: "gif"},
       {name: "JPEG", ext: "jpeg"},
-      {name: "JPEG (jpg)", ext: "jpg"},
+      {name: "JPG", ext: "jpg"},
       {name: "PNG", ext: "png"},
       {name: "WebP", ext: "webp"},
       {name: "SVG", ext: "svg"},
@@ -417,7 +392,36 @@
       {name: "DivX", ext: "divx"},
       {name: "MPEG", ext: "mpeg"},
       {name: "OGV", ext: "ogv"}
+    ],
+    "Web & Markup": [
+      {name: "HTML+", ext: "html"},
+      {name: "HTML", ext: "htm"},
+      
+      {name: "Wireless Markup Language", ext: "wml"},
+      {name: "Wireless Markup Language (wap)", ext: "wap"},
+      {name: "XML", ext: "xml"}
+    ],
+         "Code": [   
+      {name: "Adobe PostScript", ext: "ps"},
+      {name: "Basic source code", ext: "bas"},
+      {name: "C/C++ source code", ext: "c"},
+      {name: "C++ source code (cpp)", ext: "cpp"},
+      {name: "C++ source code (cc)", ext: "cc"},
+      {name: "C++ source code (cxx)", ext: "cxx"},
+      {name: "C/C++ header (h)", ext: "h"},
+      {name: "C++ header (hpp)", ext: "hpp"},
+      {name: "C# source code", ext: "cs"},
+      {name: "Java source code", ext: "java"},
+      {name: "Perl source code", ext: "pl"},
+      {name: "Python source code", ext: "py"}
+    ],
+       "Formats géographiques": [
+      {name: "Google Earth", ext: "kml"},
+      {name: "Google Earth (kmz)", ext: "kmz"},
+      {name: "GPS eXchange Format", ext: "gpx"},
+      {name: "Hancom Hanword", ext: "hwp"}
     ]
+
   };
   const searchInput = document.getElementById('searchInput');
   const searchForm = document.getElementById('searchForm');
