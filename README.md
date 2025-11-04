@@ -9,10 +9,9 @@
 #how about building a second brain website, or the medecine fmpm from notion in here
 #add a quick link to quizelet tables
 #or dissection search
-# add these to search page 
+# add these to search page : https://fmhy.net/internet-tools#google-search-tools
 * https://goosh.org/
-* Google Search Tools
-* SearchTweaks - Google Search Tools
+* SearchTweaks - Google Search Tools : https://searchtweaks.com/
 * Mastering Google Search Operators, 2, 3, 4 - Google Search Operator Resources
 * Custom Sidebar - Highly Customizable ⁠Google Search Sidebar
 * ISearchFrom - Change Location / Device for Google Search
