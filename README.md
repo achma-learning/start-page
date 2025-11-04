@@ -9,6 +9,26 @@
 #how about building a second brain website, or the medecine fmpm from notion in here
 #add a quick link to quizelet tables
 #or dissection search
+# add these to search page 
+* https://goosh.org/
+* Google Search Tools
+* SearchTweaks - Google Search Tools
+* Mastering Google Search Operators, 2, 3, 4 - Google Search Operator Resources
+* Custom Sidebar - Highly Customizable ⁠Google Search Sidebar
+* ISearchFrom - Change Location / Device for Google Search
+* goosh - Simple Google Web Client
+* Google Trends - Google Search Trends
+⁠* Google Images Tools Enhanced - Extra Google Image Search Filters
+* View Image - Adds Back "View Image" Button to Google Image Search
+* Show Image Dimensions - Add Image Dimensions to Google
+* Google DWIMages - Direct Links to Images & Pages on Google
+* Endless Google - Google Search Endless Scrolling
+* Google Bangs - DDG !bangs in Google
+* DisableAMP - Disable Google AMP Links
+* https://searchtweaks.com/super-edu-search.html
+*
+
+*
 
 # Project Title
 
