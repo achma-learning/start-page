@@ -1,3 +1,7 @@
+# https://searchall.net/
+# https://fmhy.net/internet-tools#search-engines
+
+
 ### https://raw.githubusercontent.com/achma-learning/start-page/main/
 #   https://achma-learning.github.io/start-page/ 
 #      https://m.youtube.com/c/Echapp%C3%A9esbellesofficiel/videos                                                   
