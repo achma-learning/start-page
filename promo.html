@@ -432,6 +432,83 @@
                 transform: translateY(-200px);
             }
         }
+
+        .dark-mode {
+            background: #1a1a1a;
+            color: #f0f0f0;
+        }
+
+        .dark-mode .search-container {
+            background: #2c2c2c;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        .dark-mode .category-section {
+            background: linear-gradient(145deg, #3a3a3a, #2c2c2c);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .dark-mode .category-title {
+            color: #f0f0f0;
+            border-bottom-color: #667eea;
+        }
+
+        .dark-mode .radio-group label {
+            color: #f0f0f0;
+        }
+
+        .dark-mode .radio-group label:hover,
+        .dark-mode .radio-group label.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .dark-mode #searchInput {
+            background: #3a3a3a;
+            border-color: #555;
+            color: #f0f0f0;
+        }
+
+        .dark-mode #searchInput:focus {
+            border-color: #667eea;
+            background: #444;
+        }
+
+        .dark-mode #searchSource {
+            background: #3a3a3a;
+            color: #f0f0f0;
+        }
+
+        .dark-mode #wikiContent {
+            background: #2c2c2c;
+            border-color: #555;
+            color: #f0f0f0;
+        }
+
+        .dark-mode #wikiContent h4 {
+            color: #667eea;
+        }
+
+
+        .dark-mode #wikiContent b {
+            color: #f0f0f0;
+            background: #3a3a3a;
+        }
+
+        .dark-mode #filetypesPopup {
+            background: #2c2c2c;
+            border-color: #555;
+            color: #f0f0f0;
+        }
+
+        .dark-mode #filetypesPopup h3 {
+            color: #f0f0f0;
+            border-bottom-color: #667eea;
+        }
+
+        .dark-mode #filetypesPopup li.item:hover {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        }
     </style>
 </head>
 <body>
@@ -453,7 +530,6 @@
           <label><input type="radio" name="searchEngine" value="ddg:">DuckDuckGo</label>
           <label><input type="radio" name="searchEngine" value="yadx:">Yandex</label>
           <label><input type="radio" name="searchEngine" value="bing:">Bing</label>
-          <label><input type="radio" name="searchEngine" value="g100:">Google 100 résultats</label>
           <label><input type="radio" name="searchEngine" value="g+:">Google Avancé</label>
         </div>
       </div>
@@ -505,6 +581,7 @@
         <button type="submit">🔍 Rechercher</button>
         <button type="button" id="wikiToggleBtn">📖 Wiki</button>
         <button type="button" id="filetypesBtn">📁 Filetypes</button>
+        <button type="button" id="darkModeToggleBtn">🌙</button>
         <label class="checkbox-label">
           <input type="checkbox" id="siteCheckbox">
           <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" style="width: 16px; height: 16px; vertical-align: middle;">
@@ -528,29 +605,41 @@
         <li><b>ddg:</b> DuckDuckGo</li>
         <li><b>yadx:</b> Yandex</li>
         <li><b>bing:</b> Bing</li>
+        <li><b>g+:</b> Google Avancé</li>
       </ul>
       
-      <h4>🎓 Académique</h4>
+      <h4>🎓 Académique / Thèses</h4>
       <ul>
         <li><b>gs:</b> Google Scholar</li>
+        <li><b>these2.0:</b> These2.0</li>
+        <li><b>cismef-th:</b> CISMeF Thèses</li>
+        <li><b>these-ma:</b> Toubkal</li>
         <li><b>these-fr:</b> Theses.fr</li>
         <li><b>rgt:</b> ResearchGate</li>
         <li><b>ndltd:</b> NDLTD</li>
       </ul>
       
-      <h4>⚕️ Médical</h4>
+      <h4>⚕️ Médical / Santé</h4>
       <ul>
         <li><b>pbmd:</b> PubMed</li>
         <li><b>cismef:</b> CISMeF</li>
-        <li><b>has:</b> Haute Autorité de Santé</li>
+        <li><b>cismef-edn:</b> CISMeF EDN</li>
+        <li><b>cismef-bp:</b> CISMeF Bonnes Pratiques</li>
+        <li><b>cismef-edu:</b> CISMeF Éducation</li>
+        <li><b>lissa:</b> LISSA</li>
+        <li><b>hetop:</b> HETOP</li>
+        <li><b>has:</b> HAS</li>
+        <li><b>openmd:</b> OpenMD</li>
       </ul>
       
-      <h4>🤖 IA</h4>
+      <h4>🤖 IA / Avancé</h4>
       <ul>
+        <li><b>wolfram:</b> Wolfram Alpha</li>
         <li><b>gpt:</b> ChatGPT</li>
         <li><b>claude:</b> Claude AI</li>
         <li><b>gemini:</b> Gemini</li>
         <li><b>perplexity:</b> Perplexity</li>
+        <li><b>copilot:</b> Copilot</li>
       </ul>
     </div>
     
@@ -613,7 +702,6 @@
     'ddg:': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
     'yadx:': { name: 'Yandex', url: 'https://yandex.com/search/?text=' },
     'bing:': { name: 'Bing', url: 'https://www.bing.com/search?q=' },
-    'g100:': { name: 'Google 100 résultats', url: 'https://www.google.com/search?num=100&q=' },
     'g+:': { name: 'Google Avancé', url: 'https://www.google.com/advanced_search?q=' },
     'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/?q=' },
     'these2.0:': { name: 'These2.0', url: 'https://thesefmpm.vercel.app/search?page=1&search=' },
@@ -847,6 +935,21 @@
     updateSearchSource();
     searchInput.focus();
   });
+
+  const darkModeToggleBtn = document.getElementById('darkModeToggleBtn');
+
+  darkModeToggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+      localStorage.setItem('darkMode', 'enabled');
+    } else {
+      localStorage.setItem('darkMode', 'disabled');
+    }
+  });
+
+  if (localStorage.getItem('darkMode') === 'enabled') {
+    document.body.classList.add('dark-mode');
+  }
 </script>
 </body>
 </html>
