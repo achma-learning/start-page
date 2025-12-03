@@ -6,235 +6,446 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/gif" href="https://raw.githubusercontent.com/achma-learning/start-page/main/images/search.gif" />
     <style>
-        /* Styles initiaux inchangés */
+        * { box-sizing: border-box; }
+        
         body {
-            font-family: Arial, sans-serif;
-            background: #f0f0f0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #000022 0%, #051937 50%, #001f3f 100%);
             display: flex;
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
             margin: 0;
+            padding: 20px;
         }
+        
         .search-container {
             margin-top: 40px;
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.09);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
             padding: 30px;
-            width: 1100px;
+            max-width: 1200px;
+            width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 34px;
+            gap: 24px;
         }
+        
         .category-row {
-            display: flex;
-            flex-direction: row;
-            gap: 25px;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
         }
+        
         .category-section {
-            background: #f8f8f8;
-            border-radius: 10px;
-            padding: 18px 12px 16px 16px;
-            min-width: 230px;
-            flex: 1 1 0;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+        
+        .category-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        
         .category-title {
-            font-weight: bold;
-            color: #000;
-            margin-bottom: 10px;
-            font-style: italic;
-            text-decoration: underline;
-            font-size: 1.09em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
         }
+        
         .radio-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
+        
         .radio-group label {
-            white-space: nowrap;
             cursor: pointer;
-            padding-left: 2px;
-            transition: background 0.19s ease;
-            border-radius: 3px;
-            font-size: 1em;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
         }
+        
         .radio-group input[type=radio] {
-            margin-right: 6px;
+            margin-right: 8px;
+            cursor: pointer;
         }
+        
         .radio-group label.selected,
         .radio-group label:hover {
-            background: #e0f0ff;
-            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            transform: translateX(4px);
         }
+        
         .search-bar {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
-            width: 100%;
-            margin-bottom: 0;
+            gap: 10px;
+            flex-wrap: wrap;
             position: relative;
         }
-        #searchInput {
-            padding: 10px 14px;
-            font-size: 15px;
-            border: 1px solid #c4d3fa;
-            border-radius: 6px;
-            width: 470px;
-            box-sizing: border-box;
-            background: #f8fafb;
-            transition: border-color 0.22s;
+        
+        #searchForm {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
         }
-        #searchInput:focus { border-color: #8ab6f9; outline: none; }
-        button {
-            padding: 9px 22px;
+        
+        #searchInput {
+            padding: 12px 16px;
             font-size: 15px;
-            background: #4285f4;
-            color: white;
-            border-radius: 5px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            min-width: 300px;
+            flex: 1;
+            max-width: 500px;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+        
+        #searchInput:focus {
+            border-color: #667eea;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            padding: 12px 24px;
+            font-size: 15px;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
-            transition: background 0.18s;
-        }
-        button:hover {
-            background: #3267d6;
-        }
-        #wikiToggleBtn {
-            background: #cb6d51;
-            padding: 9px 16px;
-            white-space: nowrap;
-        }
-        #wikiToggleBtn:hover {
-            background: #a55842;
-        }
-        #searchSource {
-            font-size: 13px;
-            color: #333;
-            margin-top: 10px;
-            margin-bottom: 2px;
-            min-height: 18px;
-            text-align: center;
-        }
-        #wikiContent {
-            background: #f8f8f8;
-            border-radius: 8px;
-            padding: 16px 20px;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.1);
-            font-size: 13px;
-            color: #333;
-            max-height: 260px;
-            overflow-y: auto;
-            margin-top: 8px;
-            display: none;
-            user-select: text;
-        }
-        #wikiContent ul {
-            margin: 0 0 12px 18px;
-            padding: 0;
-        }
-        #wikiContent li {
-            margin-bottom: 4px;
-            line-height: 1.3;
-        }
-        #wikiContent b {
-            color: #1e48be;
+            transition: all 0.2s ease;
             font-weight: 600;
         }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #searchForm button[type="submit"] {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        #wikiToggleBtn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        #filetypesBtn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        #searchSource {
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+            font-weight: 500;
+            min-height: 20px;
+            padding: 8px;
+            border-radius: 6px;
+            background: #f8f9fa;
+        }
+        
+        #wikiContent {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            font-size: 14px;
+            color: #333;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        #wikiContent h4 {
+            margin-top: 16px;
+            margin-bottom: 8px;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+        
+        #wikiContent ul {
+            margin: 0 0 16px 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        #wikiContent li {
+            margin-bottom: 8px;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        
+        #wikiContent li:hover {
+            background: #f0f0f0;
+        }
+        
+        #wikiContent b {
+            color: #667eea;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            background: #f0f0ff;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
         .checkbox-container {
             display: flex;
             align-items: center;
-            font-size: 13px;
-            margin-bottom: 12px;
-            user-select: none;
-            gap: 6px;
-            color: #333;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
         }
-        /* Nouveau style pour bouton filetypes */
-        #filetypesBtn {
-            background: #4caf50;
-            padding: 9px 16px;
-            white-space: nowrap;
-            color: white;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            transition: background 0.18s;
-        }
-        #filetypesBtn:hover {
-            background: #3a9d3a;
-        }
-        /* Popup filetypes similaire au wikiContent mais décalé */
+        
         #filetypesPopup {
-            position: absolute;
-            top: 42px; /* un peu sous la barre de boutons */
-            right: 100px; /* à gauche du bouton filetypes */
-            width: 440px;          /* agrandi */
-            max-height: 450px;     /* agrandi */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
             overflow-y: auto;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.25);
-            padding: 1.5rem;       /* plus d'espace */
-            font-size: 1rem;       /* texte un peu plus grand */
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            padding: 24px;
+            font-size: 14px;
             color: #333;
             display: none;
-            opacity: 1;
-            transition: opacity 0.8s ease;
-            z-index: 1100;
-            user-select: none;
+            z-index: 2000;
         }
+        
+        #filetypesPopup.show {
+            display: block;
+        }
+        
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1999;
+        }
+        
+        .popup-overlay.show {
+            display: block;
+        }
+        
         #filetypesPopup h3 {
-            margin-top: 0;
-            font-size: 1.1rem;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 0.3rem;
-            user-select: text;
+            margin: 0 0 16px 0;
+            font-size: 1.4em;
+            color: #2c3e50;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
         }
+        
+        #filetypesPopup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            background: none;
+            border: none;
+            padding: 0;
+            width: auto;
+            height: auto;
+        }
+        
+        #filetypesPopup .close-btn:hover {
+            color: #333;
+            transform: none;
+            box-shadow: none;
+        }
+        
         #filetypesPopup ul {
-            list-style-type: none;
-            padding-left: 0;
+            list-style: none;
+            padding: 0;
             margin: 0;
         }
+        
         #filetypesPopup li.category {
-            font-weight: bold;
-            margin-top: 0.8rem;
-            cursor: default;
-            user-select: text;
+            font-weight: 700;
+            margin-top: 16px;
+            margin-bottom: 8px;
+            color: #667eea;
+            font-size: 1.1em;
         }
+        
         #filetypesPopup li.item {
             cursor: pointer;
-            padding: 0.6rem 0.4rem; /* agrandi la zone cliquable */
-            font-size: 1rem;       /* plus grande lisibilité */
-            border-bottom: 1px solid #eee;
-            transition: background-color 0.2s ease;
-            user-select: text;     /* permet la sélection */
+            padding: 10px 12px;
+            border-radius: 6px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.2s ease;
         }
+        
         #filetypesPopup li.item:hover {
-            background-color: #e0f0ff;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            transform: translateX(4px);
+            border-left: 3px solid #667eea;
         }
-        @media (max-width: 1090px) {
-          /* Ajustement popup en responsive */
-          #filetypesPopup {
-            right: 5px;
-            width: 95vw;          /* élargit pour petits écrans */
-            max-height: 350px;
-            top: 60px;
-          }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .search-container {
+                padding: 20px;
+                margin-top: 20px;
+            }
+            
+            .category-row {
+                grid-template-columns: 1fr;
+            }
+            
+            #searchInput {
+                min-width: 100%;
+            }
+            
+            #searchForm {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            #searchForm button {
+                width: 100%;
+            }
+            
+            #filetypesPopup {
+                width: 95%;
+                max-height: 70vh;
+            }
+        }
+        
+        /* Scrollbar styling */
+        #wikiContent::-webkit-scrollbar,
+        #filetypesPopup::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #wikiContent::-webkit-scrollbar-track,
+        #filetypesPopup::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        
+        #wikiContent::-webkit-scrollbar-thumb,
+        #filetypesPopup::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        #stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        #stars, #stars2, #stars3 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-repeat: repeat;
+            background-position: 0 0;
+        }
+
+        #stars {
+            background-image: radial-gradient(1px 1px at 20px 30px, #eee, rgba(0,0,0,0)),
+                              radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
+            background-size: 200px 200px;
+            animation: move-stars 15s linear infinite;
+        }
+
+        #stars2 {
+            background-image: radial-gradient(1px 1px at 50px 100px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(1px 1px at 120px 40px, #ddd, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 50px 150px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 100px 200px, #ddd, rgba(0,0,0,0));
+            background-size: 300px 300px;
+            animation: move-stars 30s linear infinite;
+        }
+
+        #stars3 {
+            background-image: radial-gradient(1px 1px at 80px 50px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 150px 100px, #ddd, rgba(0,0,0,0));
+            background-size: 400px 400px;
+            animation: move-stars 45s linear infinite;
+        }
+
+        @keyframes move-stars {
+            from {
+                transform: translateY(0px);
+            }
+            to {
+                transform: translateY(-200px);
+            }
         }
     </style>
 </head>
 <body>
+  <div id="stars-container">
+      <div id="stars"></div>
+      <div id="stars2"></div>
+      <div id="stars3"></div>
+  </div>
+  <div class="popup-overlay" id="popupOverlay"></div>
+  
   <div class="search-container">
     <div class="category-row">
       <div class="category-section">
-        <div class="category-title">Group1: General Search</div>
+        <div class="category-title">🌐 Recherche Générale</div>
         <div class="radio-group" id="group1">
           <label><input type="radio" name="searchEngine" value="g:" checked>Google</label>
           <label><input type="radio" name="searchEngine" value="yt:">YouTube</label>
@@ -242,67 +453,74 @@
           <label><input type="radio" name="searchEngine" value="ddg:">DuckDuckGo</label>
           <label><input type="radio" name="searchEngine" value="yadx:">Yandex</label>
           <label><input type="radio" name="searchEngine" value="bing:">Bing</label>
-          <label><input type="radio" name="searchEngine" value="g100:">Google 100 results</label>
-          <label><input type="radio" name="searchEngine" value="g+:">Google Advanced</label>
+          <label><input type="radio" name="searchEngine" value="g100:">Google 100 résultats</label>
+          <label><input type="radio" name="searchEngine" value="g+:">Google Avancé</label>
         </div>
       </div>
+      
       <div class="category-section">
-        <div class="category-title">Group2: Academic/Thesis</div>
+        <div class="category-title">🎓 Académique / Thèses</div>
         <div class="radio-group" id="group2">
-           <label><input type="radio" name="searchEngine" value="gs:">Google Scholar</label>
+          <label><input type="radio" name="searchEngine" value="gs:">Google Scholar</label>
           <label><input type="radio" name="searchEngine" value="these2.0:">These2.0</label>
           <label><input type="radio" name="searchEngine" value="cismef-th:">CISMeF Thèses</label>
           <label><input type="radio" name="searchEngine" value="these-ma:">Toubkal</label>
-          <label><input type="radio" name="searchEngine" value="these-ma-gs:">Toubkal - Google Search</label>
           <label><input type="radio" name="searchEngine" value="these-fr:">Theses.fr</label>
           <label><input type="radio" name="searchEngine" value="rgt:">ResearchGate</label>
           <label><input type="radio" name="searchEngine" value="ndltd:">NDLTD</label>
         </div>
       </div>
+      
       <div class="category-section">
-        <div class="category-title">Group3: Medical/Health</div>
+        <div class="category-title">⚕️ Médical / Santé</div>
         <div class="radio-group" id="group3">
           <label><input type="radio" name="searchEngine" value="pbmd:">PubMed</label>
           <label><input type="radio" name="searchEngine" value="cismef:">CISMeF</label>
           <label><input type="radio" name="searchEngine" value="cismef-edn:">CISMeF EDN</label>
-          <label><input type="radio" name="searchEngine" value="cismef-bp:">CISMeF Best Practices</label>
-          <label><input type="radio" name="searchEngine" value="cismef-edu:">CISMeF Education</label>
+          <label><input type="radio" name="searchEngine" value="cismef-bp:">CISMeF Bonnes Pratiques</label>
+          <label><input type="radio" name="searchEngine" value="cismef-edu:">CISMeF Éducation</label>
           <label><input type="radio" name="searchEngine" value="lissa:">LISSA</label>
           <label><input type="radio" name="searchEngine" value="hetop:">HETOP</label>
-          <label><input type="radio" name="searchEngine" value="has:">Haute Autorité de Santé</label>
+          <label><input type="radio" name="searchEngine" value="has:">HAS</label>
           <label><input type="radio" name="searchEngine" value="openmd:">OpenMD</label>
         </div>
       </div>
+      
       <div class="category-section">
-        <div class="category-title">Group4: AI/Advanced</div>
+        <div class="category-title">🤖 IA / Avancé</div>
         <div class="radio-group" id="group4">
           <label><input type="radio" name="searchEngine" value="wolfram:">Wolfram Alpha</label>
           <label><input type="radio" name="searchEngine" value="gpt:">ChatGPT</label>
-          <label><input type="radio" name="searchEngine" value="x.ai:">Grok</label>
-          <label><input type="radio" name="searchEngine" value="g.ai:">Gemini</label>
-          <label><input type="radio" name="searchEngine" value="p.ai:">Perplexity</label>
+          <label><input type="radio" name="searchEngine" value="claude:">Claude AI</label>
+          <label><input type="radio" name="searchEngine" value="gemini:">Gemini</label>
+          <label><input type="radio" name="searchEngine" value="perplexity:">Perplexity</label>
+          <label><input type="radio" name="searchEngine" value="copilot:">Copilot</label>
         </div>
       </div>
     </div>
+    
     <div class="search-bar">
-      <form id="searchForm" style="display:flex; align-items:center; gap:6px; width: 100%; justify-content: center;">
-        <input type="text" id="searchInput" autocomplete="off" placeholder="Apprendre est un chemin qui nous permet d’oublier nos soucis, tout en nous rendant compétents et humbles devant l’œuvre magnifique de la Création divine" />
-        <button type="submit">Rechercher</button>
-        <button type="button" id="wikiToggleBtn" aria-expanded="false" aria-controls="wikiContent">Wiki</button>
-        <!-- Nouveau bouton filetypes -->
-        <button type="button" id="filetypesBtn" aria-expanded="false" aria-controls="filetypesPopup" aria-haspopup="true">filetypes:</button>
-        <label for="siteCheckbox" style="font-size: 13px; margin-left: 8px; cursor: pointer; user-select: none;">
-          <input type="checkbox" id="siteCheckbox" style="margin-right: 4px; vertical-align: middle;">
-          site
+      <form id="searchForm">
+        <input type="text" id="searchInput" autocomplete="off" placeholder="Commencez votre recherche ici..." />
+        <button type="submit">🔍 Rechercher</button>
+        <button type="button" id="wikiToggleBtn">📖 Wiki</button>
+        <button type="button" id="filetypesBtn">📁 Filetypes</button>
+        <label class="checkbox-label">
+          <input type="checkbox" id="siteCheckbox">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" style="width: 16px; height: 16px; vertical-align: middle;">
         </label>
       </form>
     </div>
-    <div id="searchSource" aria-live="polite" role="status">Entrez une requête pour afficher la source</div>
-    <div id="wikiContent" role="region" aria-label="Wiki des préfixes et moteurs" tabindex="0" >
+    
+    <div id="searchSource">Entrez une requête pour afficher la source</div>
+    
+    <div id="wikiContent" role="region" aria-label="Wiki des préfixes">
       <div class="checkbox-container">
         <input type="checkbox" id="keepWikiOpenCheckbox" />
-        <label for="keepWikiOpenCheckbox">Keep wiki open</label>
+        <label for="keepWikiOpenCheckbox">Garder le wiki ouvert</label>
       </div>
+      
+      <h4>🌐 Recherche Générale</h4>
       <ul>
         <li><b>g:</b> Google</li>
         <li><b>yt:</b> YouTube</li>
@@ -310,144 +528,96 @@
         <li><b>ddg:</b> DuckDuckGo</li>
         <li><b>yadx:</b> Yandex</li>
         <li><b>bing:</b> Bing</li>
-        <li><b>g100:</b> Google 100 results</li>
-        <li><b>g+:</b> Google Advanced</li>
       </ul>
+      
+      <h4>🎓 Académique</h4>
       <ul>
-        <li><b>these-fr:</b> Theses.fr</li>
-        <li><b>these2.0:</b> These2.0</li>
-        <li><b>these-ma:</b> Toubkal</li>
-        <li><b>these-ma-gs:</b> Toubkal Google Search</li>
-        <li><b>cismef-th:</b> CISMeF Thèses</li>
         <li><b>gs:</b> Google Scholar</li>
+        <li><b>these-fr:</b> Theses.fr</li>
         <li><b>rgt:</b> ResearchGate</li>
         <li><b>ndltd:</b> NDLTD</li>
       </ul>
+      
+      <h4>⚕️ Médical</h4>
       <ul>
         <li><b>pbmd:</b> PubMed</li>
         <li><b>cismef:</b> CISMeF</li>
-        <li><b>cismef-edn:</b> CISMeF EDN</li>
-        <li><b>cismef-bp:</b> CISMeF Best Practices</li>
-        <li><b>cismef-edu:</b> CISMeF Education</li>
-        <li><b>lissa:</b> LISSA</li>
-        <li><b>hetop:</b> HETOP</li>
         <li><b>has:</b> Haute Autorité de Santé</li>
-        <li><b>openmd:</b> OpenMD</li>
       </ul>
+      
+      <h4>🤖 IA</h4>
       <ul>
-        <li><b>wolfram:</b> Wolfram Alpha</li>
         <li><b>gpt:</b> ChatGPT</li>
-        <li><b>x.ai:</b> Grok</li>
-        <li><b>g.ai:</b> Gemini</li>
-        <li><b>p.ai:</b> Perplexity</li>
+        <li><b>claude:</b> Claude AI</li>
+        <li><b>gemini:</b> Gemini</li>
+        <li><b>perplexity:</b> Perplexity</li>
       </ul>
     </div>
-    <!-- Popup filetypes injectée ici -->
-    <div id="filetypesPopup" role="dialog" aria-modal="true" aria-labelledby="filetypesTitle" tabindex="-1">
-      <h3 id="filetypesTitle">Fichiers indexables par Google</h3>
-      <p>Cliquez sur un type de fichier.</p>
+    
+    <div id="filetypesPopup">
+      <button class="close-btn" id="closeFiletypes">&times;</button>
+      <h3>📁 Types de fichiers indexables</h3>
+      <p>Cliquez sur un type de fichier pour l'ajouter à votre recherche.</p>
       <ul id="filetypeList"></ul>
     </div>
   </div>
+
 <script>
-  // Données types de fichiers indexables by Google
   const filetypesWiki = {
-    "Documents": [
-      {name: "Adobe Portable Document Format", ext: "pdf"},
+    "📄 Documents": [
+      {name: "Adobe PDF", ext: "pdf"},
       {name: "Microsoft Word", ext: "doc"},
-      {name: "Microsoft Word-2", ext: "docx"},
+      {name: "Microsoft Word (nouveau)", ext: "docx"},
       {name: "Rich Text Format", ext: "rtf"},
-      {name: "Microsoft PowerPoint", ext: "ppt"},
-      {name: "Microsoft PowerPoint-2", ext: "pptx"},
-      {name: "Microsoft Excel", ext: "xls"},
-      {name: "Microsoft Excel-2", ext: "xlsx"},
-      {name: "Comma-Separated Values", ext: "csv"},
-      {name: "TeX/LaTeX", ext: "tex"},
-      {name: "Electronic Publication", ext: "epub"},
-      {name: "OpenOffice text", ext: "odt"},
-      {name: "OpenOffice presentation", ext: "odp"},
-      {name: "OpenOffice spreadsheet", ext: "ods"},
+      {name: "PowerPoint", ext: "ppt"},
+      {name: "PowerPoint (nouveau)", ext: "pptx"},
+      {name: "Excel", ext: "xls"},
+      {name: "Excel (nouveau)", ext: "xlsx"},
+      {name: "CSV", ext: "csv"},
       {name: "Text", ext: "txt"},
-      {name: "Text-2", ext: "text"},
-    ],  
-          "Images": [
-      {name: "BMP", ext: "bmp"},
-      {name: "GIF", ext: "gif"},
-      {name: "JPEG", ext: "jpeg"},
-      {name: "JPG", ext: "jpg"},
+      {name: "OpenOffice Text", ext: "odt"},
+      {name: "TeX/LaTeX", ext: "tex"},
+      {name: "EPUB", ext: "epub"}
+    ],
+    "🖼️ Images": [
+      {name: "JPEG", ext: "jpg"},
       {name: "PNG", ext: "png"},
+      {name: "GIF", ext: "gif"},
       {name: "WebP", ext: "webp"},
       {name: "SVG", ext: "svg"},
-      {name: "AVIF", ext: "avif"}
+      {name: "BMP", ext: "bmp"}
     ],
-    "Vidéos": [
-      {name: "3GP", ext: "3gp"},
+    "🎬 Vidéos": [
+      {name: "MP4", ext: "mp4"},
       {name: "AVI", ext: "avi"},
       {name: "MOV", ext: "mov"},
-      {name: "MP4", ext: "mp4"},
-      {name: "MKV", ext: "mkv"},
       {name: "WebM", ext: "webm"},
-      {name: "WMV", ext: "wmv"},
-      {name: "ASF", ext: "asf"},
-      {name: "DivX", ext: "divx"},
-      {name: "MPEG", ext: "mpeg"},
-      {name: "OGV", ext: "ogv"}
+      {name: "MKV", ext: "mkv"},
+      {name: "WMV", ext: "wmv"}
     ],
-    "Web & Markup": [
-      {name: "HTML+", ext: "html"},
-      {name: "HTML", ext: "htm"},
-      
-      {name: "Wireless Markup Language", ext: "wml"},
-      {name: "Wireless Markup Language (wap)", ext: "wap"},
-      {name: "XML", ext: "xml"}
-    ],
-         "Code": [   
-      {name: "Adobe PostScript", ext: "ps"},
-      {name: "Basic source code", ext: "bas"},
-      {name: "C/C++ source code", ext: "c"},
-      {name: "C++ source code (cpp)", ext: "cpp"},
-      {name: "C++ source code (cc)", ext: "cc"},
-      {name: "C++ source code (cxx)", ext: "cxx"},
-      {name: "C/C++ header (h)", ext: "h"},
-      {name: "C++ header (hpp)", ext: "hpp"},
-      {name: "C# source code", ext: "cs"},
-      {name: "Java source code", ext: "java"},
-      {name: "Perl source code", ext: "pl"},
-      {name: "Python source code", ext: "py"}
-    ],
-       "Formats géographiques": [
-      {name: "Google Earth", ext: "kml"},
-      {name: "Google Earth (kmz)", ext: "kmz"},
-      {name: "GPS eXchange Format", ext: "gpx"},
-      {name: "Hancom Hanword", ext: "hwp"}
+    "💻 Code & Web": [
+      {name: "HTML", ext: "html"},
+      {name: "XML", ext: "xml"},
+      {name: "Python", ext: "py"},
+      {name: "JavaScript", ext: "js"},
+      {name: "Java", ext: "java"},
+      {name: "C++", ext: "cpp"},
+      {name: "C", ext: "c"}
     ]
-
   };
-  const searchInput = document.getElementById('searchInput');
-  const searchForm = document.getElementById('searchForm');
-  const searchSource = document.getElementById('searchSource');
-  const radioButtons = document.querySelectorAll('input[name="searchEngine"]');
-  const wikiToggleBtn = document.getElementById('wikiToggleBtn');
-  const wikiContent = document.getElementById('wikiContent');
-  const keepWikiOpenCheckbox = document.getElementById('keepWikiOpenCheckbox');
-  const filetypesBtn = document.getElementById('filetypesBtn');
-  const filetypesPopup = document.getElementById('filetypesPopup');
-  const filetypeList = document.getElementById('filetypeList');
-  const siteCheckbox = document.getElementById('siteCheckbox');
-  // --- Fonction utilitaire pour afficher source de recherche (reste inchangée) ---
-  const internationale_search = {
+
+  const searchEngines = {
     'g:': { name: 'Google', url: 'https://www.google.com/search?q=' },
     'yt:': { name: 'YouTube', url: 'https://www.youtube.com/results?search_query=' },
     'brave:': { name: 'Brave Search', url: 'https://search.brave.com/search?q=' },
     'ddg:': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
     'yadx:': { name: 'Yandex', url: 'https://yandex.com/search/?text=' },
     'bing:': { name: 'Bing', url: 'https://www.bing.com/search?q=' },
-    'g100:': { name: 'Google 100 results', url: 'https://www.google.com/search?q=' },
-    'g+:': { name: 'Google Advanced', url: 'https://www.google.com/advanced_search?q=' },
+    'g100:': { name: 'Google 100 résultats', url: 'https://www.google.com/search?num=100&q=' },
+    'g+:': { name: 'Google Avancé', url: 'https://www.google.com/advanced_search?q=' },
     'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/?q=' },
     'these2.0:': { name: 'These2.0', url: 'https://thesefmpm.vercel.app/search?page=1&search=' },
     'these-ma:': { name: 'Toubkal', url: 'https://toubkal.imist.ma/?query=' },
-    'these-ma-gs:': { name: 'Toubkal Google Search', url: 'https://www.google.com/search?q=site:toubkal.imist.ma+' },
     'cismef-th:': { name: 'CISMeF Thèses', url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q=' },
     'gs:': { name: 'Google Scholar', url: 'https://scholar.google.com/scholar?q=' },
     'rgt:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=' },
@@ -455,29 +625,45 @@
     'pbmd:': { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=' },
     'cismef:': { name: 'CISMeF', url: 'https://doccismef.chu-rouen.fr/dc/#q=' },
     'cismef-edn:': { name: 'CISMeF EDN', url: 'https://doccismef.chu-rouen.fr/dc/#env=ecn&q=' },
-    'cismef-bp:': { name: 'CISMeF Best Practices', url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q=' },
-    'cismef-edu:': { name: 'CISMeF Education', url: 'https://doccismef.chu-rouen.fr/dc/#env=unf3s&q=' },
+    'cismef-bp:': { name: 'CISMeF Bonnes Pratiques', url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q=' },
+    'cismef-edu:': { name: 'CISMeF Éducation', url: 'https://doccismef.chu-rouen.fr/dc/#env=unf3s&q=' },
     'lissa:': { name: 'LISSA', url: 'https://www.lissa.fr/dc/#env=lissa&q=' },
     'hetop:': { name: 'HETOP', url: 'https://www.hetop.eu/hetop/fr/#q=' },
-    'has:': { name: 'Haute Autorité de Santé', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=' },
+    'has:': { name: 'HAS', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=' },
     'openmd:': { name: 'OpenMD', url: 'https://openmd.com/search?q=' },
     'wolfram:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=' },
-    'gpt:': { name: 'ChatGPT', url: 'https://chat.openai.com/?q=' },
-    'x.ai:': { name: 'Grok', url: 'https://www.x.ai/grok?q=' },
-    'g.ai:': { name: 'Gemini', url: 'https://gemini.google.com/?q=' },
-    'p.ai:': { name: 'Perplexity', url: 'https://www.perplexity.ai/search?q=' }
+    'gpt:': { name: 'ChatGPT', url: 'https://chatgpt.com/?prompt=' },
+    'claude:': { name: 'Claude AI', url: 'https://claude.ai/new?q=' },
+    'gemini:': { name: 'Gemini', url: 'https://gemini.google.com/app?q=' },
+    'perplexity:': { name: 'Perplexity', url: 'https://www.perplexity.ai/search?q=' },
+    'copilot:': { name: 'Copilot', url: 'https://copilot.microsoft.com/?q=' }
   };
+
+  const searchInput = document.getElementById('searchInput');
+  const searchForm = document.getElementById('searchForm');
+  const searchSource = document.getElementById('searchSource');
+  const wikiToggleBtn = document.getElementById('wikiToggleBtn');
+  const wikiContent = document.getElementById('wikiContent');
+  const keepWikiOpenCheckbox = document.getElementById('keepWikiOpenCheckbox');
+  const filetypesBtn = document.getElementById('filetypesBtn');
+  const filetypesPopup = document.getElementById('filetypesPopup');
+  const filetypeList = document.getElementById('filetypeList');
+  const siteCheckbox = document.getElementById('siteCheckbox');
+  const popupOverlay = document.getElementById('popupOverlay');
+  const closeFiletypes = document.getElementById('closeFiletypes');
+
   function updateSearchSource() {
     let source = "Entrez une requête pour afficher la source";
-    let color = "#333";
+    let color = "#555";
     let prefix = "";
     let value = searchInput.value.trim();
-    for (const [key, obj] of Object.entries(internationale_search)) {
+
+    for (const [key, obj] of Object.entries(searchEngines)) {
       if (value.startsWith(key)) {
-        source = "Source de recherche : " + obj.name;
-        color = "green";
+        source = "🎯 Source : " + obj.name;
+        color = "#28a745";
         prefix = key;
-        // Sync radio
+        
         document.querySelectorAll('input[name="searchEngine"]').forEach(radio => {
           radio.parentElement.classList.remove('selected');
           if (radio.value === key) {
@@ -488,47 +674,61 @@
         break;
       }
     }
+
     if (!prefix) {
-      // Use selected radio
       const selected = document.querySelector('input[name="searchEngine"]:checked');
-      if (selected && selected.value && internationale_search[selected.value]) {
-        source = "Source de recherche : " + internationale_search[selected.value].name;
-        color = "green";
+      if (selected && searchEngines[selected.value]) {
+        source = "🎯 Source : " + searchEngines[selected.value].name;
+        color = "#28a745";
         selected.parentElement.classList.add('selected');
       }
     }
+
     searchSource.textContent = source;
     searchSource.style.color = color;
   }
+
   searchInput.addEventListener('input', updateSearchSource);
-  radioButtons.forEach(radio => {
+
+  document.querySelectorAll('input[name="searchEngine"]').forEach(radio => {
     radio.addEventListener('change', function() {
-      radioButtons.forEach(r => r.parentElement.classList.remove('selected'));
+      document.querySelectorAll('input[name="searchEngine"]').forEach(r => 
+        r.parentElement.classList.remove('selected')
+      );
       radio.parentElement.classList.add('selected');
+      
       let val = searchInput.value.trim();
       let selectedPrefix = radio.value;
-      for (const key of Object.keys(internationale_search)) {
+      
+      for (const key of Object.keys(searchEngines)) {
         if (val.startsWith(key)) {
-          val = val.substring(key.length).trimStart();
+          val = val.substring(key.length).trim();
           break;
         }
       }
+      
       searchInput.value = selectedPrefix + (val ? ' ' + val : '');
       updateSearchSource();
     });
   });
+
   searchForm.addEventListener('submit', function(e) {
     e.preventDefault();
     let value = searchInput.value.trim();
+    
+    if (!value) return;
+    
     let prefix = '';
     let query = '';
-    for (const key of Object.keys(internationale_search)) {
+
+    for (const key of Object.keys(searchEngines)) {
       if (value.startsWith(key)) {
         prefix = key;
         query = value.substring(prefix.length).trim();
         break;
       }
     }
+
     if (!prefix) {
       const selected = document.querySelector('input[name="searchEngine"]:checked');
       if (selected) prefix = selected.value;
@@ -536,144 +736,116 @@
     }
 
     if (siteCheckbox.checked) {
-      // If site checkbox checked, override to Google site search restricted to selected radio's site
       const selectedRadio = document.querySelector('input[name="searchEngine"]:checked');
-      if (selectedRadio && selectedRadio.value && internationale_search[selectedRadio.value]) {
-        // Extract site URL domain from the selected search engine url
-        let siteUrl = internationale_search[selectedRadio.value].url;
+      if (selectedRadio && searchEngines[selectedRadio.value]) {
+        let siteUrl = searchEngines[selectedRadio.value].url;
         try {
-          // Use URL constructor to isolate hostname
           let urlObj = new URL(siteUrl);
           siteUrl = urlObj.hostname;
         } catch (err) {
-          // Fallback parsing
           siteUrl = siteUrl.replace(/^https?:\/\//, '').split(/[/?#]/)[0];
         }
-        // Construct Google search with site:domain + query
-        const googleSearchUrl = 'https://www.google.com/search?q=';
-        let googleQuery = encodeURIComponent(`site:${siteUrl} ${query}`);
-        window.open(googleSearchUrl + googleQuery, '_blank');
-        return; // exit early, already handled
+        const googleQuery = encodeURIComponent(`site:${siteUrl} ${query}`);
+        window.open('https://www.google.com/search?q=' + googleQuery, '_blank');
+        return;
       }
     }
 
-    // Normal search behavior
     if (prefix && query) {
-      let url = internationale_search[prefix].url + encodeURIComponent(query);
-      if (prefix === 'g100:') url += '&num=100';
+      let url = searchEngines[prefix].url + encodeURIComponent(query);
       window.open(url, '_blank');
     }
   });
-  // Wiki toggle (inchangé)
+
   wikiToggleBtn.addEventListener('click', () => {
     if (wikiContent.style.display === 'block') {
-      if (keepWikiOpenCheckbox.checked) {
-        return;
+      if (!keepWikiOpenCheckbox.checked) {
+        wikiContent.style.display = 'none';
       }
-      wikiContent.style.display = 'none';
-      wikiToggleBtn.setAttribute('aria-expanded', 'false');
     } else {
       wikiContent.style.display = 'block';
-      wikiToggleBtn.setAttribute('aria-expanded', 'true');
       wikiContent.focus();
     }
   });
-  // Focus auto au load
-  window.addEventListener('load', () => {
-    updateSearchSource();
-    searchInput.focus();
-  });
-  // ----- Partie spécifique au bouton filetypes ------
-  // Création dynamique de la liste filetypes dans le popup
+
   function renderFiletypesList() {
-    filetypeList.innerHTML = ''; // Clear
+    filetypeList.innerHTML = '';
     for (const [category, types] of Object.entries(filetypesWiki)) {
       const catLi = document.createElement('li');
       catLi.classList.add('category');
       catLi.textContent = category;
       filetypeList.appendChild(catLi);
+
       types.forEach(ft => {
         const itemLi = document.createElement('li');
         itemLi.classList.add('item');
-        // Affichage : Nom (extension entre parenthèses)
-        itemLi.textContent = `${ft.name} (${ft.ext})`;
-        itemLi.setAttribute('data-ext', ft.ext);
-        itemLi.tabIndex = 0; // pour accessibilité clavier
-        // Au clic, on insère filetype:"ext" dans barre de recherche
+        itemLi.textContent = `${ft.name} (.${ft.ext})`;
         itemLi.addEventListener('click', () => {
           insertOrReplaceFiletype(ft.ext);
-          fadeOutFiletypesPopup();
+          closeFiletypesPopup();
           searchInput.focus();
-        });
-        // Interaction clavier (Enter ou Espace)
-        itemLi.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            itemLi.click();
-          }
         });
         filetypeList.appendChild(itemLi);
       });
     }
   }
-  // Affichage/caché du popup filetypes
-  filetypesBtn.addEventListener('click', () => {
-    if (filetypesPopup.style.display === 'block') {
-      fadeOutFiletypesPopup();
-    } else {
-      renderFiletypesList();
-      filetypesPopup.style.display = 'block';
-      filetypesPopup.style.opacity = '1';
-      filetypesBtn.setAttribute('aria-expanded', 'true');
-      // Positionnement précis si besoin (ici fixed dans CSS)
-      filetypesPopup.focus();
-    }
-  });
-  // Fonction fade out
-  function fadeOutFiletypesPopup() {
-    filetypesPopup.style.opacity = '0';
-    filetypesBtn.setAttribute('aria-expanded', 'false');
-    setTimeout(() => {
-      filetypesPopup.style.display = 'none';
-    }, 600);
+
+  function openFiletypesPopup() {
+    renderFiletypesList();
+    filetypesPopup.classList.add('show');
+    popupOverlay.classList.add('show');
   }
-  // Fonction pour insérer ou remplacer un filtre filetype:"xxx"
+
+  function closeFiletypesPopup() {
+    filetypesPopup.classList.remove('show');
+    popupOverlay.classList.remove('show');
+  }
+
+  filetypesBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openFiletypesPopup();
+  });
+
+  closeFiletypes.addEventListener('click', closeFiletypesPopup);
+  popupOverlay.addEventListener('click', closeFiletypesPopup);
+
   function insertOrReplaceFiletype(ext) {
     let val = searchInput.value.trim();
-    // Regex pour détecter un filtre filetype déjà existant (sans guillemets)
     const filetypeRegex = /filetype:([^\s]+)/i;
+    
     if (filetypeRegex.test(val)) {
-      // Remplacer l'ancien filetype
       val = val.replace(filetypeRegex, `filetype:${ext}`);
     } else {
-      // Ajouter à la fin (avec espace si besoin)
       if (val.length > 0) val += ' ';
       val += `filetype:${ext}`;
     }
+    
     searchInput.value = val;
     updateSearchSource();
   }
-  // Pour fermeture popup si clic dehors
+
   document.addEventListener('click', (e) => {
-    if (!filetypesPopup.contains(e.target) && e.target !== filetypesBtn) {
-      if (filetypesPopup.style.display === 'block') {
-        fadeOutFiletypesPopup();
-      }
-    }
-    // Pour wikiContent aussi
     if (!wikiContent.contains(e.target) && e.target !== wikiToggleBtn) {
       if (wikiContent.style.display === 'block' && !keepWikiOpenCheckbox.checked) {
         wikiContent.style.display = 'none';
-        wikiToggleBtn.setAttribute('aria-expanded', 'false');
       }
     }
   });
-  // Fermeture popup filetypes avec Esc
-  filetypesPopup.addEventListener('keydown', e => {
-    if(e.key === 'Escape') {
-      fadeOutFiletypesPopup();
-      filetypesBtn.focus();
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (filetypesPopup.classList.contains('show')) {
+        closeFiletypesPopup();
+      }
+      if (wikiContent.style.display === 'block' && !keepWikiOpenCheckbox.checked) {
+        wikiContent.style.display = 'none';
+      }
     }
+  });
+
+  window.addEventListener('load', () => {
+    updateSearchSource();
+    searchInput.focus();
   });
 </script>
 </body>
