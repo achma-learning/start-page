@@ -396,6 +396,8 @@
             height: 100%;
             background-repeat: repeat;
             background-position: 0 0;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
         }
 
         #stars {
@@ -405,7 +407,8 @@
                               radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
                               radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
             background-size: 200px 200px;
-            animation: move-stars 15s linear infinite;
+            animation-name: move-stars, twinkle;
+            animation-duration: 15s, 5s;
         }
 
         #stars2 {
@@ -414,14 +417,22 @@
                               radial-gradient(2px 2px at 50px 150px, #fff, rgba(0,0,0,0)),
                               radial-gradient(2px 2px at 100px 200px, #ddd, rgba(0,0,0,0));
             background-size: 300px 300px;
-            animation: move-stars 30s linear infinite;
+            animation-name: move-stars, twinkle;
+            animation-duration: 30s, 7s;
         }
 
         #stars3 {
             background-image: radial-gradient(1px 1px at 80px 50px, #fff, rgba(0,0,0,0)),
                               radial-gradient(2px 2px at 150px 100px, #ddd, rgba(0,0,0,0));
             background-size: 400px 400px;
-            animation: move-stars 45s linear infinite;
+            animation-name: move-stars, twinkle;
+            animation-duration: 45s, 10s;
+        }
+
+        @keyframes twinkle {
+          0% { opacity: 0; }
+          50% { opacity: 0.7; }
+          100% { opacity: 0; }
         }
 
         @keyframes move-stars {
@@ -434,80 +445,108 @@
         }
 
         .dark-mode {
-            background: #1a1a1a;
-            color: #f0f0f0;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #b0bec5;
         }
 
         .dark-mode .search-container {
-            background: #2c2c2c;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            background: #1a2332;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(100, 181, 246, 0.1);
         }
 
         .dark-mode .category-section {
-            background: linear-gradient(145deg, #3a3a3a, #2c2c2c);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            background: #243447;
+            border: 1px solid #2d3e52;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .dark-mode .category-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            border-color: #64b5f6;
         }
 
         .dark-mode .category-title {
-            color: #f0f0f0;
-            border-bottom-color: #667eea;
+            color: #64b5f6;
+            border-bottom-color: #64b5f6;
         }
 
         .dark-mode .radio-group label {
-            color: #f0f0f0;
+            color: #b0bec5;
         }
 
         .dark-mode .radio-group label:hover,
         .dark-mode .radio-group label.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #ffffff;
         }
 
         .dark-mode #searchInput {
-            background: #3a3a3a;
-            border-color: #555;
-            color: #f0f0f0;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid #2d3e52;
+            color: #b0bec5;
         }
 
         .dark-mode #searchInput:focus {
-            border-color: #667eea;
-            background: #444;
+            border-color: #64b5f6;
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .dark-mode #searchSource {
-            background: #3a3a3a;
-            color: #f0f0f0;
+            background: #243447;
+            color: #b0bec5;
         }
 
         .dark-mode #wikiContent {
-            background: #2c2c2c;
-            border-color: #555;
-            color: #f0f0f0;
+            background: #1a2332;
+            border-color: #2d3e52;
+            color: #b0bec5;
         }
 
         .dark-mode #wikiContent h4 {
-            color: #667eea;
+            color: #64b5f6;
         }
 
-
         .dark-mode #wikiContent b {
-            color: #f0f0f0;
-            background: #3a3a3a;
+            color: #64b5f6;
+            background: #243447;
         }
 
         .dark-mode #filetypesPopup {
-            background: #2c2c2c;
-            border-color: #555;
-            color: #f0f0f0;
+            background: #1a2332;
+            border-color: #2d3e52;
+            color: #b0bec5;
         }
 
         .dark-mode #filetypesPopup h3 {
-            color: #f0f0f0;
-            border-bottom-color: #667eea;
+            color: #64b5f6;
+            border-bottom-color: #64b5f6;
         }
 
         .dark-mode #filetypesPopup li.item:hover {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+        }
+
+        .dark-mode #searchForm button[type="submit"] {
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+        }
+
+        .dark-mode #wikiToggleBtn {
+            background: linear-gradient(135deg, #cb6d51, #d6845e);
+        }
+
+        .dark-mode #filetypesBtn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+        }
+        
+        .dark-mode #darkModeToggleBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .dark-mode button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
     </style>
 </head>
@@ -579,13 +618,15 @@
       <form id="searchForm">
         <input type="text" id="searchInput" autocomplete="off" placeholder="Commencez votre recherche ici..." />
         <button type="submit">🔍 Rechercher</button>
-        <button type="button" id="wikiToggleBtn">📖 Wiki</button>
-        <button type="button" id="filetypesBtn">📁 Filetypes</button>
-        <button type="button" id="darkModeToggleBtn">🌙</button>
         <label class="checkbox-label">
           <input type="checkbox" id="siteCheckbox">
           <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" style="width: 16px; height: 16px; vertical-align: middle;">
         </label>
+
+        <button type="button" id="wikiToggleBtn">📖 Wiki</button>
+        <button type="button" id="filetypesBtn">📁 Filetypes</button>
+        <button type="button" id="darkModeToggleBtn">🌙</button>
+
       </form>
     </div>
     
