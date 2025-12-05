@@ -693,6 +693,8 @@
   </div>
 
 <script>
+  // AI-Assisted Comment: This object categorizes common file extensions for the 'filetype' search functionality.
+  // It is used to build the filetype selection popup, allowing users to easily append a 'filetype:' operator to their search query.
   const filetypesWiki = {
     "📄 Documents": [
       {name: "Adobe PDF", ext: "pdf"},
@@ -736,6 +738,9 @@
     ]
   };
 
+  // AI-Assisted Comment: This object maps search prefixes (e.g., 'g:') to their corresponding search engine details.
+  // Each entry contains the search engine's name and the base URL for constructing search queries.
+  // The script uses this map to determine which search engine to use based on user input or selection.
   const searchEngines = {
     'g:': { name: 'Google', url: 'https://www.google.com/search?q=' },
     'yt:': { name: 'YouTube', url: 'https://www.youtube.com/results?search_query=' },
@@ -744,7 +749,10 @@
     'yadx:': { name: 'Yandex', url: 'https://yandex.com/search/?text=' },
     'bing:': { name: 'Bing', url: 'https://www.bing.com/search?q=' },
     'g+:': { name: 'Google Avancé', url: 'https://www.google.com/advanced_search?q=' },
-    'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/?q=' },
+    'these-fr:': { 
+  name: 'Theses.fr', 
+  url: 'https://theses.fr/resultats?filtres=%255BStatut%25253D%252522soutenue%252522~Statut%25253D%252522Accessibles%252520en%252520ligne%252522%255D&q=' 
+},
     'these2.0:': { name: 'These2.0', url: 'https://thesefmpm.vercel.app/search?page=1&search=' },
     'these-ma:': { name: 'Toubkal', url: 'https://toubkal.imist.ma/search?query=' },
     'cismef-th:': { name: 'CISMeF Thèses', url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q=' },
@@ -768,6 +776,8 @@
     'copilot:': { name: 'Copilot', url: 'https://copilot.microsoft.com/?q=' }
   };
 
+  // AI-Assisted Comment: These constants store references to various DOM elements.
+  // Caching these elements in variables improves performance by avoiding repeated DOM lookups.
   const searchInput = document.getElementById('searchInput');
   const searchForm = document.getElementById('searchForm');
   const searchSource = document.getElementById('searchSource');
@@ -781,6 +791,9 @@
   const popupOverlay = document.getElementById('popupOverlay');
   const closeFiletypes = document.getElementById('closeFiletypes');
 
+  // AI-Assisted Comment: This function updates the UI to reflect the currently selected search engine.
+  // It reads the value of the search input, checks for a recognized prefix (like 'g:'),
+  // and updates the 'searchSource' element with the name of the engine. It also synchronizes the radio button selection.
   function updateSearchSource() {
     let source = "Entrez une requête pour afficher la source";
     let color = "#555";
@@ -819,6 +832,9 @@
 
   searchInput.addEventListener('input', updateSearchSource);
 
+  // AI-Assisted Comment: This adds a 'change' event listener to all search engine radio buttons.
+  // When a user selects a different radio button, this code updates the search input field
+  // by replacing the old prefix with the new one, while preserving the user's query.
   document.querySelectorAll('input[name="searchEngine"]').forEach(radio => {
     radio.addEventListener('change', function() {
       document.querySelectorAll('input[name="searchEngine"]').forEach(r => 
@@ -841,6 +857,9 @@
     });
   });
 
+  // AI-Assisted Comment: This is the main event listener for the form submission.
+  // It prevents the default form submission, parses the user's input to separate the prefix and the query,
+  // and then constructs the final search URL. It includes special handling for certain search engines.
   searchForm.addEventListener('submit', function(e) {
     e.preventDefault();
     let value = searchInput.value.trim();
@@ -884,6 +903,9 @@
       let baseUrl = searchEngines[prefix].url;
       let finalUrl;
 
+      // AI-Assisted Comment: Special handling for the Toubkal (these-ma:) search engine.
+      // This engine requires a specific 'submit=OK' parameter which is appended here.
+      // This is a correction to a previous bug where the parameter was handled incorrectly.
       // Exception spéciale pour Toubkal
       if (prefix === 'these-ma:') {
         finalUrl = baseUrl + encodeURIComponent(query) + '&submit=OK';
@@ -895,6 +917,8 @@
     }
   });
 
+  // AI-Assisted Comment: This function toggles the visibility of the wiki content area.
+  // It also respects the "keep open" checkbox, preventing the wiki from closing if the user has checked it.
   wikiToggleBtn.addEventListener('click', () => {
     if (wikiContent.style.display === 'block') {
       if (!keepWikiOpenCheckbox.checked) {
@@ -906,6 +930,8 @@
     }
   });
 
+  // AI-Assisted Comment: This function dynamically builds the list of filetypes in the filetype popup.
+  // It iterates over the 'filetypesWiki' object and creates list items for each category and filetype.
   function renderFiletypesList() {
     filetypeList.innerHTML = '';
     for (const [category, types] of Object.entries(filetypesWiki)) {
@@ -947,6 +973,8 @@
   closeFiletypes.addEventListener('click', closeFiletypesPopup);
   popupOverlay.addEventListener('click', closeFiletypesPopup);
 
+  // AI-Assisted Comment: This function inserts or replaces a 'filetype:' operator in the search input.
+  // If a filetype is already present, it's replaced with the new one; otherwise, the new one is appended.
   function insertOrReplaceFiletype(ext) {
     let val = searchInput.value.trim();
     const filetypeRegex = /filetype:([^\s]+)/i;
@@ -986,8 +1014,11 @@
     searchInput.focus();
   });
 
+  // AI-Assisted Comment: This constant stores a reference to the dark mode toggle button.
   const darkModeToggleBtn = document.getElementById('darkModeToggleBtn');
 
+  // AI-Assisted Comment: This adds a click event listener to the dark mode toggle button.
+  // It adds or removes the 'dark-mode' class on the body and saves the user's preference in localStorage.
   darkModeToggleBtn.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
     if (document.body.classList.contains('dark-mode')) {
@@ -997,6 +1028,8 @@
     }
   });
 
+  // AI-Assisted Comment: This checks for the user's dark mode preference in localStorage on page load.
+  // If dark mode was previously enabled, it's automatically applied.
   if (localStorage.getItem('darkMode') === 'enabled') {
     document.body.classList.add('dark-mode');
   }
