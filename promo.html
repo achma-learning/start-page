@@ -330,6 +330,14 @@
             border-left: 3px solid #667eea;
         }
         
+        .favicon-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            vertical-align: middle;
+            border-radius: 2px; /* Slightly rounded corners for favicons */
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .search-container {
@@ -608,6 +616,7 @@
           <label><input type="radio" name="searchEngine" value="gpt:">ChatGPT</label>
           <label><input type="radio" name="searchEngine" value="claude:">Claude AI</label>
           <label><input type="radio" name="searchEngine" value="gemini:">Gemini</label>
+          <label><input type="radio" name="searchEngine" value="gai:">Google AI Mode</label>
           <label><input type="radio" name="searchEngine" value="perplexity:">Perplexity</label>
           <label><input type="radio" name="searchEngine" value="copilot:">Copilot</label>
         </div>
@@ -679,6 +688,7 @@
         <li><b>gpt:</b> ChatGPT</li>
         <li><b>claude:</b> Claude AI</li>
         <li><b>gemini:</b> Gemini</li>
+        <li><b>gai:</b> Google AI Mode – utilise le mode expérimental udm=50 qui déclenche très souvent la réponse IA/Gemini</li>
         <li><b>perplexity:</b> Perplexity</li>
         <li><b>copilot:</b> Copilot</li>
       </ul>
@@ -742,38 +752,35 @@
   // Each entry contains the search engine's name and the base URL for constructing search queries.
   // The script uses this map to determine which search engine to use based on user input or selection.
   const searchEngines = {
-    'g:': { name: 'Google', url: 'https://www.google.com/search?q=' },
-    'yt:': { name: 'YouTube', url: 'https://www.youtube.com/results?search_query=' },
-    'brave:': { name: 'Brave Search', url: 'https://search.brave.com/search?q=' },
-    'ddg:': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=' },
-    'yadx:': { name: 'Yandex', url: 'https://yandex.com/search/?text=' },
-    'bing:': { name: 'Bing', url: 'https://www.bing.com/search?q=' },
-    'g+:': { name: 'Google Avancé', url: 'https://www.google.com/advanced_search?q=' },
-    'these-fr:': { 
-  name: 'Theses.fr', 
-  url: 'https://theses.fr/resultats?filtres=%255BStatut%25253D%252522soutenue%252522~Statut%25253D%252522Accessibles%252520en%252520ligne%252522%255D&q=' 
-},
-    'these2.0:': { name: 'These2.0', url: 'https://thesefmpm.vercel.app/search?page=1&search=' },
-    'these-ma:': { name: 'Toubkal', url: 'https://toubkal.imist.ma/search?query=' },
-    'cismef-th:': { name: 'CISMeF Thèses', url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q=' },
-    'gs:': { name: 'Google Scholar', url: 'https://scholar.google.com/scholar?q=' },
-    'rgt:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=' },
-    'ndltd:': { name: 'NDLTD', url: 'http://search.ndltd.org/search.php?q=' },
-    'pbmd:': { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=' },
-    'cismef:': { name: 'CISMeF', url: 'https://doccismef.chu-rouen.fr/dc/#q=' },
-    'cismef-edn:': { name: 'CISMeF EDN', url: 'https://doccismef.chu-rouen.fr/dc/#env=ecn&q=' },
-    'cismef-bp:': { name: 'CISMeF Bonnes Pratiques', url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q=' },
-    'cismef-edu:': { name: 'CISMeF Éducation', url: 'https://doccismef.chu-rouen.fr/dc/#env=unf3s&q=' },
-    'lissa:': { name: 'LISSA', url: 'https://www.lissa.fr/dc/#env=lissa&q=' },
-    'hetop:': { name: 'HETOP', url: 'https://www.hetop.eu/hetop/fr/#q=' },
-    'has:': { name: 'HAS', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=' },
-    'openmd:': { name: 'OpenMD', url: 'https://openmd.com/search?q=' },
-    'wolfram:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=' },
-    'gpt:': { name: 'ChatGPT', url: 'https://chatgpt.com/?prompt=' },
-    'claude:': { name: 'Claude AI', url: 'https://claude.ai/new?q=' },
-    'gemini:': { name: 'Gemini', url: 'https://gemini.google.com/app?q=' },
-    'perplexity:': { name: 'Perplexity', url: 'https://www.perplexity.ai/search?q=' },
-    'copilot:': { name: 'Copilot', url: 'https://copilot.microsoft.com/?q=' }
+    'g:': { name: 'Google', url: 'https://www.google.com/search?q=', domain: 'google.com' },
+    'yt:': { name: 'YouTube', url: 'https://www.youtube.com/results?search_query=', domain: 'youtube.com' },
+    'brave:': { name: 'Brave Search', url: 'https://search.brave.com/search?q=', domain: 'brave.com' },
+    'ddg:': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=', domain: 'duckduckgo.com' },
+    'yadx:': { name: 'Yandex', url: 'https://yandex.com/search/?text=', domain: 'yandex.com' },
+    'bing:': { name: 'Bing', url: 'https://www.bing.com/search?q=', domain: 'bing.com' },
+            'g+:': { name: 'Google Avancé', url: 'https://www.google.com/advanced_search?q=', domain: 'google.com' },
+            'gai:': { name: 'Google AI Mode', url: 'https://www.google.com/search?udm=50&q=', domain: 'google.com' },    'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/resultats?filtres=%255BStatut%25253D%252522soutenue%252522~Statut%25253D%252522Accessibles%252520en%252520ligne%252522%255D&q=', domain: 'theses.fr' },
+    'these2.0:': { name: 'These2.0', url: 'https://thesefmpm.vercel.app/search?page=1&search=', domain: 'thesefmpm.vercel.app' },
+    'these-ma:': { name: 'Toubkal', url: 'https://toubkal.imist.ma/search?query=', domain: 'toubkal.imist.ma' },
+    'cismef-th:': { name: 'CISMeF Thèses', url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q=', domain: 'doccismef.chu-rouen.fr' },
+    'gs:': { name: 'Google Scholar', url: 'https://scholar.google.com/scholar?q=', domain: 'google.com' },
+    'rgt:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=', domain: 'researchgate.net' },
+    'ndltd:': { name: 'NDLTD', url: 'http://search.ndltd.org/search.php?q=', domain: 'ndltd.org' },
+    'pbmd:': { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=', domain: 'ncbi.nlm.nih.gov' },
+    'cismef:': { name: 'CISMeF', url: 'https://doccismef.chu-rouen.fr/dc/#q=', domain: 'doccismef.chu-rouen.fr' },
+    'cismef-edn:': { name: 'CISMeF EDN', url: 'https://doccismef.chu-rouen.fr/dc/#env=ecn&q=', domain: 'doccismef.chu-rouen.fr' },
+    'cismef-bp:': { name: 'CISMeF Bonnes Pratiques', url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q=', domain: 'doccismef.chu-rouen.fr' },
+    'cismef-edu:': { name: 'CISMeF Éducation', url: 'https://doccismef.chu-rouen.fr/dc/#env=unf3s&q=', domain: 'doccismef.chu-rouen.fr' },
+    'lissa:': { name: 'LISSA', url: 'https://www.lissa.fr/dc/#env=lissa&q=', domain: 'lissa.fr' },
+    'hetop:': { name: 'HETOP', url: 'https://www.hetop.eu/hetop/fr/#q=', domain: 'hetop.eu' },
+    'has:': { name: 'HAS', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=', domain: 'has-sante.fr' },
+    'openmd:': { name: 'OpenMD', url: 'https://openmd.com/search?q=', domain: 'openmd.com' },
+    'wolfram:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=', domain: 'wolframalpha.com' },
+    'gpt:': { name: 'ChatGPT', url: 'https://chatgpt.com/?prompt=', domain: 'chatgpt.com' },
+    'claude:': { name: 'Claude AI', url: 'https://claude.ai/new?q=', domain: 'claude.ai' },
+    'gemini:': { name: 'Gemini', url: 'https://gemini.google.com/app?q=', domain: 'google.com' },
+    'perplexity:': { name: 'Perplexity', url: 'https://www.perplexity.ai/search?q=', domain: 'perplexity.ai' },
+    'copilot:': { name: 'Copilot', url: 'https://copilot.microsoft.com/?q=', domain: 'microsoft.com' }
   };
 
   // AI-Assisted Comment: These constants store references to various DOM elements.
@@ -790,6 +797,24 @@
   const siteCheckbox = document.getElementById('siteCheckbox');
   const popupOverlay = document.getElementById('popupOverlay');
   const closeFiletypes = document.getElementById('closeFiletypes');
+
+  // AI-Assisted Comment: This function dynamically adds favicon images next to each search engine radio button.
+  // It fetches favicons from a public Google service using the domain specified in the searchEngines object.
+  function addFaviconsToSearchEngines() {
+    document.querySelectorAll('input[name="searchEngine"]').forEach(radio => {
+      const prefix = radio.value;
+      const searchEngine = searchEngines[prefix];
+      if (searchEngine && searchEngine.domain) {
+        const faviconUrl = `https://www.google.com/s2/favicons?sz=32&domain=${searchEngine.domain}`;
+        const img = document.createElement('img');
+        img.src = faviconUrl;
+        img.alt = `${searchEngine.name} Favicon`;
+        img.classList.add('favicon-icon');
+        // Insert the image after the radio input but before the text content of the label
+        radio.parentNode.insertBefore(img, radio.nextSibling);
+      }
+    });
+  }
 
   // AI-Assisted Comment: This function updates the UI to reflect the currently selected search engine.
   // It reads the value of the search input, checks for a recognized prefix (like 'g:'),
@@ -1012,6 +1037,8 @@
   window.addEventListener('load', () => {
     updateSearchSource();
     searchInput.focus();
+    // AI-Assisted Comment: Dynamically add favicons to search engine options on page load.
+    addFaviconsToSearchEngines();
   });
 
   // AI-Assisted Comment: This constant stores a reference to the dark mode toggle button.
