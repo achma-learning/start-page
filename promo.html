@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <title>Barre de Recherche Dynamique</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/gif" href="https://raw.githubusercontent.com/achma-learning/start-page/main/images/search.gif" />
+    
+    <link rel="icon" type="image/svg+xml" href="https://upload.wikimedia.org/wikipedia/commons/a/a9/Vector_search_icon.svg" />
     <style>
         * { box-sizing: border-box; }
         
@@ -567,6 +568,20 @@
   <div class="popup-overlay" id="popupOverlay"></div>
   
   <div class="search-container">
+    <div class="search-bar">
+      <form id="searchForm">
+        <div id="searchSource">Entrez une requête pour afficher la source</div>
+        <img id="search-prefix-favicon" class="favicon-icon" src="" alt="favicon" style="display: none; margin-right: 5px;"><input type="text" id="searchInput" autocomplete="off" placeholder="Commencez votre recherche ici..." />
+        <button type="submit">🔍</button>
+        <label class="checkbox-label">
+          <input type="checkbox" id="siteCheckbox">
+          site:
+        </label>
+
+        <button type="button" id="filetypesBtn">📁 Filetypes</button>
+      </form>
+    </div>
+
     <div class="category-row">
       <div class="category-section">
         <div class="category-title">🌐 Recherche Générale</div>
@@ -575,21 +590,21 @@
           <label><input type="radio" name="searchEngine" value="yt:">YouTube</label>
           <label><input type="radio" name="searchEngine" value="brave:">Brave Search</label>
           <label><input type="radio" name="searchEngine" value="ddg:">DuckDuckGo</label>
-          <label><input type="radio" name="searchEngine" value="yadx:">Yandex</label>
+          <label><input type="radio" name="searchEngine" value="yan:">Yandex</label>
           <label><input type="radio" name="searchEngine" value="bing:">Bing</label>
-          <label><input type="radio" name="searchEngine" value="g+:">Google Avancé</label>
+          <label><input type="radio" name="searchEngine" value="gplus:">Google Avancé</label>
         </div>
       </div>
       
       <div class="category-section">
         <div class="category-title">🎓 Académique / Thèses</div>
         <div class="radio-group" id="group2">
-          <label><input type="radio" name="searchEngine" value="gs:">Google Scholar</label>
+          <label><input type="radio" name="searchEngine" value="scholar:">Google Scholar</label>
           <label><input type="radio" name="searchEngine" value="these2.0:">These2.0</label>
           <label><input type="radio" name="searchEngine" value="cismef-th:">CISMeF Thèses</label>
           <label><input type="radio" name="searchEngine" value="these-ma:">Toubkal</label>
           <label><input type="radio" name="searchEngine" value="these-fr:">Theses.fr</label>
-          <label><input type="radio" name="searchEngine" value="rgt:">ResearchGate</label>
+          <label><input type="radio" name="searchEngine" value="rgate:">ResearchGate</label>
           <label><input type="radio" name="searchEngine" value="ndltd:">NDLTD</label>
         </div>
       </div>
@@ -597,7 +612,7 @@
       <div class="category-section">
         <div class="category-title">⚕️ Médical / Santé</div>
         <div class="radio-group" id="group3">
-          <label><input type="radio" name="searchEngine" value="pbmd:">PubMed</label>
+          <label><input type="radio" name="searchEngine" value="pubmed:">PubMed</label>
           <label><input type="radio" name="searchEngine" value="cismef:">CISMeF</label>
           <label><input type="radio" name="searchEngine" value="cismef-edn:">CISMeF EDN</label>
           <label><input type="radio" name="searchEngine" value="cismef-bp:">CISMeF Bonnes Pratiques</label>
@@ -612,8 +627,8 @@
       <div class="category-section">
         <div class="category-title">🤖 IA / Avancé</div>
         <div class="radio-group" id="group4">
-          <label><input type="radio" name="searchEngine" value="wolfram:">Wolfram Alpha</label>
-          <label><input type="radio" name="searchEngine" value="gpt:">ChatGPT</label>
+          <label><input type="radio" name="searchEngine" value="wolf:">Wolfram Alpha</label>
+          <label><input type="radio" name="searchEngine" value="chatgpt:">ChatGPT</label>
           <label><input type="radio" name="searchEngine" value="claude:">Claude AI</label>
           <label><input type="radio" name="searchEngine" value="gemini:">Gemini</label>
           <label><input type="radio" name="searchEngine" value="gai:">Google AI Mode</label>
@@ -622,24 +637,6 @@
         </div>
       </div>
     </div>
-    
-    <div class="search-bar">
-      <form id="searchForm">
-        <input type="text" id="searchInput" autocomplete="off" placeholder="Commencez votre recherche ici..." />
-        <button type="submit">🔍 Rechercher</button>
-        <label class="checkbox-label">
-          <input type="checkbox" id="siteCheckbox">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" style="width: 16px; height: 16px; vertical-align: middle;">
-        </label>
-
-        <button type="button" id="wikiToggleBtn">📖 Wiki</button>
-        <button type="button" id="filetypesBtn">📁 Filetypes</button>
-        <button type="button" id="darkModeToggleBtn">🌙</button>
-
-      </form>
-    </div>
-    
-    <div id="searchSource">Entrez une requête pour afficher la source</div>
     
     <div id="wikiContent" role="region" aria-label="Wiki des préfixes">
       <div class="checkbox-container">
@@ -653,25 +650,25 @@
         <li><b>yt:</b> YouTube</li>
         <li><b>brave:</b> Brave Search</li>
         <li><b>ddg:</b> DuckDuckGo</li>
-        <li><b>yadx:</b> Yandex</li>
+        <li><b>yan:</b> Yandex</li>
         <li><b>bing:</b> Bing</li>
-        <li><b>g+:</b> Google Avancé</li>
+        <li><b>gplus:</b> Google Avancé</li>
       </ul>
       
       <h4>🎓 Académique / Thèses</h4>
       <ul>
-        <li><b>gs:</b> Google Scholar</li>
+        <li><b>scholar:</b> Google Scholar</li>
         <li><b>these2.0:</b> These2.0</li>
         <li><b>cismef-th:</b> CISMeF Thèses</li>
         <li><b>these-ma:</b> Toubkal</li>
         <li><b>these-fr:</b> Theses.fr</li>
-        <li><b>rgt:</b> ResearchGate</li>
+        <li><b>rgate:</b> ResearchGate</li>
         <li><b>ndltd:</b> NDLTD</li>
       </ul>
       
       <h4>⚕️ Médical / Santé</h4>
       <ul>
-        <li><b>pbmd:</b> PubMed</li>
+        <li><b>pubmed:</b> PubMed</li>
         <li><b>cismef:</b> CISMeF</li>
         <li><b>cismef-edn:</b> CISMeF EDN</li>
         <li><b>cismef-bp:</b> CISMeF Bonnes Pratiques</li>
@@ -684,8 +681,8 @@
       
       <h4>🤖 IA / Avancé</h4>
       <ul>
-        <li><b>wolfram:</b> Wolfram Alpha</li>
-        <li><b>gpt:</b> ChatGPT</li>
+        <li><b>wolf:</b> Wolfram Alpha</li>
+        <li><b>chatgpt:</b> ChatGPT</li>
         <li><b>claude:</b> Claude AI</li>
         <li><b>gemini:</b> Gemini</li>
         <li><b>gai:</b> Google AI Mode – utilise le mode expérimental udm=50 qui déclenche très souvent la réponse IA/Gemini</li>
@@ -699,6 +696,10 @@
       <h3>📁 Types de fichiers indexables</h3>
       <p>Cliquez sur un type de fichier pour l'ajouter à votre recherche.</p>
       <ul id="filetypeList"></ul>
+    </div>
+    <div class="bottom-buttons" style="text-align: center; margin-top: 24px;">
+        <button type="button" id="wikiToggleBtn">📖 Wiki</button>
+        <button type="button" id="darkModeToggleBtn">🌙</button>
     </div>
   </div>
 
@@ -756,17 +757,17 @@
     'yt:': { name: 'YouTube', url: 'https://www.youtube.com/results?search_query=', domain: 'youtube.com' },
     'brave:': { name: 'Brave Search', url: 'https://search.brave.com/search?q=', domain: 'brave.com' },
     'ddg:': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=', domain: 'duckduckgo.com' },
-    'yadx:': { name: 'Yandex', url: 'https://yandex.com/search/?text=', domain: 'yandex.com' },
+    'yan:': { name: 'Yandex', url: 'https://yandex.com/search/?text=', domain: 'yandex.com' },
     'bing:': { name: 'Bing', url: 'https://www.bing.com/search?q=', domain: 'bing.com' },
-            'g+:': { name: 'Google Avancé', url: 'https://www.google.com/advanced_search?q=', domain: 'google.com' },
+            'gplus:': { name: 'Google Avancé', url: 'https://www.google.com/advanced_search?q=', domain: 'google.com' },
             'gai:': { name: 'Google AI Mode', url: 'https://www.google.com/search?udm=50&q=', domain: 'google.com' },    'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/resultats?filtres=%255BStatut%25253D%252522soutenue%252522~Statut%25253D%252522Accessibles%252520en%252520ligne%252522%255D&q=', domain: 'theses.fr' },
     'these2.0:': { name: 'These2.0', url: 'https://thesefmpm.vercel.app/search?page=1&search=', domain: 'thesefmpm.vercel.app' },
     'these-ma:': { name: 'Toubkal', url: 'https://toubkal.imist.ma/search?query=', domain: 'toubkal.imist.ma' },
     'cismef-th:': { name: 'CISMeF Thèses', url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q=', domain: 'doccismef.chu-rouen.fr' },
-    'gs:': { name: 'Google Scholar', url: 'https://scholar.google.com/scholar?q=', domain: 'google.com' },
-    'rgt:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=', domain: 'researchgate.net' },
+    'scholar:': { name: 'Google Scholar', url: 'https://scholar.google.com/scholar?q=', domain: 'google.com' },
+    'rgate:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=', domain: 'researchgate.net' },
     'ndltd:': { name: 'NDLTD', url: 'http://search.ndltd.org/search.php?q=', domain: 'ndltd.org' },
-    'pbmd:': { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=', domain: 'ncbi.nlm.nih.gov' },
+    'pubmed:': { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=', domain: 'ncbi.nlm.nih.gov' },
     'cismef:': { name: 'CISMeF', url: 'https://doccismef.chu-rouen.fr/dc/#q=', domain: 'doccismef.chu-rouen.fr' },
     'cismef-edn:': { name: 'CISMeF EDN', url: 'https://doccismef.chu-rouen.fr/dc/#env=ecn&q=', domain: 'doccismef.chu-rouen.fr' },
     'cismef-bp:': { name: 'CISMeF Bonnes Pratiques', url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q=', domain: 'doccismef.chu-rouen.fr' },
@@ -775,8 +776,8 @@
     'hetop:': { name: 'HETOP', url: 'https://www.hetop.eu/hetop/fr/#q=', domain: 'hetop.eu' },
     'has:': { name: 'HAS', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=', domain: 'has-sante.fr' },
     'openmd:': { name: 'OpenMD', url: 'https://openmd.com/search?q=', domain: 'openmd.com' },
-    'wolfram:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=', domain: 'wolframalpha.com' },
-    'gpt:': { name: 'ChatGPT', url: 'https://chatgpt.com/?prompt=', domain: 'chatgpt.com' },
+    'wolf:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=', domain: 'wolframalpha.com' },
+    'chatgpt:': { name: 'ChatGPT', url: 'https://chatgpt.com/?prompt=', domain: 'chatgpt.com' },
     'claude:': { name: 'Claude AI', url: 'https://claude.ai/new?q=', domain: 'claude.ai' },
     'gemini:': { name: 'Gemini', url: 'https://gemini.google.com/app?q=', domain: 'google.com' },
     'perplexity:': { name: 'Perplexity', url: 'https://www.perplexity.ai/search?q=', domain: 'perplexity.ai' },
@@ -822,33 +823,60 @@
   function updateSearchSource() {
     let source = "Entrez une requête pour afficher la source";
     let color = "#555";
-    let prefix = "";
     let value = searchInput.value.trim();
+    const searchPrefixFavicon = document.getElementById('search-prefix-favicon');
 
-    for (const [key, obj] of Object.entries(searchEngines)) {
-      if (value.startsWith(key)) {
-        source = "🎯 Source : " + obj.name;
-        color = "#28a745";
-        prefix = key;
-        
-        document.querySelectorAll('input[name="searchEngine"]').forEach(radio => {
-          radio.parentElement.classList.remove('selected');
-          if (radio.value === key) {
-            radio.checked = true;
-            radio.parentElement.classList.add('selected');
-          }
-        });
-        break;
-      }
+    let effectivePrefix = "";
+    let effectiveEngine = null;
+
+    // 1. Check for prefix in input
+    for (const key of Object.keys(searchEngines)) {
+        if (value.startsWith(key)) {
+            effectivePrefix = key;
+            break;
+        }
     }
 
-    if (!prefix) {
-      const selected = document.querySelector('input[name="searchEngine"]:checked');
-      if (selected && searchEngines[selected.value]) {
-        source = "🎯 Source : " + searchEngines[selected.value].name;
+    // 2. If no prefix, use selected radio
+    if (!effectivePrefix) {
+        const selectedRadio = document.querySelector('input[name="searchEngine"]:checked');
+        if (selectedRadio) {
+            effectivePrefix = selectedRadio.value;
+        }
+    }
+    
+    if(effectivePrefix) {
+        effectiveEngine = searchEngines[effectivePrefix];
+    }
+
+    // Update UI
+    if (effectiveEngine) {
+        source = "🎯 Source : " + effectiveEngine.name;
         color = "#28a745";
-        selected.parentElement.classList.add('selected');
-      }
+
+        // Update favicon
+        if (effectiveEngine.domain) {
+            const faviconUrl = `https://www.google.com/s2/favicons?sz=32&domain=${effectiveEngine.domain}`;
+            searchPrefixFavicon.src = faviconUrl;
+            searchPrefixFavicon.alt = effectiveEngine.name;
+            searchPrefixFavicon.style.display = 'inline-block';
+        } else {
+            searchPrefixFavicon.style.display = 'none';
+            searchPrefixFavicon.src = '';
+        }
+
+        // Sync radio buttons
+        document.querySelectorAll('input[name="searchEngine"]').forEach(radio => {
+            const isEffective = radio.value === effectivePrefix;
+            radio.checked = isEffective;
+            radio.parentElement.classList.toggle('selected', isEffective);
+        });
+    } else {
+        // No engine could be determined (should not happen with default checked radio)
+        source = "Entrez une requête pour afficher la source";
+        color = "#555";
+        searchPrefixFavicon.style.display = 'none';
+        searchPrefixFavicon.src = '';
     }
 
     searchSource.textContent = source;
