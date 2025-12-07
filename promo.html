@@ -626,6 +626,7 @@
           <label><input type="radio" name="searchEngine" value="rp:">Radiopaedia</label>
           <label><input type="radio" name="searchEngine" value="utd:">UpToDate</label>
           <label><input type="radio" name="searchEngine" value="coch:">Cochrane Library</label>
+          <label><input type="radio" name="searchEngine" value="medscape:">Medscape</label>
           <label><input type="radio" name="searchEngine" value="openmd:">OpenMD</label>
         </div>
       </div>
@@ -688,6 +689,7 @@
         <li><b>rp:</b> Radiopaedia</li>
         <li><b>utd:</b> UpToDate</li>
         <li><b>coch:</b> Cochrane Library</li>
+        <li><b>medscape:</b> Medscape</li>
         <li><b>openmd:</b> OpenMD</li>
       </ul>
       
@@ -793,7 +795,8 @@
     'nejm:': { name: 'New England Journal of Medicine', url: 'https://www.nejm.org/search?q=', domain: 'nejm.org' },
     'rp:': { name: 'Radiopaedia', url: 'https://radiopaedia.org/search?q=', domain: 'radiopaedia.org' },
     'utd:': { name: 'UpToDate', url: 'https://www.uptodate.com/contents/search?search=', domain: 'uptodate.com' },
-    'coch:': { name: 'Cochrane Library', url: 'https://www.cochranelibrary.com/search', domain: 'cochranelibrary.com' },
+    'coch:': { name: 'Cochrane Library', url: 'https://www.cochranelibrary.com/search?q=', domain: 'cochranelibrary.com' },
+    'medscape:': { name: 'Medscape', url: 'https://search.medscape.com/search/fr/', domain: 'medscape.com' },
     'openmd:': { name: 'OpenMD', url: 'https://openmd.com/search?q=', domain: 'openmd.com' },
     'wolf:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=', domain: 'wolframalpha.com' },
     'chatgpt:': { name: 'ChatGPT', url: 'https://chatgpt.com/?prompt=', domain: 'chatgpt.com' },
@@ -990,6 +993,8 @@
         finalUrl = baseUrl + encodeURIComponent(query) + '&submit=OK';
       } else if (prefix === 'gpat:') {
         finalUrl = baseUrl + '?q=(' + encodeURIComponent(query) + ')&oq=' + encodeURIComponent(query);
+      } else if (prefix === 'medscape:') {
+        finalUrl = baseUrl + '?q="' + encodeURIComponent(query) + '"';
       } else {
         finalUrl = baseUrl + encodeURIComponent(query);
       }
