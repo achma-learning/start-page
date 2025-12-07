@@ -600,6 +600,8 @@
         <div class="category-title">🎓 Académique / Thèses</div>
         <div class="radio-group" id="group2">
           <label><input type="radio" name="searchEngine" value="scholar:">Google Scholar</label>
+          <label><input type="radio" name="searchEngine" value="arxiv:">arXiv</label>
+          <label><input type="radio" name="searchEngine" value="gpat:">Google Patents</label>
           <label><input type="radio" name="searchEngine" value="these2.0:">These2.0</label>
           <label><input type="radio" name="searchEngine" value="cismef-th:">CISMeF Thèses</label>
           <label><input type="radio" name="searchEngine" value="these-ma:">Toubkal</label>
@@ -620,6 +622,10 @@
           <label><input type="radio" name="searchEngine" value="lissa:">LISSA</label>
           <label><input type="radio" name="searchEngine" value="hetop:">HETOP</label>
           <label><input type="radio" name="searchEngine" value="has:">HAS</label>
+          <label><input type="radio" name="searchEngine" value="nejm:">New England Journal of Medicine</label>
+          <label><input type="radio" name="searchEngine" value="rp:">Radiopaedia</label>
+          <label><input type="radio" name="searchEngine" value="utd:">UpToDate</label>
+          <label><input type="radio" name="searchEngine" value="coch:">Cochrane Library</label>
           <label><input type="radio" name="searchEngine" value="openmd:">OpenMD</label>
         </div>
       </div>
@@ -658,6 +664,8 @@
       <h4>🎓 Académique / Thèses</h4>
       <ul>
         <li><b>scholar:</b> Google Scholar</li>
+        <li><b>arxiv:</b> arXiv</li>
+        <li><b>gpat:</b> Google Patents</li>
         <li><b>these2.0:</b> These2.0</li>
         <li><b>cismef-th:</b> CISMeF Thèses</li>
         <li><b>these-ma:</b> Toubkal</li>
@@ -676,6 +684,10 @@
         <li><b>lissa:</b> LISSA</li>
         <li><b>hetop:</b> HETOP</li>
         <li><b>has:</b> HAS</li>
+        <li><b>nejm:</b> New England Journal of Medicine</li>
+        <li><b>rp:</b> Radiopaedia</li>
+        <li><b>utd:</b> UpToDate</li>
+        <li><b>coch:</b> Cochrane Library</li>
         <li><b>openmd:</b> OpenMD</li>
       </ul>
       
@@ -766,6 +778,8 @@
     'these-ma:': { name: 'Toubkal', url: 'https://toubkal.imist.ma/search?query=', domain: 'toubkal.imist.ma' },
     'cismef-th:': { name: 'CISMeF Thèses', url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q=', domain: 'doccismef.chu-rouen.fr' },
     'scholar:': { name: 'Google Scholar', url: 'https://scholar.google.com/scholar?q=', domain: 'google.com' },
+    'arxiv:': { name: 'arXiv', url: 'https://arxiv.org/search/?query=', domain: 'arxiv.org' },
+    'gpat:': { name: 'Google Patents', url: 'https://patents.google.com/', domain: 'patents.google.com' },
     'rgate:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=', domain: 'researchgate.net' },
     'ndltd:': { name: 'NDLTD', url: 'http://search.ndltd.org/search.php?q=', domain: 'ndltd.org' },
     'pubmed:': { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=', domain: 'ncbi.nlm.nih.gov' },
@@ -776,6 +790,10 @@
     'lissa:': { name: 'LISSA', url: 'https://www.lissa.fr/dc/#env=lissa&q=', domain: 'lissa.fr' },
     'hetop:': { name: 'HETOP', url: 'https://www.hetop.eu/hetop/fr/#q=', domain: 'hetop.eu' },
     'has:': { name: 'HAS', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=', domain: 'has-sante.fr' },
+    'nejm:': { name: 'New England Journal of Medicine', url: 'https://www.nejm.org/search?q=', domain: 'nejm.org' },
+    'rp:': { name: 'Radiopaedia', url: 'https://radiopaedia.org/search?q=', domain: 'radiopaedia.org' },
+    'utd:': { name: 'UpToDate', url: 'https://www.uptodate.com/contents/search?search=', domain: 'uptodate.com' },
+    'coch:': { name: 'Cochrane Library', url: 'https://www.cochranelibrary.com/search', domain: 'cochranelibrary.com' },
     'openmd:': { name: 'OpenMD', url: 'https://openmd.com/search?q=', domain: 'openmd.com' },
     'wolf:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=', domain: 'wolframalpha.com' },
     'chatgpt:': { name: 'ChatGPT', url: 'https://chatgpt.com/?prompt=', domain: 'chatgpt.com' },
@@ -970,6 +988,8 @@
       // Exception spéciale pour Toubkal
       if (prefix === 'these-ma:') {
         finalUrl = baseUrl + encodeURIComponent(query) + '&submit=OK';
+      } else if (prefix === 'gpat:') {
+        finalUrl = baseUrl + '?q=(' + encodeURIComponent(query) + ')&oq=' + encodeURIComponent(query);
       } else {
         finalUrl = baseUrl + encodeURIComponent(query);
       }
