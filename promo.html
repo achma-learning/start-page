@@ -700,6 +700,7 @@
     <div class="bottom-buttons" style="text-align: center; margin-top: 24px;">
         <button type="button" id="wikiToggleBtn">📖 Wiki</button>
         <button type="button" id="darkModeToggleBtn">🌙</button>
+        <button type="button" id="bangsBtn">!bangs</button>
     </div>
   </div>
 
@@ -798,6 +799,7 @@
   const siteCheckbox = document.getElementById('siteCheckbox');
   const popupOverlay = document.getElementById('popupOverlay');
   const closeFiletypes = document.getElementById('closeFiletypes');
+  const bangsBtn = document.getElementById('bangsBtn');
 
   // AI-Assisted Comment: This function dynamically adds favicon images next to each search engine radio button.
   // It fetches favicons from a public Google service using the domain specified in the searchEngines object.
@@ -918,6 +920,12 @@
     let value = searchInput.value.trim();
     
     if (!value) return;
+
+    if (value.startsWith('!')) {
+        const bangUrl = 'https://duckduckgo.com/?q=' + encodeURIComponent(value);
+        window.open(bangUrl, '_blank');
+        return;
+    }
     
     let prefix = '';
     let query = '';
@@ -981,6 +989,12 @@
       wikiContent.style.display = 'block';
       wikiContent.focus();
     }
+  });
+
+  bangsBtn.addEventListener('click', () => {
+    const query = searchInput.value.trim();
+    const url = 'https://duckduckgo.com/bangs?q=' + encodeURIComponent(query);
+    window.open(url, 'bangsWindow', 'width=800,height=600,scrollbars=yes,resizable=yes');
   });
 
   // AI-Assisted Comment: This function dynamically builds the list of filetypes in the filetype popup.
