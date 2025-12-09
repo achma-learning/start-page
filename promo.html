@@ -330,6 +330,68 @@
             transform: translateX(4px);
             border-left: 3px solid #667eea;
         }
+
+        #filetype-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 1rem;
+        }
+
+        .filetype-category h4 {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .dark-mode .filetype-category h4 {
+            color: #64b5f6;
+            border-bottom-color: #455a64;
+        }
+
+        .filetype-item label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .filetype-item label:hover {
+            background-color: #f0f2f5;
+        }
+        .dark-mode .filetype-item label:hover {
+            background-color: #2c3e50;
+        }
+
+        .popup-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .dark-mode .popup-buttons {
+            border-top-color: #455a64;
+        }
+
+        #applyFiletypes {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        #clearFiletypes {
+            background-color: #f1f3f4;
+            border: 1px solid #dadce0;
+        }
+        .dark-mode #clearFiletypes {
+            background-color: #303134;
+            color: #e8eaed;
+            border-color: #5f6368;
+        }
         
         .favicon-icon {
             width: 16px;
@@ -980,9 +1042,13 @@
     
     <div id="filetypesPopup">
       <button class="close-btn" id="closeFiletypes">&times;</button>
-      <h3>📁 Types de fichiers indexables</h3>
-      <p>Cliquez sur un type de fichier pour l'ajouter à votre recherche.</p>
-      <ul id="filetypeList"></ul>
+      <h3>📁 Select Filetypes</h3>
+      <p>Select one or more filetypes. Multiple selections will be joined by OR.</p>
+      <div class="popup-buttons">
+        <button type="button" id="clearFiletypes">Clear</button>
+        <button type="button" id="applyFiletypes">Apply</button>
+      </div>
+      <div id="filetype-grid"></div>
     </div>
     <div id="googleWikiPopup" style="display: none;">
       <button class="close-btn" id="closeGoogleWikiBtn">&times;</button>
@@ -1046,49 +1112,13 @@
   </div>
 
 <script>
-  // AI-Assisted Comment: This object categorizes common file extensions for the 'filetype' search functionality.
-  // It is used to build the filetype selection popup, allowing users to easily append a 'filetype:' operator to their search query.
   const filetypesWiki = {
-    "📄 Documents": [
-      {name: "Adobe PDF", ext: "pdf"},
-      {name: "Microsoft Word", ext: "doc"},
-      {name: "Microsoft Word (nouveau)", ext: "docx"},
-      {name: "Rich Text Format", ext: "rtf"},
-      {name: "PowerPoint", ext: "ppt"},
-      {name: "PowerPoint (nouveau)", ext: "pptx"},
-      {name: "Excel", ext: "xls"},
-      {name: "Excel (nouveau)", ext: "xlsx"},
-      {name: "CSV", ext: "csv"},
-      {name: "Text", ext: "txt"},
-      {name: "OpenOffice Text", ext: "odt"},
-      {name: "TeX/LaTeX", ext: "tex"},
-      {name: "EPUB", ext: "epub"}
-    ],
-    "🖼️ Images": [
-      {name: "JPEG", ext: "jpg"},
-      {name: "PNG", ext: "png"},
-      {name: "GIF", ext: "gif"},
-      {name: "WebP", ext: "webp"},
-      {name: "SVG", ext: "svg"},
-      {name: "BMP", ext: "bmp"}
-    ],
-    "🎬 Vidéos": [
-      {name: "MP4", ext: "mp4"},
-      {name: "AVI", ext: "avi"},
-      {name: "MOV", ext: "mov"},
-      {name: "WebM", ext: "webm"},
-      {name: "MKV", ext: "mkv"},
-      {name: "WMV", ext: "wmv"}
-    ],
-    "💻 Code & Web": [
-      {name: "HTML", ext: "html"},
-      {name: "XML", ext: "xml"},
-      {name: "Python", ext: "py"},
-      {name: "JavaScript", ext: "js"},
-      {name: "Java", ext: "java"},
-      {name: "C++", ext: "cpp"},
-      {name: "C", ext: "c"}
-    ]
+      "📄 Documents & Text": ["pdf", "doc", "docx", "rtf", "txt", "text", "odt", "tex", "epub", "csv", "ps", "wml", "wap", "xml"],
+      "📊 Spreadsheets & Presentations": ["xls", "xlsx", "ppt", "pptx", "ods", "odp"],
+      "💻 Code & Web": ["html", "htm", "py", "js", "java", "cpp", "c", "h", "cs", "pl"],
+      "🖼️ Images": ["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp", "avif"],
+      "🎬 Video & Media": ["mp4", "avi", "mov", "webm", "mkv", "wmv", "mp3", "3gp", "3g2", "asf", "divx", "m2v", "m3u", "m3u8", "m4v", "ogv", "qvt", "ram", "rm", "vob"],
+      "🗺️ Niche & Specialized": ["kml", "kmz", "gpx", "hwp", "dwf"]
   };
 
   // AI-Assisted Comment: This object maps search prefixes (e.g., 'g:') to their corresponding search engine details.
@@ -1149,7 +1179,6 @@
   const keepWikiOpenCheckbox = document.getElementById('keepWikiOpenCheckbox');
   const filetypesBtn = document.getElementById('filetypesBtn');
   const filetypesPopup = document.getElementById('filetypesPopup');
-  const filetypeList = document.getElementById('filetypeList');
   const siteCheckbox = document.getElementById('siteCheckbox');
   const popupOverlay = document.getElementById('popupOverlay');
   const closeFiletypes = document.getElementById('closeFiletypes');
@@ -1216,13 +1245,14 @@
     // 3. Handle Aliases
     let sourceName = effectiveEngine ? effectiveEngine.name : null;
     if (effectiveEngine && effectiveEngine.isAlias) {
+        const originalFilterValue = effectiveEngine.filterValue; // Save value from alias object
         sourceName = effectiveEngine.name; // Use alias name for display
         const aliasTargetPrefix = effectiveEngine.aliasFor;
         effectivePrefix = aliasTargetPrefix; // The real engine is the target
         effectiveEngine = searchEngines[aliasTargetPrefix];
 
-        if (effectiveEngine.filterValue) {
-            const filterRadio = document.querySelector(`input[name="cismef_scope"][value="${effectiveEngine.filterValue}"]`);
+        if (originalFilterValue) {
+            const filterRadio = document.querySelector(`input[name="cismef_scope"][value="${originalFilterValue}"]`);
             if (filterRadio) {
                 filterRadio.checked = true;
             }
@@ -1411,7 +1441,7 @@
       } else if (prefix === 'medscape:') {
         finalUrl = baseUrl + '?q="' + encodeURIComponent(query) + '"';
       } else if (prefix === 'vidal:') {
-        const encodedQuery = query.split(' ').join('+'); // Replace spaces with +
+        const encodedQuery = encodeURIComponent(query).replace(/%20/g, '+');
         finalUrl = baseUrl + encodedQuery;
       } else {
         finalUrl = baseUrl + encodeURIComponent(query);
@@ -1440,34 +1470,91 @@
     window.open(url, 'bangsWindow', 'width=800,height=600,scrollbars=yes,resizable=yes');
   });
 
-  // AI-Assisted Comment: This function dynamically builds the list of filetypes in the filetype popup.
-  // It iterates over the 'filetypesWiki' object and creates list items for each category and filetype.
-  function renderFiletypesList() {
-    filetypeList.innerHTML = '';
-    for (const [category, types] of Object.entries(filetypesWiki)) {
-      const catLi = document.createElement('li');
-      catLi.classList.add('category');
-      catLi.textContent = category;
-      filetypeList.appendChild(catLi);
+  function renderFiletypesCheckboxes() {
+    const grid = document.getElementById('filetype-grid');
+    grid.innerHTML = '';
+    const currentFiletypes = getCurrentlySelectedFiletypes();
 
-      types.forEach(ft => {
-        const itemLi = document.createElement('li');
-        itemLi.classList.add('item');
-        itemLi.textContent = `${ft.name} (.${ft.ext})`;
-        itemLi.addEventListener('click', () => {
-          insertOrReplaceFiletype(ft.ext);
-          closeFiletypesPopup();
-          searchInput.focus();
+    for (const [category, exts] of Object.entries(filetypesWiki)) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'filetype-category';
+        
+        const title = document.createElement('h4');
+        title.textContent = category;
+        categoryDiv.appendChild(title);
+
+        const itemsContainer = document.createElement('div');
+        itemsContainer.className = 'filetype-items-container';
+
+        exts.forEach(ext => {
+            const id = `ft-checkbox-${ext}`;
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'filetype-item';
+            
+            const label = document.createElement('label');
+            label.setAttribute('for', id);
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = id;
+            checkbox.value = ext;
+            checkbox.className = 'filetype-checkbox';
+            if (currentFiletypes.includes(ext)) {
+                checkbox.checked = true;
+            }
+            
+            label.appendChild(checkbox);
+            label.append(` .${ext}`);
+            
+            itemDiv.appendChild(label);
+            itemsContainer.appendChild(itemDiv);
         });
-        filetypeList.appendChild(itemLi);
-      });
+        categoryDiv.appendChild(itemsContainer);
+        grid.appendChild(categoryDiv);
     }
   }
 
+  function getCurrentlySelectedFiletypes() {
+    let val = searchInput.value.trim();
+    const filetypeRegex = /(?:filetype:([^\s()]+))/g;
+    let matches;
+    const extensions = [];
+    while ((matches = filetypeRegex.exec(val)) !== null) {
+      extensions.push(matches[1]);
+    }
+    return extensions;
+  }
+
+  function applyFiletypeFilter() {
+    const checkedBoxes = document.querySelectorAll('.filetype-checkbox:checked');
+    const extensions = Array.from(checkedBoxes).map(cb => cb.value);
+    let val = searchInput.value.trim();
+
+    const filetypeRegex = /\s*\((filetype:[^\)]+\))\s*|\s*filetype:[^\s]+/g;
+    val = val.replace(filetypeRegex, '').trim();
+
+    if (extensions.length > 0) {
+        const filetypeQuery = extensions.map(ext => `filetype:${ext}`).join(' OR ');
+        if (val.length > 0) val += ' ';
+        val += extensions.length > 1 ? `(${filetypeQuery})` : filetypeQuery;
+    }
+
+    searchInput.value = val;
+    updateSearchSource();
+    closeFiletypesPopup();
+    searchInput.focus();
+  }
+  
+  function clearFiletypeSelection() {
+    document.querySelectorAll('.filetype-checkbox').forEach(cb => cb.checked = false);
+  }
+
   function openFiletypesPopup() {
-    renderFiletypesList();
+    renderFiletypesCheckboxes();
     filetypesPopup.classList.add('show');
     popupOverlay.classList.add('show');
+    document.getElementById('applyFiletypes').onclick = applyFiletypeFilter;
+    document.getElementById('clearFiletypes').onclick = clearFiletypeSelection;
   }
 
   function closeFiletypesPopup() {
@@ -1502,23 +1589,6 @@
       closeGoogleWikiPopup();
     }
   });
-
-  // AI-Assisted Comment: This function inserts or replaces a 'filetype:' operator in the search input.
-  // If a filetype is already present, it's replaced with the new one; otherwise, the new one is appended.
-  function insertOrReplaceFiletype(ext) {
-    let val = searchInput.value.trim();
-    const filetypeRegex = /filetype:([^\s]+)/i;
-    
-    if (filetypeRegex.test(val)) {
-      val = val.replace(filetypeRegex, `filetype:${ext}`);
-    } else {
-      if (val.length > 0) val += ' ';
-      val += `filetype:${ext}`;
-    }
-    
-    searchInput.value = val;
-    updateSearchSource();
-  }
 
   document.addEventListener('click', (e) => {
     if (!wikiContent.contains(e.target) && e.target !== wikiToggleBtn) {
@@ -1619,6 +1689,11 @@
                     top = rect.bottom + 5;
                   }
 
+                  // ADDED: Prevent tooltip from going off the bottom of the screen
+                  if (top + tooltipRect.height > window.innerHeight) {
+                    top = rect.top - tooltipRect.height - 5;
+                  }
+
                   let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
                   if (left < 0) left = 5; // Adjust for left edge
                   if (left + tooltipRect.width > window.innerWidth) {
@@ -1629,7 +1704,7 @@
                   operatorTooltip.style.left = `${left}px`;
                   
                   setTimeout(() => { operatorTooltip.style.opacity = 1; }, 10);
-              }, 100); // 0.1 second delay
+              }, 300); // 0.3 second delay
           }
       }
   });
