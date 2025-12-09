@@ -573,6 +573,52 @@
             border-color: #64b5f6;
             box-shadow: 0 4px 24px rgba(100, 181, 246, 0.25);
         }
+
+        #googleOperatorFilters {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+            border: 2px solid #4285F4; /* Google Blue */
+            box-shadow: 0 4px 24px rgba(66, 133, 244, 0.25);
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .dark-mode #googleOperatorFilters {
+            border-color: #64b5f6;
+            box-shadow: 0 4px 24px rgba(100, 181, 246, 0.25);
+        }
+
+        .operators-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .operator-btn {
+            background-color: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .operator-btn:hover {
+            background-color: #e8eaed;
+        }
+
+        .dark-mode .operator-btn {
+            background-color: #303134;
+            border-color: #5f6368;
+            color: #e8eaed;
+        }
+
+        .dark-mode .operator-btn:hover {
+            background-color: #3c4043;
+        }
     </style>
 </head>
 <body>
@@ -636,6 +682,46 @@
               <label><input type="radio" name="yt_date" value="EgIIBA%253D%253D"> Ce mois-ci</label>
               <label><input type="radio" name="yt_date" value="EgIIBQ%253D%253D"> Cette année</label>
           </div>
+      </div>
+    </div>
+
+    <div id="googleOperatorFilters" style="display: none;">
+      <div class="category-section">
+        <div class="category-title">Basic Operators</div>
+        <div class="operators-group">
+          <button class="operator-btn" data-operator='" "'>"phrase"</button>
+          <button class="operator-btn" data-operator="OR">OR</button>
+          <button class="operator-btn" data-operator="-">-term</button>
+          <button class="operator-btn" data-operator="*">*</button>
+          <button class="operator-btn" data-operator="( )">(group)</button>
+          <button class="operator-btn" data-operator="in">in</button>
+        </div>
+      </div>
+      <div class="category-section">
+        <div class="category-title">Advanced Operators</div>
+        <div class="operators-group">
+          <button class="operator-btn" data-operator="site:">site:</button>
+          <button class="operator-btn" data-operator="intitle:">intitle:</button>
+          <button class="operator-btn" data-operator="allintitle:">allintitle:</button>
+          <button class="operator-btn" data-operator="inurl:">inurl:</button>
+          <button class="operator-btn" data-operator="allinurl:">allinurl:</button>
+          <button class="operator-btn" data-operator="intext:">intext:</button>
+          <button class="operator-btn" data-operator="allintext:">allintext:</button>
+          <button class="operator-btn" data-operator="filetype:">filetype:</button>
+          <button class="operator-btn" data-operator="related:">related:</button>
+        </div>
+      </div>
+      <div class="category-section">
+        <div class="category-title">Specialized Operators</div>
+        <div class="operators-group">
+          <button class="operator-btn" data-operator="define:">define:</button>
+          <button class="operator-btn" data-operator="source:">source:</button>
+          <button class="operator-btn" data-operator="stocks:">stocks:</button>
+          <button class="operator-btn" data-operator="weather:">weather:</button>
+          <button class="operator-btn" data-operator="before:">before:</button>
+          <button class="operator-btn" data-operator="after:">after:</button>
+          <button class="operator-btn" data-operator="AROUND()">AROUND()</button>
+        </div>
       </div>
     </div>
 
@@ -890,6 +976,7 @@
   const closeFiletypes = document.getElementById('closeFiletypes');
   const bangsBtn = document.getElementById('bangsBtn');
   const youtubeFilters = document.getElementById('youtubeFilters');
+  const googleOperatorFilters = document.getElementById('googleOperatorFilters');
 
   // AI-Assisted Comment: This function dynamically adds favicon images next to each search engine radio button.
   // It fetches favicons from a public Google service using the domain specified in the searchEngines object.
@@ -978,10 +1065,12 @@
         youtubeFilters.style.display = 'none';
     }
 
-    // Toggle Filetypes button visibility
+    // Toggle Google Operator filters visibility
     if (effectivePrefix === 'g:') {
+        googleOperatorFilters.style.display = 'grid';
         filetypesBtn.style.display = 'inline-block';
     } else {
+        googleOperatorFilters.style.display = 'none';
         filetypesBtn.style.display = 'none';
     }
 
@@ -1226,6 +1315,20 @@
   if (localStorage.getItem('darkMode') === 'enabled') {
     document.body.classList.add('dark-mode');
   }
+
+  googleOperatorFilters.addEventListener('click', function(e) {
+    if (e.target.classList.contains('operator-btn')) {
+        const operator = e.target.dataset.operator;
+        const input = document.getElementById('searchInput');
+        const currentValue = input.value;
+
+        if (currentValue.trim() && !currentValue.endsWith(' ')) {
+            input.value += ' ';
+        }
+        input.value += operator;
+        input.focus();
+    }
+  });
 </script>
 </body>
 </html>
