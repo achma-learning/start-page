@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <title>Barre de Recherche Dynamique</title>
+    <title>Tools Search</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel="icon" type="image/svg+xml" href="https://upload.wikimedia.org/wikipedia/commons/a/a9/Vector_search_icon.svg" />
@@ -590,6 +590,22 @@
             box-shadow: 0 4px 24px rgba(100, 181, 246, 0.25);
         }
 
+        #cismefFilters {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+            border: 2px solid #005689; /* CISMeF color */
+            box-shadow: 0 4px 24px rgba(0, 86, 137, 0.25);
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .dark-mode #cismefFilters {
+            border-color: #64b5f6;
+            box-shadow: 0 4px 24px rgba(100, 181, 246, 0.25);
+        }
+
         .operators-group {
             display: flex;
             flex-wrap: wrap;
@@ -618,6 +634,101 @@
 
         .dark-mode .operator-btn:hover {
             background-color: #3c4043;
+        }
+
+        #googleWikiPopup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 700px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            padding: 24px;
+            font-size: 14px;
+            color: #333;
+            display: none;
+            z-index: 2000;
+        }
+        #googleWikiPopup.show { display: block; }
+        .dark-mode #googleWikiPopup {
+            background: #1a2332;
+            border-color: #2d3e52;
+            color: #b0bec5;
+        }
+        #googleWikiPopup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        #googleWikiPopup .close-btn:hover { color: #333; }
+        .dark-mode #googleWikiPopup .close-btn:hover { color: #fff; }
+
+        #googleWikiPopup h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .dark-mode #googleWikiPopup h3 {
+            color: #64b5f6;
+            border-bottom-color: #64b5f6;
+        }
+
+        .wiki-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        .wiki-table th, .wiki-table td {
+            border: 1px solid #ddd;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        .wiki-table th { background-color: #f2f2f2; }
+        .wiki-table code {
+            background: #f0f0ff;
+            padding: 2px 5px;
+            border-radius: 4px;
+            color: #667eea;
+            font-weight: 600;
+        }
+        .dark-mode .wiki-table, .dark-mode .wiki-table th, .dark-mode .wiki-table td { border-color: #455a64; }
+        .dark-mode .wiki-table th { background-color: #243447; }
+        .dark-mode .wiki-table code {
+            background: #243447;
+            color: #82aaff;
+        }
+        .dark-mode #googleWikiPopup a { color: #82aaff; }
+
+        .operator-tooltip {
+            position: fixed; /* Use fixed to position relative to viewport */
+            background-color: #333;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            z-index: 10000;
+            pointer-events: none;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            max-width: 250px;
+            text-align: center;
+        }
+        .dark-mode .operator-tooltip {
+            background-color: #e0e0e0;
+            color: #1a1a1a;
+            border: 1px solid #555;
         }
     </style>
 </head>
@@ -725,6 +836,20 @@
       </div>
     </div>
 
+    <div id="cismefFilters" style="display: none;">
+      <div class="category-section">
+        <div class="category-title">⚕️ CISMeF - Type de document</div>
+        <div class="radio-group">
+          <label><input type="radio" name="cismef_scope" value="env=basic&q=" checked> Tous les types</label>
+          <label><input type="radio" name="cismef_scope" value="env=bp&q="> Uniquement les recommandations professionnelles</label>
+          <label><input type="radio" name="cismef_scope" value="env=unf3s&q="> Documents d'enseignement</label>
+          <label><input type="radio" name="cismef_scope" value="env=pat&q="> Documents grand public et les associations de patients</label>
+          <label><input type="radio" name="cismef_scope" value="env=thm&q="> Thèses et mémoires</label>
+          <label><input type="radio" name="cismef_scope" value="env=ecn&q=a&p="> Épreuves Classantes Nationales (nouveau programme 2022)</label>
+        </div>
+      </div>
+    </div>
+
     <div class="category-row">
       <div class="category-section">
         <div class="category-title">🌐 Recherche Générale</div>
@@ -762,9 +887,7 @@
           <label><input type="radio" name="searchEngine" value="msps:">Ministère de la santé et de la Protection Sociale</label>
           <label><input type="radio" name="searchEngine" value="has:">HAS</label>
           <label><input type="radio" name="searchEngine" value="vidal:">VIDAL</label>
-          <label><input type="radio" name="searchEngine" value="cismef-edn:">CISMeF EDN</label>
-          <label><input type="radio" name="searchEngine" value="cismef-bp:">CISMeF Bonnes Pratiques</label>
-          <label><input type="radio" name="searchEngine" value="cismef-edu:">CISMeF Éducation</label>
+
           <label><input type="radio" name="searchEngine" value="lissa:">LISSA</label>
           <label><input type="radio" name="searchEngine" value="anm:">Académie nationale de médecine</label>
           <label><input type="radio" name="searchEngine" value="hetop:">HETOP</label>
@@ -824,13 +947,13 @@
       
       <h4>⚕️ Médical / Santé</h4>
       <ul>
-        <li><b>cismef:</b> CISMeF</li>
+        <li><b>cismef:</b> CISMeF (recherche globale)</li>
+        <li><b>cismef-bp:</b> CISMeF (Bonnes Pratiques)</li>
+        <li><b>cismef-edu:</b> CISMeF (Éducation)</li>
+        <li><b>cismef-pat:</b> CISMeF (Patients)</li>
         <li><b>msps:</b> Ministère de la santé et de la Protection Sociale</li>
         <li><b>has:</b> HAS</li>
         <li><b>vidal:</b> VIDAL</li>
-        <li><b>cismef-edn:</b> CISMeF EDN</li>
-        <li><b>cismef-bp:</b> CISMeF Bonnes Pratiques</li>
-        <li><b>cismef-edu:</b> CISMeF Éducation</li>
         <li><b>lissa:</b> LISSA</li>
         <li><b>anm:</b> Académie nationale de médecine</li>
         <li><b>hetop:</b> HETOP</li>
@@ -860,9 +983,63 @@
       <p>Cliquez sur un type de fichier pour l'ajouter à votre recherche.</p>
       <ul id="filetypeList"></ul>
     </div>
+    <div id="googleWikiPopup" style="display: none;">
+      <button class="close-btn" id="closeGoogleWikiBtn">&times;</button>
+      <h3><span class="favicon-icon" style="background-image: url('https://www.google.com/s2/favicons?sz=32&domain=google.com'); background-size: contain; display: inline-block; vertical-align: middle;"></span> Google Search Operators Wiki</h3>
+      <div class="checkbox-container" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #e0e0e0;">
+        <input type="checkbox" id="keepGoogleWikiOpenCheckbox" />
+        <label for="keepGoogleWikiOpenCheckbox">Keep wiki open</label>
+      </div>
+      <p>Search operators are special words and symbols to refine search results. Here are the most reliable ones:</p>
+      <div style="max-height: 50vh; overflow-y: auto;">
+        <h4>Basic Operators</h4>
+        <table class="wiki-table">
+          <thead><tr><th>Operator</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>"phrase"</code></td><td>Searches for an exact phrase match.</td></tr>
+            <tr><td><code>OR</code> or <code>|</code></td><td>Returns results containing either term.</td></tr>
+            <tr><td><code>-term</code></td><td>Excludes results containing the term.</td></tr>
+            <tr><td><code>*</code></td><td>Wildcard for any word or phrase.</td></tr>
+            <tr><td><code>( )</code></td><td>Groups terms to control search logic.</td></tr>
+            <tr><td><code>in</code></td><td>Converts units or currencies.</td></tr>
+          </tbody>
+        </table>
+        <h4>Advanced Operators</h4>
+        <table class="wiki-table">
+          <thead><tr><th>Operator</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>site:</code></td><td>Restricts results to a specific site.</td></tr>
+            <tr><td><code>intitle:</code></td><td>Term must appear in the page title.</td></tr>
+            <tr><td><code>allintitle:</code></td><td>All terms must appear in the page title.</td></tr>
+            <tr><td><code>inurl:</code></td><td>Term must be in the page's URL.</td></tr>
+            <tr><td><code>allinurl:</code></td><td>All terms must be in the URL.</td></tr>
+            <tr><td><code>intext:</code></td><td>Term must be in the page body text.</td></tr>
+            <tr><td><code>allintext:</code></td><td>All terms must be in the body text.</td></tr>
+            <tr><td><code>filetype:</code></td><td>Limits results to specific file types (e.g., pdf, docx).</td></tr>
+            <tr><td><code>related:</code></td><td>Finds sites similar to a given domain.</td></tr>
+          </tbody>
+        </table>
+        <h4>Specialized Operators</h4>
+        <table class="wiki-table">
+         <thead><tr><th>Operator</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>define:</code></td><td>Displays definitions.</td></tr>
+            <tr><td><code>source:</code></td><td>In Google News, filters by a specific outlet.</td></tr>
+            <tr><td><code>stocks:</code></td><td>Fetches stock info.</td></tr>
+            <tr><td><code>weather:</code></td><td>Shows weather for a location.</td></tr>
+            <tr><td><code>before:/after:</code></td><td>Filters results before/after a date (YYYY-MM-DD).</td></tr>
+            <tr><td><code>AROUND(n)</code></td><td>Finds terms within 'n' words of each other.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="wiki-footer" style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #e0e0e0;">
+        <p>Operators can be combined (e.g., <code>site:gov filetype:pdf "policy"</code>). For full details, see <a href="https://support.google.com/websearch/answer/2466433" target="_blank" rel="noopener noreferrer">Google's official documentation</a>.</p>
+      </div>
+    </div>
     <div class="bottom-buttons" style="text-align: center; margin-top: 24px;">
         <button type="button" id="wikiToggleBtn">📖 Wiki</button>
         <button type="button" id="darkModeToggleBtn">🌙</button>
+        <button type="button" id="googleWikiBtn" style="display: none;">📖 Google Wiki</button>
         <button type="button" id="bangsBtn">!bangs</button>
     </div>
   </div>
@@ -935,14 +1112,14 @@
     'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/resultats?filtres=%255BStatut%25253D%252522soutenue%252522~Statut%25253D%252522Accessibles%252520en%252520ligne%252522%255D&q=', domain: 'theses.fr' },
     'rgate:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=', domain: 'researchgate.net' },
     'ndltd:': { name: 'NDLTD', url: 'http://search.ndltd.org/search.php?q=', domain: 'ndltd.org' },
-    'cismef:': { name: 'CISMeF', url: 'https://doccismef.chu-rouen.fr/dc/#q=', domain: 'doccismef.chu-rouen.fr' },
+    'cismef:': { name: 'CISMeF', url: 'https://doccismef.chu-rouen.fr/dc/#', domain: 'doccismef.chu-rouen.fr' },
     // look for functional MSPS search url
     'msps:': { name: 'Ministère de la santé et de la Protection Sociale', url: 'https://www.google.com/search?q=site:sante.gov.ma ', domain: 'sante.gov.ma' },
     'has:': { name: 'HAS', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=', domain: 'has-sante.fr' },
     'vidal:': { name: 'VIDAL', url: 'https://www.vidal.fr/recherche.html?query=', domain: 'vidal.fr' },
-    'cismef-edn:': { name: 'CISMeF EDN', url: 'https://doccismef.chu-rouen.fr/dc/#env=ecn&q=', domain: 'doccismef.chu-rouen.fr' },
-    'cismef-bp:': { name: 'CISMeF Bonnes Pratiques', url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q=', domain: 'doccismef.chu-rouen.fr' },
-    'cismef-edu:': { name: 'CISMeF Éducation', url: 'https://doccismef.chu-rouen.fr/dc/#env=unf3s&q=', domain: 'doccismef.chu-rouen.fr' },
+    'cismef-bp:': { name: 'CISMeF Bonnes Pratiques', isAlias: true, aliasFor: 'cismef:', filterValue: 'env=bp&q=' },
+    'cismef-edu:': { name: 'CISMeF Éducation', isAlias: true, aliasFor: 'cismef:', filterValue: 'env=unf3s&q=' },
+    'cismef-pat:': { name: 'CISMeF Patients', isAlias: true, aliasFor: 'cismef:', filterValue: 'env=pat&q=' },
     'lissa:': { name: 'LISSA', url: 'https://www.lissa.fr/dc/#env=lissa&q=', domain: 'lissa.fr' },
     'anm:': { name: 'Académie nationale de médecine', url: 'http://91.209.229.113/search?titre=', domain: '91.209.229.113' },
     'hetop:': { name: 'HETOP', url: 'https://www.hetop.eu/hetop/fr/#q=', domain: 'hetop.eu' },
@@ -977,6 +1154,11 @@
   const bangsBtn = document.getElementById('bangsBtn');
   const youtubeFilters = document.getElementById('youtubeFilters');
   const googleOperatorFilters = document.getElementById('googleOperatorFilters');
+  const cismefFilters = document.getElementById('cismefFilters');
+  const googleWikiBtn = document.getElementById('googleWikiBtn');
+  const googleWikiPopup = document.getElementById('googleWikiPopup');
+  const closeGoogleWikiBtn = document.getElementById('closeGoogleWikiBtn');
+  const keepGoogleWikiOpenCheckbox = document.getElementById('keepGoogleWikiOpenCheckbox');
 
   // AI-Assisted Comment: This function dynamically adds favicon images next to each search engine radio button.
   // It fetches favicons from a public Google service using the domain specified in the searchEngines object.
@@ -1027,17 +1209,34 @@
     if(effectivePrefix) {
         effectiveEngine = searchEngines[effectivePrefix];
     }
+    
+    // 3. Handle Aliases
+    let sourceName = effectiveEngine ? effectiveEngine.name : null;
+    if (effectiveEngine && effectiveEngine.isAlias) {
+        sourceName = effectiveEngine.name; // Use alias name for display
+        const aliasTargetPrefix = effectiveEngine.aliasFor;
+        effectivePrefix = aliasTargetPrefix; // The real engine is the target
+        effectiveEngine = searchEngines[aliasTargetPrefix];
+
+        if (effectiveEngine.filterValue) {
+            const filterRadio = document.querySelector(`input[name="cismef_scope"][value="${effectiveEngine.filterValue}"]`);
+            if (filterRadio) {
+                filterRadio.checked = true;
+            }
+        }
+    }
+
 
     // Update UI
     if (effectiveEngine) {
-        source = "🎯 Source : " + effectiveEngine.name;
+        source = "🎯 Source : " + sourceName;
         color = "#28a745";
 
         // Update favicon
         if (effectiveEngine.domain) {
             const faviconUrl = `https://www.google.com/s2/favicons?sz=32&domain=${effectiveEngine.domain}`;
             searchPrefixFavicon.src = faviconUrl;
-            searchPrefixFavicon.alt = effectiveEngine.name;
+            searchPrefixFavicon.alt = sourceName;
             searchPrefixFavicon.style.display = 'inline-block';
         } else {
             searchPrefixFavicon.style.display = 'none';
@@ -1047,11 +1246,11 @@
         // Sync radio buttons
         document.querySelectorAll('input[name="searchEngine"]').forEach(radio => {
             const isEffective = radio.value === effectivePrefix;
-            radio.checked = isEffective;
+            if (radio.checked !== isEffective) radio.checked = isEffective;
             radio.parentElement.classList.toggle('selected', isEffective);
         });
     } else {
-        // No engine could be determined (should not happen with default checked radio)
+        // No engine could be determined
         source = "Entrez une requête pour afficher la source";
         color = "#555";
         searchPrefixFavicon.style.display = 'none';
@@ -1059,20 +1258,26 @@
     }
 
     // Toggle YouTube filters visibility
-    if (effectivePrefix === 'yt:') {
-        youtubeFilters.style.display = 'grid';
-    } else {
-        youtubeFilters.style.display = 'none';
-    }
+    youtubeFilters.style.display = (effectivePrefix === 'yt:') ? 'grid' : 'none';
 
     // Toggle Google Operator filters visibility
-    if (effectivePrefix === 'g:') {
-        googleOperatorFilters.style.display = 'grid';
-        filetypesBtn.style.display = 'inline-block';
+    const isGoogle = (effectivePrefix === 'g:');
+    googleOperatorFilters.style.display = isGoogle ? 'grid' : 'none';
+    filetypesBtn.style.display = isGoogle ? 'inline-block' : 'none';
+    googleWikiBtn.style.display = isGoogle ? 'inline-block' : 'none';
+
+    // Toggle CISMeF filters visibility and select correct filter from alias
+    if (effectivePrefix === 'cismef:') {
+      cismefFilters.style.display = 'grid';
+      const typedPrefixEngine = searchEngines[Object.keys(searchEngines).find(k => value.startsWith(k))];
+      if (typedPrefixEngine && typedPrefixEngine.isAlias && typedPrefixEngine.filterValue) {
+        const filterRadio = document.querySelector(`input[name="cismef_scope"][value="${typedPrefixEngine.filterValue}"]`);
+        if (filterRadio) filterRadio.checked = true;
+      }
     } else {
-        googleOperatorFilters.style.display = 'none';
-        filetypesBtn.style.display = 'none';
+      cismefFilters.style.display = 'none';
     }
+
 
     searchSource.textContent = source;
     searchSource.style.color = color;
@@ -1152,6 +1357,14 @@
         return;
       }
     }
+    
+    const engine = searchEngines[prefix];
+    if (engine && engine.isAlias) {
+        const filterRadio = document.querySelector(`input[name="cismef_scope"][value="${engine.filterValue}"]`);
+        if (filterRadio) filterRadio.checked = true;
+        prefix = engine.aliasFor;
+    }
+
 
     if (prefix && query) {
       if (prefix === 'yt:') {
@@ -1168,7 +1381,18 @@
         
         window.open(finalUrl, '_blank');
         return;
+      } else if (prefix === 'cismef:') {
+        let baseUrl = searchEngines['cismef:'].url;
+        const selectedRadio = document.querySelector('input[name="cismef_scope"]:checked');
+        let params = 'env=basic&q='; // Default
+        if (selectedRadio) {
+            params = selectedRadio.value;
+        }
+        let finalUrl = baseUrl + params + encodeURIComponent(query);
+        window.open(finalUrl, '_blank');
+        return;
       }
+
 
       let baseUrl = searchEngines[prefix].url;
       let finalUrl;
@@ -1245,13 +1469,33 @@
     popupOverlay.classList.remove('show');
   }
 
+  function openGoogleWikiPopup() {
+    googleWikiPopup.classList.add('show');
+    popupOverlay.classList.add('show');
+  }
+
+  function closeGoogleWikiPopup() {
+    googleWikiPopup.classList.remove('show');
+    if (!filetypesPopup.classList.contains('show')) {
+      popupOverlay.classList.remove('show');
+    }
+  }
+
+  googleWikiBtn.addEventListener('click', openGoogleWikiPopup);
+  closeGoogleWikiBtn.addEventListener('click', closeGoogleWikiPopup);
+
   filetypesBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     openFiletypesPopup();
   });
 
   closeFiletypes.addEventListener('click', closeFiletypesPopup);
-  popupOverlay.addEventListener('click', closeFiletypesPopup);
+  popupOverlay.addEventListener('click', () => {
+    closeFiletypesPopup();
+    if (!keepGoogleWikiOpenCheckbox.checked) {
+      closeGoogleWikiPopup();
+    }
+  });
 
   // AI-Assisted Comment: This function inserts or replaces a 'filetype:' operator in the search input.
   // If a filetype is already present, it's replaced with the new one; otherwise, the new one is appended.
@@ -1282,6 +1526,9 @@
     if (e.key === 'Escape') {
       if (filetypesPopup.classList.contains('show')) {
         closeFiletypesPopup();
+      }
+      if (googleWikiPopup.classList.contains('show') && !keepGoogleWikiOpenCheckbox.checked) {
+        closeGoogleWikiPopup();
       }
       if (wikiContent.style.display === 'block' && !keepWikiOpenCheckbox.checked) {
         wikiContent.style.display = 'none';
@@ -1316,17 +1563,117 @@
     document.body.classList.add('dark-mode');
   }
 
+  const operatorTooltip = document.createElement('div');
+  operatorTooltip.id = 'operatorTooltip';
+  operatorTooltip.className = 'operator-tooltip';
+  document.body.appendChild(operatorTooltip);
+
+  const operatorDescriptions = {
+      '" "': "Searches for an exact phrase match. Example: \"climate change\"",
+      'OR': "Returns results with either term. Example: python OR java",
+      '-': "Excludes results with this term. Example: apple -fruit",
+      '*': "Acts as a wildcard for any word. Example: \"best * for productivity\"",
+      '( )': "Groups terms for complex queries. Example: (solar OR wind) energy",
+      'in': "Converts units or currencies. Example: 100 km in miles",
+      'site:': "Restricts search to a specific site. Example: site:nytimes.com",
+      'intitle:': "Finds the term in the page title. Example: intitle:SEO",
+      'allintitle:': "Finds all terms in the page title. Example: allintitle:SEO trends",
+      'inurl:': "Finds the term in the page URL. Example: inurl:blog",
+      'allinurl:': "Finds all terms in the URL. Example: allinurl:blog seo",
+      'intext:': "Searches only in the body text. Example: intext:\"quantum computing\"",
+      'allintext:': "Finds all terms in the body text. Example: allintext:AI ethics",
+      'filetype:': "Restricts to a specific file type. Example: filetype:pdf",
+      'related:': "Finds sites similar to a given domain. Example: related:mozilla.org",
+      'define:': "Displays the definition of a word. Example: define:serendipity",
+      'source:': "In Google News, filters by outlet. Example: AI source:bbc",
+      'stocks:': "Fetches stock information. Example: stocks:GOOGL",
+      'weather:': "Shows weather for a location. Example: weather:Tokyo",
+      'before:': "Filters results before a date (YYYY-MM-DD). Example: iPhone before:2023-01-01",
+      'after:': "Filters results after a date (YYYY-MM-DD). Example: iPhone after:2023-09-01",
+      'AROUND()': "Finds terms within N words of each other. Example: \"electric cars\" AROUND(5) battery"
+  };
+
+  let tooltipTimeout;
+
+  googleOperatorFilters.addEventListener('mouseover', function(e) {
+      if (e.target.classList.contains('operator-btn')) {
+          const operator = e.target.dataset.operator;
+          const description = operatorDescriptions[operator];
+          
+          if (description) {
+              tooltipTimeout = setTimeout(() => {
+                  operatorTooltip.innerHTML = description;
+                  operatorTooltip.style.display = 'block';
+
+                  const rect = e.target.getBoundingClientRect();
+                  const tooltipRect = operatorTooltip.getBoundingClientRect();
+                  
+                  let top = rect.top - tooltipRect.height - 5;
+                  if (top < 0) { // If it goes off the top of the screen, place it below
+                    top = rect.bottom + 5;
+                  }
+
+                  let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+                  if (left < 0) left = 5; // Adjust for left edge
+                  if (left + tooltipRect.width > window.innerWidth) {
+                    left = window.innerWidth - tooltipRect.width - 5; // Adjust for right edge
+                  }
+                  
+                  operatorTooltip.style.top = `${top}px`;
+                  operatorTooltip.style.left = `${left}px`;
+                  
+                  setTimeout(() => { operatorTooltip.style.opacity = 1; }, 10);
+              }, 1000); // 1 second delay
+          }
+      }
+  });
+
+  googleOperatorFilters.addEventListener('mouseout', function(e) {
+      if (e.target.classList.contains('operator-btn')) {
+          clearTimeout(tooltipTimeout);
+          operatorTooltip.style.opacity = 0;
+          setTimeout(() => {
+              if (operatorTooltip.style.opacity === '0') {
+                   operatorTooltip.style.display = 'none';
+              }
+          }, 800); // Match transition duration
+      }
+  });
+
+
   googleOperatorFilters.addEventListener('click', function(e) {
     if (e.target.classList.contains('operator-btn')) {
         const operator = e.target.dataset.operator;
         const input = document.getElementById('searchInput');
-        const currentValue = input.value;
 
-        if (currentValue.trim() && !currentValue.endsWith(' ')) {
+        if (input.value.trim() && !input.value.endsWith(' ')) {
             input.value += ' ';
         }
-        input.value += operator;
+
+        let textToInsert = operator;
+        let cursorOffset = 0;
+
+        if (operator === '" "') {
+            textToInsert = '""';
+            cursorOffset = -1;
+        } else if (operator === '( )') {
+            textToInsert = '()';
+            cursorOffset = -1;
+        } else if (operator === 'AROUND()') {
+            textToInsert = 'AROUND()';
+            cursorOffset = -1;
+        }
+
+        const selectionStart = input.selectionStart;
+        const textBefore = input.value.substring(0, selectionStart);
+        const textAfter = input.value.substring(input.selectionEnd);
+        
+        input.value = textBefore + textToInsert + textAfter;
+        
+        const finalCursorPos = selectionStart + textToInsert.length + cursorOffset;
+        
         input.focus();
+        input.setSelectionRange(finalCursorPos, finalCursorPos);
     }
   });
 </script>
