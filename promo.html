@@ -600,6 +600,7 @@
         <div class="category-title">🎓 Académique / Thèses</div>
         <div class="radio-group" id="group2">
           <label><input type="radio" name="searchEngine" value="scholar:">Google Scholar</label>
+          <label><input type="radio" name="searchEngine" value="pubmed:">PubMed</label>
           <label><input type="radio" name="searchEngine" value="arxiv:">arXiv</label>
           <label><input type="radio" name="searchEngine" value="gpat:">Google Patents</label>
           <label><input type="radio" name="searchEngine" value="these2.0:">These2.0</label>
@@ -614,15 +615,15 @@
       <div class="category-section">
         <div class="category-title">⚕️ Médical / Santé</div>
         <div class="radio-group" id="group3">
-          <label><input type="radio" name="searchEngine" value="pubmed:">PubMed</label>
           <label><input type="radio" name="searchEngine" value="cismef:">CISMeF</label>
+          <label><input type="radio" name="searchEngine" value="has:">HAS</label>
+          <label><input type="radio" name="searchEngine" value="vidal:">VIDAL</label>
           <label><input type="radio" name="searchEngine" value="cismef-edn:">CISMeF EDN</label>
           <label><input type="radio" name="searchEngine" value="cismef-bp:">CISMeF Bonnes Pratiques</label>
           <label><input type="radio" name="searchEngine" value="cismef-edu:">CISMeF Éducation</label>
           <label><input type="radio" name="searchEngine" value="lissa:">LISSA</label>
           <label><input type="radio" name="searchEngine" value="anm:">Académie nationale de médecine</label>
           <label><input type="radio" name="searchEngine" value="hetop:">HETOP</label>
-          <label><input type="radio" name="searchEngine" value="has:">HAS</label>
           <label><input type="radio" name="searchEngine" value="nejm:">New England Journal of Medicine</label>
           <label><input type="radio" name="searchEngine" value="rp:">Radiopaedia</label>
           <label><input type="radio" name="searchEngine" value="utd:">UpToDate</label>
@@ -666,6 +667,7 @@
       <h4>🎓 Académique / Thèses</h4>
       <ul>
         <li><b>scholar:</b> Google Scholar</li>
+        <li><b>pubmed:</b> PubMed</li>
         <li><b>arxiv:</b> arXiv</li>
         <li><b>gpat:</b> Google Patents</li>
         <li><b>these2.0:</b> These2.0</li>
@@ -678,15 +680,15 @@
       
       <h4>⚕️ Médical / Santé</h4>
       <ul>
-        <li><b>pubmed:</b> PubMed</li>
         <li><b>cismef:</b> CISMeF</li>
+        <li><b>has:</b> HAS</li>
+        <li><b>vidal:</b> VIDAL</li>
         <li><b>cismef-edn:</b> CISMeF EDN</li>
         <li><b>cismef-bp:</b> CISMeF Bonnes Pratiques</li>
         <li><b>cismef-edu:</b> CISMeF Éducation</li>
         <li><b>lissa:</b> LISSA</li>
         <li><b>anm:</b> Académie nationale de médecine</li>
         <li><b>hetop:</b> HETOP</li>
-        <li><b>has:</b> HAS</li>
         <li><b>nejm:</b> New England Journal of Medicine</li>
         <li><b>rp:</b> Radiopaedia</li>
         <li><b>utd:</b> UpToDate</li>
@@ -776,25 +778,27 @@
     'ddg:': { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=', domain: 'duckduckgo.com' },
     'yan:': { name: 'Yandex', url: 'https://yandex.com/search/?text=', domain: 'yandex.com' },
     'bing:': { name: 'Bing', url: 'https://www.bing.com/search?q=', domain: 'bing.com' },
-            'gplus:': { name: 'Google Avancé', url: 'https://www.google.com/advanced_search?q=', domain: 'google.com' },
-            'gai:': { name: 'Google AI Mode', url: 'https://www.google.com/search?udm=50&q=', domain: 'google.com' },    'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/resultats?filtres=%255BStatut%25253D%252522soutenue%252522~Statut%25253D%252522Accessibles%252520en%252520ligne%252522%255D&q=', domain: 'theses.fr' },
-    'these2.0:': { name: 'These2.0', url: 'https://thesefmpm.vercel.app/search?page=1&search=', domain: 'thesefmpm.vercel.app' },
-    'these-ma:': { name: 'Toubkal', url: 'https://toubkal.imist.ma/search?query=', domain: 'toubkal.imist.ma' },
-    'cismef-th:': { name: 'CISMeF Thèses', url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q=', domain: 'doccismef.chu-rouen.fr' },
+    'gplus:': { name: 'Google Avancé', url: 'https://www.google.com/advanced_search?q=', domain: 'google.com' },
+    'gai:': { name: 'Google AI Mode', url: 'https://www.google.com/search?udm=50&q=', domain: 'google.com' },
     'scholar:': { name: 'Google Scholar', url: 'https://scholar.google.com/scholar?q=', domain: 'google.com' },
+    'pubmed:': { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=', domain: 'ncbi.nlm.nih.gov' },
     'arxiv:': { name: 'arXiv', url: 'https://arxiv.org/search/?query=', domain: 'arxiv.org' },
     'gpat:': { name: 'Google Patents', url: 'https://patents.google.com/', domain: 'patents.google.com' },
+    'these2.0:': { name: 'These2.0', url: 'https://thesefmpm.vercel.app/search?page=1&search=', domain: 'thesefmpm.vercel.app' },
+    'cismef-th:': { name: 'CISMeF Thèses', url: 'https://doccismef.chu-rouen.fr/dc/#env=thm&q=', domain: 'doccismef.chu-rouen.fr' },
+    'these-ma:': { name: 'Toubkal', url: 'https://toubkal.imist.ma/search?query=', domain: 'toubkal.imist.ma' },
+    'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/resultats?filtres=%255BStatut%25253D%252522soutenue%252522~Statut%25253D%252522Accessibles%252520en%252520ligne%252522%255D&q=', domain: 'theses.fr' },
     'rgate:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=', domain: 'researchgate.net' },
     'ndltd:': { name: 'NDLTD', url: 'http://search.ndltd.org/search.php?q=', domain: 'ndltd.org' },
-    'pubmed:': { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=', domain: 'ncbi.nlm.nih.gov' },
     'cismef:': { name: 'CISMeF', url: 'https://doccismef.chu-rouen.fr/dc/#q=', domain: 'doccismef.chu-rouen.fr' },
+    'has:': { name: 'HAS', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=', domain: 'has-sante.fr' },
+    'vidal:': { name: 'VIDAL', url: 'https://www.vidal.fr/recherche.html?query=', domain: 'vidal.fr' },
     'cismef-edn:': { name: 'CISMeF EDN', url: 'https://doccismef.chu-rouen.fr/dc/#env=ecn&q=', domain: 'doccismef.chu-rouen.fr' },
     'cismef-bp:': { name: 'CISMeF Bonnes Pratiques', url: 'https://doccismef.chu-rouen.fr/dc/#env=bp&q=', domain: 'doccismef.chu-rouen.fr' },
     'cismef-edu:': { name: 'CISMeF Éducation', url: 'https://doccismef.chu-rouen.fr/dc/#env=unf3s&q=', domain: 'doccismef.chu-rouen.fr' },
     'lissa:': { name: 'LISSA', url: 'https://www.lissa.fr/dc/#env=lissa&q=', domain: 'lissa.fr' },
     'anm:': { name: 'Académie nationale de médecine', url: 'http://91.209.229.113/search?titre=', domain: '91.209.229.113' },
     'hetop:': { name: 'HETOP', url: 'https://www.hetop.eu/hetop/fr/#q=', domain: 'hetop.eu' },
-    'has:': { name: 'HAS', url: 'https://www.has-sante.fr/jcms/fc_2875171/fr/resultat-de-recherche?text=', domain: 'has-sante.fr' },
     'nejm:': { name: 'New England Journal of Medicine', url: 'https://www.nejm.org/search?q=', domain: 'nejm.org' },
     'rp:': { name: 'Radiopaedia', url: 'https://radiopaedia.org/search?q=', domain: 'radiopaedia.org' },
     'utd:': { name: 'UpToDate', url: 'https://www.uptodate.com/contents/search?search=', domain: 'uptodate.com' },
