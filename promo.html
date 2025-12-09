@@ -1113,12 +1113,75 @@
 
 <script>
   const filetypesWiki = {
-      "📄 Documents & Text": ["pdf", "doc", "docx", "rtf", "txt", "text", "odt", "tex", "epub", "csv", "ps", "wml", "wap", "xml"],
-      "📊 Spreadsheets & Presentations": ["xls", "xlsx", "ppt", "pptx", "ods", "odp"],
-      "💻 Code & Web": ["html", "htm", "py", "js", "java", "cpp", "c", "h", "cs", "pl"],
-      "🖼️ Images": ["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp", "avif"],
-      "🎬 Video & Media": ["mp4", "avi", "mov", "webm", "mkv", "wmv", "mp3", "3gp", "3g2", "asf", "divx", "m2v", "m3u", "m3u8", "m4v", "ogv", "qvt", "ram", "rm", "vob"],
-      "🗺️ Niche & Specialized": ["kml", "kmz", "gpx", "hwp", "dwf"]
+      "📄 Documents & Text": [
+          { ext: 'pdf', name: 'Adobe Portable Document Format' },
+          { ext: ['doc', 'docx'], name: 'Microsoft Word' },
+          { ext: 'rtf', name: 'Rich Text Format' },
+          { ext: ['txt', 'text'], name: 'Plain Text' },
+          { ext: 'odt', name: 'OpenDocument Text' },
+          { ext: 'tex', name: 'LaTeX/TeX' },
+          { ext: 'epub', name: 'Electronic Publication' },
+          { ext: 'csv', name: 'Comma-Separated Values' },
+          { ext: 'ps', name: 'Adobe PostScript' },
+          { ext: ['wml', 'wap'], name: 'Wireless Markup Language' },
+          { ext: 'xml', name: 'Extensible Markup Language' }
+      ],
+      "📊 Spreadsheets & Presentations": [
+          { ext: ['xls', 'xlsx'], name: 'Microsoft Excel' },
+          { ext: ['ppt', 'pptx'], name: 'Microsoft PowerPoint' },
+          { ext: 'ods', name: 'OpenDocument Spreadsheet' },
+          { ext: 'odp', name: 'OpenDocument Presentation' }
+      ],
+      "💻 Code & Web": [
+          { ext: ['html', 'htm'], name: 'HTML' },
+          { ext: 'py', name: 'Python' },
+          { ext: 'js', name: 'JavaScript' },
+          { ext: 'java', name: 'Java' },
+          { ext: 'cpp', name: 'C++' },
+          { ext: 'c', name: 'C / C Header' },
+          { ext: 'h', name: 'C / C Header' },
+          { ext: 'cs', name: 'C#' },
+          { ext: 'pl', name: 'Perl' }
+      ],
+      "🖼️ Images": [
+          { ext: 'jpg', name: 'JPEG image' },
+          { ext: 'jpeg', name: 'JPEG image' },
+          { ext: 'png', name: 'Portable Network Graphics' },
+          { ext: 'gif', name: 'Graphics Interchange Format' },
+          { ext: 'webp', name: 'WebP' },
+          { ext: 'svg', name: 'Scalable Vector Graphics' },
+          { ext: 'bmp', name: 'Bitmap' },
+          { ext: 'avif', name: 'AV1 Image File Format' }
+      ],
+      "🎬 Video & Media": [
+          { ext: 'mp4', name: 'MPEG-4 Video' },
+          { ext: 'avi', name: 'AVI' },
+          { ext: 'mov', name: 'Apple QuickTime Movie' },
+          { ext: 'webm', name: 'WebM' },
+          { ext: 'mkv', name: 'Matroska Video' },
+          { ext: 'wmv', name: 'Windows Media Video' },
+          { ext: 'mp3', name: 'MP3 Audio' },
+          { ext: '3gp', name: '3GPP Multimedia' },
+          { ext: '3g2', name: '3GPP Multimedia' },
+          { ext: 'asf', name: 'Advanced Systems Format' },
+          { ext: 'divx', name: 'DivX Video' },
+          { ext: 'm2v', name: 'MPEG Video & Playlist' },
+          { ext: 'm3u', name: 'MPEG Video & Playlist' },
+          { ext: 'm3u8', name: 'MPEG Video & Playlist' },
+          { ext: 'm4v', name: 'MPEG-4 Video' },
+          { ext: 'ogv', name: 'Ogg Video' },
+          { ext: 'qvt', name: 'QVT' },
+          { ext: 'ram', name: 'Real Audio Media' },
+          { ext: 'rm', name: 'Real Media' },
+          { ext: 'vob', name: 'DVD Video Object' }
+      ],
+      "🗺️ Niche & Specialized": [
+          { ext: 'kml', name: 'Keyhole Markup Language' },
+          { ext: 'kmz', name: 'Keyhole Markup Language' },
+          { ext: 'gpx', name: 'GPS Exchange Format' },
+          { ext: 'hwp', name: 'Hanword Document' },
+          { ext: 'dwf', name: 'Design Web Format' }
+      ]
   };
 
   // AI-Assisted Comment: This object maps search prefixes (e.g., 'g:') to their corresponding search engine details.
@@ -1475,7 +1538,7 @@
     grid.innerHTML = '';
     const currentFiletypes = getCurrentlySelectedFiletypes();
 
-    for (const [category, exts] of Object.entries(filetypesWiki)) {
+    for (const [category, filetypes] of Object.entries(filetypesWiki)) {
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'filetype-category';
         
@@ -1486,8 +1549,21 @@
         const itemsContainer = document.createElement('div');
         itemsContainer.className = 'filetype-items-container';
 
-        exts.forEach(ext => {
-            const id = `ft-checkbox-${ext}`;
+        filetypes.forEach(filetype => {
+            let id, value, name, labelText;
+
+            if (Array.isArray(filetype.ext)) {
+                id = `ft-checkbox-${filetype.ext.join('-')}`;
+                value = filetype.ext.join(',');
+                name = filetype.name;
+                labelText = `${name} (.${filetype.ext.join(', .')})`;
+            } else {
+                id = `ft-checkbox-${filetype.ext}`;
+                value = filetype.ext;
+                name = filetype.name;
+                labelText = `${name} (.${filetype.ext})`;
+            }
+
             const itemDiv = document.createElement('div');
             itemDiv.className = 'filetype-item';
             
@@ -1497,14 +1573,16 @@
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.id = id;
-            checkbox.value = ext;
+            checkbox.value = value;
             checkbox.className = 'filetype-checkbox';
-            if (currentFiletypes.includes(ext)) {
+            
+            const extensionsInValue = value.split(',');
+            if (extensionsInValue.some(ext => currentFiletypes.includes(ext))) {
                 checkbox.checked = true;
             }
             
             label.appendChild(checkbox);
-            label.append(` .${ext}`);
+            label.append(` ${labelText}`);
             
             itemDiv.appendChild(label);
             itemsContainer.appendChild(itemDiv);
@@ -1515,8 +1593,8 @@
   }
 
   function getCurrentlySelectedFiletypes() {
-    let val = searchInput.value.trim();
-    const filetypeRegex = /(?:filetype:([^\s()]+))/g;
+    let val = searchInput.value;
+    const filetypeRegex = /filetype:([^\s()]+)/g;
     let matches;
     const extensions = [];
     while ((matches = filetypeRegex.exec(val)) !== null) {
@@ -1527,16 +1605,21 @@
 
   function applyFiletypeFilter() {
     const checkedBoxes = document.querySelectorAll('.filetype-checkbox:checked');
-    const extensions = Array.from(checkedBoxes).map(cb => cb.value);
+    const allExtensions = [];
+    Array.from(checkedBoxes).forEach(cb => {
+        const exts = cb.value.split(',');
+        allExtensions.push(...exts);
+    });
+
     let val = searchInput.value.trim();
 
     const filetypeRegex = /\s*\((filetype:[^\)]+\))\s*|\s*filetype:[^\s]+/g;
     val = val.replace(filetypeRegex, '').trim();
 
-    if (extensions.length > 0) {
-        const filetypeQuery = extensions.map(ext => `filetype:${ext}`).join(' OR ');
+    if (allExtensions.length > 0) {
+        const filetypeQuery = allExtensions.map(ext => `filetype:${ext}`).join(' OR ');
         if (val.length > 0) val += ' ';
-        val += extensions.length > 1 ? `(${filetypeQuery})` : filetypeQuery;
+        val += allExtensions.length > 1 ? `(${filetypeQuery})` : filetypeQuery;
     }
 
     searchInput.value = val;
