@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Cosmic Counter • Reach 100</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&display=swap');
+    body, html {
+        margin: 0; padding: 0;
+        height: 100%;
+        background: #000;
+        overflow: hidden;
+        touch-action: manipulation;
+        cursor: none; /* hidden cursor = more immersive */
+    }
+    /* Deep space layered background */
+    #space {
+        position: fixed;
+        inset: 0;
+        background:
+            radial-gradient(circle at 20% 80%, #120030 0%, transparent 40%),
+            radial-gradient(circle at 80% 20%, #001020 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, #000 30%, #000011 100%);
+    }
+    /* Counter */
+    #counter {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Orbitron', sans-serif;
+        font-size: 18vw;
+        font-weight: 800;
+        color: #ccffff;
+        text-shadow:
+            0 0 30px #64f0ff,
+            0 0 80px #3280ff,
+            0 0 150px #00ffff;
+        letter-spacing: -0.02em;
+        z-index: 10;
+        user-select: none;
+        animation: glowPulse 3s infinite alternate;
+    }
+    @media (min-width: 768px) { #counter { font-size: 160px; } }
+    @keyframes glowPulse {
+        from { text-shadow: 0 0 30px #64f0ff, 0 0 80px #3280ff, 0 0 150px #00ffff; }
+        to   { text-shadow: 0 0 50px #64f0ff, 0 0 120px #3280ff, 0 0 220px #00ffff; }
+    }
+    /* Victory container */
+    #victory {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #00ffaa, #00ffff, #88ffaa);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Orbitron', sans-serif;
+        color: #000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        z-index: 20;
+        padding: 20px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    /* Table layout */
+    .table {
+        display: table;
+        border-collapse: collapse;
+        background: transparent;
+        max-width: 900px;
+        width: auto;
+    }
+    .table-row {
+        display: table-row;
+    }
+    .table-cell {
+        display: table-cell;
+        vertical-align: middle;
+        padding: 12px 24px;
+        user-select: none;
+    }
+    /* Top row: 100 spanning both columns */
+    .number-cell {
+        font-size: 8vw;
+        text-shadow: 0 0 40px white;
+        animation: victoryPulse 2s infinite;
+        font-weight: 800;
+        text-align: center;
+        /* spans both columns via single cell */
+    }
+    /* Bottom row content */
+    .content-cell {
+        text-align: left;
+        vertical-align: middle;
+        width: 60%;
+    }
+    .content-cell h2 {
+        margin: 10px 0;
+        font-size: 6vw;
+    }
+    .content-cell p {
+        font-size: 2vw;
+        margin: 0;
+        opacity: 0.9;
+    }
+    /* Report cell */
+    .report-cell {
+        width: 40%;
+        background-color: rgba(0,0,0,0.7);
+        color: #ccffff;
+        font-family: 'Orbitron', sans-serif;
+        border-radius: 8px;
+        font-size: 12px;
+        white-space: normal;
+        max-width: 320px;
+        text-align: left;
+    }
+
+    /* Responsive for smaller screens */
+    @media (max-width: 767px) {
+        #victory {
+            padding: 10px;
+        }
+        .table {
+            display: block;
+            max-width: 90vw;
+            text-align: center;
+        }
+        .table-row {
+            display: block;
+            margin-bottom: 15px;
+        }
+        .number-cell {
+            font-size: 12vw;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .content-cell, .report-cell {
+            display: block;
+            width: 100%;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .content-cell h2 {
+            font-size: 6vw;
+        }
+        .content-cell p {
+            font-size: 4vw;
+        }
+        .report-cell {
+            font-size: 14px;
+            max-width: 100%;
+        }
+    }
+
+    @keyframes victoryPulse {
+        0%,100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    /* Show victory */
+    #victory.show {
+        opacity: 1;
+        pointer-events: all;
+    }
+</style>
+</head>
+<body>
+<div id="space">
+    <div class="stars"></div>
+    <div class="nebula"></div>
+</div>
+<div id="counter">0</div>
+<div id="victory">
+    <div class="table" role="table" aria-label="Victory container">
+        <div class="table-row top-row" role="row">
+            <div class="table-cell number-cell" role="cell">100</div>
+        </div>
+        <div class="table-row bottom-row" role="row">
+            <div class="table-cell content-cell" role="cell">
+                <h2>UNIVERSAL ASCENSION</h2>
+                <p>Tap the cosmos to begin anew</p>
+            </div>
+            <div class="table-cell report-cell" role="cell" id="report">
+                <!-- Report content goes here -->
+            </div>
+        </div>
+    </div>
+</div>
+<audio id="winSound" preload="auto">
+    <source src="https://cdn.freesound.org/previews/109/109662_512123-lq.mp3" type="audio/mpeg" />
+</audio>
+<script>
+let count = 0;
+const counterEl = document.getElementById('counter');
+const victoryEl = document.getElementById('victory');
+const winSound = document.getElementById('winSound');
+
+const timestamps = [];
+
+function increment() {
+    if (count >= 100) return;
+
+    const now = performance.now();
+    timestamps.push(now);
+
+    count++;
+    counterEl.textContent = count;
+
+    if (count === 100) {
+        showVictory();
+        showReport();
+    }
+}
+
+function reset() {
+    count = 0;
+    counterEl.textContent = count;
+    victoryEl.classList.remove('show');
+    timestamps.length = 0;
+    removeReport();
+}
+
+function showVictory() {
+    victoryEl.classList.add('show');
+    winSound.currentTime = 0;
+    winSound.play().catch(() => {});
+}
+
+function showReport() {
+    const intervals = [];
+    for (let i = 1; i < timestamps.length; i++) {
+        intervals.push(timestamps[i] - timestamps[i - 1]);
+    }
+
+    const totalDurationMs = timestamps[timestamps.length - 1] - timestamps[0];
+    const totalDurationMinutes = totalDurationMs / 60000;
+
+    const averageMs = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+    const minMs = Math.min(...intervals);
+    const maxMs = Math.max(...intervals);
+
+    const reportEl = document.getElementById('report');
+
+    reportEl.innerHTML = `
+        <strong>Report</strong><br>
+        Time to reach 100: ${totalDurationMinutes.toFixed(2)} min<br>
+        Average time between numbers: ${(averageMs / 1000).toFixed(3)} s<br>
+        Minimum interval time: ${(minMs / 1000).toFixed(3)} s<br>
+        Maximum interval time: ${(maxMs / 1000).toFixed(3)} s
+    `;
+}
+
+function removeReport() {
+    const reportEl = document.getElementById('report');
+    if (reportEl) {
+        reportEl.innerHTML = '';
+    }
+}
+
+document.body.addEventListener('click', increment);
+document.body.addEventListener('touchstart', e => { e.preventDefault(); increment(); }, {passive:false});
+document.body.addEventListener('keydown', e => { e.preventDefault(); increment(); });
+
+victoryEl.addEventListener('click', reset);
+victoryEl.addEventListener('touchstart', e => { e.preventDefault(); reset(); }, {passive:false});
+
+// Unlock audio
+let unlocked = false;
+const unlock = () => {
+    if (unlocked) return;
+    winSound.play().then(() => winSound.pause());
+    unlocked = true;
+};
+document.body.addEventListener('click', unlock, {once:true});
+document.body.addEventListener('touchstart', unlock, {once:true});
+</script>
+</body>
+</html>
