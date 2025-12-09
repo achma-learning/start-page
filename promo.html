@@ -721,7 +721,7 @@
             pointer-events: none;
             display: none;
             opacity: 0;
-            transition: opacity 0.8s ease;
+            transition: opacity 0.2s ease;
             max-width: 250px;
             text-align: center;
         }
@@ -950,6 +950,7 @@
         <li><b>cismef:</b> CISMeF (recherche globale)</li>
         <li><b>cismef-bp:</b> CISMeF (Bonnes Pratiques)</li>
         <li><b>cismef-edu:</b> CISMeF (Éducation)</li>
+        <li><b>cismef-edn:</b> CISMeF (ECN)</li>
         <li><b>cismef-pat:</b> CISMeF (Patients)</li>
         <li><b>msps:</b> Ministère de la santé et de la Protection Sociale</li>
         <li><b>has:</b> HAS</li>
@@ -1119,6 +1120,7 @@
     'vidal:': { name: 'VIDAL', url: 'https://www.vidal.fr/recherche.html?query=', domain: 'vidal.fr' },
     'cismef-bp:': { name: 'CISMeF Bonnes Pratiques', isAlias: true, aliasFor: 'cismef:', filterValue: 'env=bp&q=' },
     'cismef-edu:': { name: 'CISMeF Éducation', isAlias: true, aliasFor: 'cismef:', filterValue: 'env=unf3s&q=' },
+    'cismef-edn:': { name: 'CISMeF ECN', isAlias: true, aliasFor: 'cismef:', filterValue: 'env=ecn&q=a&p=' },
     'cismef-pat:': { name: 'CISMeF Patients', isAlias: true, aliasFor: 'cismef:', filterValue: 'env=pat&q=' },
     'lissa:': { name: 'LISSA', url: 'https://www.lissa.fr/dc/#env=lissa&q=', domain: 'lissa.fr' },
     'anm:': { name: 'Académie nationale de médecine', url: 'http://91.209.229.113/search?titre=', domain: '91.209.229.113' },
@@ -1159,6 +1161,7 @@
   const googleWikiPopup = document.getElementById('googleWikiPopup');
   const closeGoogleWikiBtn = document.getElementById('closeGoogleWikiBtn');
   const keepGoogleWikiOpenCheckbox = document.getElementById('keepGoogleWikiOpenCheckbox');
+
 
   // AI-Assisted Comment: This function dynamically adds favicon images next to each search engine radio button.
   // It fetches favicons from a public Google service using the domain specified in the searchEngines object.
@@ -1407,6 +1410,9 @@
         finalUrl = baseUrl + '?q=(' + encodeURIComponent(query) + ')&oq=' + encodeURIComponent(query);
       } else if (prefix === 'medscape:') {
         finalUrl = baseUrl + '?q="' + encodeURIComponent(query) + '"';
+      } else if (prefix === 'vidal:') {
+        const encodedQuery = query.split(' ').join('+'); // Replace spaces with +
+        finalUrl = baseUrl + encodedQuery;
       } else {
         finalUrl = baseUrl + encodeURIComponent(query);
       }
@@ -1623,7 +1629,7 @@
                   operatorTooltip.style.left = `${left}px`;
                   
                   setTimeout(() => { operatorTooltip.style.opacity = 1; }, 10);
-              }, 1000); // 1 second delay
+              }, 300); // 0.3 second delay
           }
       }
   });
@@ -1636,7 +1642,7 @@
               if (operatorTooltip.style.opacity === '0') {
                    operatorTooltip.style.display = 'none';
               }
-          }, 800); // Match transition duration
+          }, 200); // Match transition duration
       }
   });
 
