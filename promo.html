@@ -557,6 +557,22 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
+
+        #youtubeFilters {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+            border: 2px solid #667eea;
+            box-shadow: 0 4px 24px rgba(102, 126, 234, 0.25);
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .dark-mode #youtubeFilters {
+            border-color: #64b5f6;
+            box-shadow: 0 4px 24px rgba(100, 181, 246, 0.25);
+        }
     </style>
 </head>
 <body>
@@ -580,6 +596,47 @@
 
         <button type="button" id="filetypesBtn">📁 Filetypes</button>
       </form>
+    </div>
+
+    <div id="youtubeFilters" style="display: none;">
+      <div class="category-section">
+        <div class="category-title">🔽 Trier par</div>
+        <div class="radio-group">
+          <label><input type="radio" name="yt_sort" value="" checked> Pertinence</label>
+          <label><input type="radio" name="yt_sort" value="CAI%3D"> Date d'ajout</label>
+          <label><input type="radio" name="yt_sort" value="CAM%3D"> Nombre de vues</label>
+          <label><input type="radio" name="yt_sort" value="CAE%3D"> Note</label>
+        </div>
+      </div>
+      <div class="category-section">
+        <div class="category-title">📁 Type</div>
+        <div class="radio-group">
+          <label><input type="radio" name="yt_type" value="" checked> Tout</label>
+          <label><input type="radio" name="yt_type" value="EgIQAQ%253D%253D"> Vidéo</label>
+          <label><input type="radio" name="yt_type" value="EgIQAg%253D%253D"> Chaîne</label>
+          <label><input type="radio" name="yt_type" value="EgIQAw%253D%253D"> Playlist</label>
+        </div>
+      </div>
+      <div class="category-section">
+          <div class="category-title">🏱️ Durée</div>
+          <div class="radio-group">
+              <label><input type="radio" name="yt_duration" value="" checked> Indifférent</label>
+              <label><input type="radio" name="yt_duration" value="EgIYAQ%253D%253D"> &lt; 4 min</label>
+              <label><input type="radio" name="yt_duration" value="EgIYAw%253D%253D"> 4-20 min</label>
+              <label><input type="radio" name="yt_duration" value="EgIYAg%253D%253D"> &gt; 20 min</label>
+          </div>
+      </div>
+      <div class="category-section">
+          <div class="category-title">📅 Date d'ajout</div>
+          <div class="radio-group">
+              <label><input type="radio" name="yt_date" value="" checked> Indifférent</label>
+              <label><input type="radio" name="yt_date" value="EgIIAQ%253D%253D"> Dernière heure</label>
+              <label><input type="radio" name="yt_date" value="EgIIAg%253D%253D"> Aujourd'hui</label>
+              <label><input type="radio" name="yt_date" value="EgIIAw%253D%253D"> Cette semaine</label>
+              <label><input type="radio" name="yt_date" value="EgIIBA%253D%253D"> Ce mois-ci</label>
+              <label><input type="radio" name="yt_date" value="EgIIBQ%253D%253D"> Cette année</label>
+          </div>
+      </div>
     </div>
 
     <div class="category-row">
@@ -832,6 +889,7 @@
   const popupOverlay = document.getElementById('popupOverlay');
   const closeFiletypes = document.getElementById('closeFiletypes');
   const bangsBtn = document.getElementById('bangsBtn');
+  const youtubeFilters = document.getElementById('youtubeFilters');
 
   // AI-Assisted Comment: This function dynamically adds favicon images next to each search engine radio button.
   // It fetches favicons from a public Google service using the domain specified in the searchEngines object.
@@ -911,6 +969,12 @@
         color = "#555";
         searchPrefixFavicon.style.display = 'none';
         searchPrefixFavicon.src = '';
+    }
+
+    if (effectivePrefix === 'yt:') {
+        youtubeFilters.style.display = 'grid';
+    } else {
+        youtubeFilters.style.display = 'none';
     }
 
     searchSource.textContent = source;
@@ -993,6 +1057,22 @@
     }
 
     if (prefix && query) {
+      if (prefix === 'yt:') {
+        let finalUrl = searchEngines['yt:'].url + encodeURIComponent(query);
+        const filterGroups = ['yt_sort', 'yt_type', 'yt_duration', 'yt_date'];
+        
+        for (const groupName of filterGroups) {
+          const selectedRadio = document.querySelector(`#youtubeFilters input[name="${groupName}"]:checked`);
+          if (selectedRadio && selectedRadio.value) {
+            finalUrl += '&sp=' + selectedRadio.value;
+            break; 
+          }
+        }
+        
+        window.open(finalUrl, '_blank');
+        return;
+      }
+
       let baseUrl = searchEngines[prefix].url;
       let finalUrl;
 
