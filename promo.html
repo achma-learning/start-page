@@ -971,10 +971,18 @@
         searchPrefixFavicon.src = '';
     }
 
+    // Toggle YouTube filters visibility
     if (effectivePrefix === 'yt:') {
         youtubeFilters.style.display = 'grid';
     } else {
         youtubeFilters.style.display = 'none';
+    }
+
+    // Toggle Filetypes button visibility
+    if (effectivePrefix === 'g:') {
+        filetypesBtn.style.display = 'inline-block';
+    } else {
+        filetypesBtn.style.display = 'none';
     }
 
     searchSource.textContent = source;
