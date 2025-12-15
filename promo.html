@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <title>tool4search</title>
+    <title>Tools Search</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel="icon" type="image/svg+xml" href="https://upload.wikimedia.org/wikipedia/commons/a/a9/Vector_search_icon.svg" />
@@ -652,6 +652,12 @@
             box-shadow: 0 4px 24px rgba(100, 181, 246, 0.25);
         }
 
+        #bingOperatorFilters {
+            grid-template-columns: repeat(3, 1fr); /* Force 3 columns for horizontal layout */
+            gap: 15px; /* Adjust gap for a tighter fit */
+            /* Other styles for bingOperatorFilters are already inherited or defined inline */
+        }
+
         #cismefFilters {
             display: none;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -734,6 +740,54 @@
         }
         #googleWikiPopup .close-btn:hover { color: #333; }
         .dark-mode #googleWikiPopup .close-btn:hover { color: #fff; }
+
+        #bingWikiPopup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 700px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            padding: 24px;
+            font-size: 14px;
+            color: #333;
+            display: none;
+            z-index: 2000;
+        }
+        #bingWikiPopup.show { display: block; }
+        .dark-mode #bingWikiPopup {
+            background: #1a2332;
+            border-color: #2d3e52;
+            color: #b0bec5;
+        }
+        #bingWikiPopup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        #bingWikiPopup .close-btn:hover { color: #333; }
+        .dark-mode #bingWikiPopup .close-btn:hover { color: #fff; }
+
+        #bingWikiPopup h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .dark-mode #bingWikiPopup h3 {
+            color: #64b5f6;
+            border-bottom-color: #64b5f6;
+        }
 
         #googleWikiPopup h3 {
             margin-top: 0;
@@ -894,6 +948,36 @@
           <button class="operator-btn" data-operator="before:">before:</button>
           <button class="operator-btn" data-operator="after:">after:</button>
           <button class="operator-btn" data-operator="AROUND()">AROUND()</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="bingOperatorFilters" style="display: none;">
+      <div class="category-section">
+        <div class="category-title">Basic Operators</div>
+        <div class="operators-group">
+          <button class="operator-btn" data-operator='" "'>"phrase"</button>
+          <button class="operator-btn" data-operator="OR">OR</button>
+          <button class="operator-btn" data-operator="NOT">NOT</button>
+        </div>
+      </div>
+      <div class="category-section">
+        <div class="category-title">Advanced Operators</div>
+        <div class="operators-group">
+          <button class="operator-btn" data-operator="site:">site:</button>
+          <button class="operator-btn" data-operator="filetype:">filetype:</button>
+          <button class="operator-btn" data-operator="inurl:">inurl:</button>
+          <button class="operator-btn" data-operator="inbody:">inbody:</button>
+          <button class="operator-btn" data-operator="intitle:">intitle:</button>
+        </div>
+      </div>
+      <div class="category-section">
+        <div class="category-title">Specialized Operators</div>
+        <div class="operators-group">
+          <button class="operator-btn" data-operator="define:">define:</button>
+          <button class="operator-btn" data-operator="imagesize:">imagesize:</button>
+          <button class="operator-btn" data-operator="feed:">feed:</button>
+          <button class="operator-btn" data-operator="language:">language:</button>
         </div>
       </div>
     </div>
@@ -1103,10 +1187,55 @@
         <p>Operators can be combined (e.g., <code>site:gov filetype:pdf "policy"</code>). For full details, see <a href="https://support.google.com/websearch/answer/2466433" target="_blank" rel="noopener noreferrer">Google's official documentation</a>.</p>
       </div>
     </div>
+    <div id="bingWikiPopup" style="display: none;">
+      <button class="close-btn" id="closeBingWikiBtn">&times;</button>
+      <h3><span class="favicon-icon" style="background-image: url('https://www.google.com/s2/favicons?sz=32&domain=bing.com'); background-size: contain; display: inline-block; vertical-align: middle;"></span> Bing Search Operators Wiki</h3>
+      <div class="checkbox-container" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #e0e0e0;">
+        <input type="checkbox" id="keepBingWikiOpenCheckbox" />
+        <label for="keepBingWikiOpenCheckbox">Keep wiki open</label>
+      </div>
+      <p>Bing search operators for more precise outcomes.</p>
+      <div style="max-height: 50vh; overflow-y: auto;">
+        <h4>Basic Operators</h4>
+        <table class="wiki-table">
+          <thead><tr><th>Operator</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>"phrase"</code></td><td>Searches for an exact phrase match.</td></tr>
+            <tr><td><code>OR</code></td><td>Returns results containing either term.</td></tr>
+            <tr><td><code>NOT</code> or <code>-</code></td><td>Excludes results containing the term.</td></tr>
+          </tbody>
+        </table>
+        <h4>Advanced Operators</h4>
+        <table class="wiki-table">
+          <thead><tr><th>Operator</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>site:</code></td><td>Restricts results to a specific site.</td></tr>
+            <tr><td><code>filetype:</code></td><td>Limits results to specific file types.</td></tr>
+            <tr><td><code>inurl:</code></td><td>Term must be in the page's URL.</td></tr>
+            <tr><td><code>inbody:</code></td><td>Term must be in the page body text.</td></tr>
+            <tr><td><code>intitle:</code></td><td>Term must appear in the page title.</td></tr>
+          </tbody>
+        </table>
+        <h4>Specialized Operators</h4>
+        <table class="wiki-table">
+         <thead><tr><th>Operator</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>define:</code></td><td>Displays definitions.</td></tr>
+            <tr><td><code>imagesize:</code></td><td>Searches for images of a specific size.</td></tr>
+            <tr><td><code>feed:</code></td><td>Returns RSS or Atom feeds.</td></tr>
+            <tr><td><code>language:</code></td><td>Searches in a specific language.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="wiki-footer" style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #e0e0e0;">
+        <p>Operators can be combined. Do not put a space after the colon.</p>
+      </div>
+    </div>
     <div class="bottom-buttons" style="text-align: center; margin-top: 24px;">
         <button type="button" id="wikiToggleBtn">📖 Wiki</button>
         <button type="button" id="darkModeToggleBtn">🌙</button>
         <button type="button" id="googleWikiBtn" style="display: none;">📖 Google Wiki</button>
+        <button type="button" id="bingWikiBtn" style="display: none;">📖 Bing Wiki</button>
         <button type="button" id="bangsBtn">!bangs</button>
     </div>
   </div>
@@ -1253,6 +1382,11 @@
   const googleWikiPopup = document.getElementById('googleWikiPopup');
   const closeGoogleWikiBtn = document.getElementById('closeGoogleWikiBtn');
   const keepGoogleWikiOpenCheckbox = document.getElementById('keepGoogleWikiOpenCheckbox');
+  const bingOperatorFilters = document.getElementById('bingOperatorFilters');
+  const bingWikiBtn = document.getElementById('bingWikiBtn');
+  const bingWikiPopup = document.getElementById('bingWikiPopup');
+  const closeBingWikiBtn = document.getElementById('closeBingWikiBtn');
+  const keepBingWikiOpenCheckbox = document.getElementById('keepBingWikiOpenCheckbox');
 
 
   // AI-Assisted Comment: This function dynamically adds favicon images next to each search engine radio button.
@@ -1361,6 +1495,11 @@
     googleOperatorFilters.style.display = isGoogle ? 'grid' : 'none';
     filetypesBtn.style.display = isGoogle ? 'inline-block' : 'none';
     googleWikiBtn.style.display = isGoogle ? 'inline-block' : 'none';
+
+    // Toggle Bing Operator filters visibility
+    const isBing = (effectivePrefix === 'bing:');
+    bingOperatorFilters.style.display = isBing ? 'grid' : 'none';
+    bingWikiBtn.style.display = isBing ? 'inline-block' : 'none';
 
     // Toggle CISMeF filters visibility and select correct filter from alias
     if (effectivePrefix === 'cismef:') {
@@ -1660,6 +1799,22 @@
   googleWikiBtn.addEventListener('click', openGoogleWikiPopup);
   closeGoogleWikiBtn.addEventListener('click', closeGoogleWikiPopup);
 
+  function openBingWikiPopup() {
+    bingWikiPopup.classList.add('show');
+    popupOverlay.classList.add('show');
+  }
+
+  function closeBingWikiPopup() {
+    bingWikiPopup.classList.remove('show');
+    if (!filetypesPopup.classList.contains('show') && !googleWikiPopup.classList.contains('show')) {
+      popupOverlay.classList.remove('show');
+    }
+  }
+
+  bingWikiBtn.addEventListener('click', openBingWikiPopup);
+  closeBingWikiBtn.addEventListener('click', closeBingWikiPopup);
+
+
   filetypesBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     openFiletypesPopup();
@@ -1670,6 +1825,9 @@
     closeFiletypesPopup();
     if (!keepGoogleWikiOpenCheckbox.checked) {
       closeGoogleWikiPopup();
+    }
+    if (!keepBingWikiOpenCheckbox.checked) {
+      closeBingWikiPopup();
     }
   });
 
@@ -1689,6 +1847,9 @@
       if (googleWikiPopup.classList.contains('show') && !keepGoogleWikiOpenCheckbox.checked) {
         closeGoogleWikiPopup();
       }
+      if (bingWikiPopup.classList.contains('show') && !keepBingWikiOpenCheckbox.checked) {
+        closeBingWikiPopup();
+      }
       if (wikiContent.style.display === 'block' && !keepWikiOpenCheckbox.checked) {
         wikiContent.style.display = 'none';
       }
@@ -1700,6 +1861,99 @@
     searchInput.focus();
     // AI-Assisted Comment: Dynamically add favicons to search engine options on page load.
     addFaviconsToSearchEngines();
+  });
+  
+  const bingOperatorDescriptions = {
+      '" "': "Searches for an exact phrase match. Example: \"search engine\"",
+      'OR': "Returns results with either term. Example: bing OR google",
+      'NOT': "Excludes results with this term. Example: search NOT engine",
+      'site:': "Restricts search to a specific site. Example: site:microsoft.com",
+      'filetype:': "Restricts to a specific file type. Example: filetype:pdf",
+      'inurl:': "Finds the term in the page URL. Example: inurl:blog",
+      'inbody:': "Searches only in the body text. Example: inbody:\"microservices\"",
+      'intitle:': "Finds the term in the page title. Example: intitle:AI",
+      'define:': "Displays the definition of a word. Example: define:algorithm",
+      'imagesize:': "Searches for images of a specific size. Example: imagesize:large",
+      'feed:': "Returns RSS or Atom feeds. Example: feed:tech",
+      'language:': "Searches in a specific language. Example: language:fr"
+  };
+
+  bingOperatorFilters.addEventListener('mouseover', function(e) {
+      if (e.target.classList.contains('operator-btn')) {
+          const operator = e.target.dataset.operator;
+          const description = bingOperatorDescriptions[operator];
+          
+          if (description) {
+              tooltipTimeout = setTimeout(() => {
+                  operatorTooltip.innerHTML = description;
+                  operatorTooltip.style.display = 'block';
+
+                  const rect = e.target.getBoundingClientRect();
+                  const tooltipRect = operatorTooltip.getBoundingClientRect();
+                  
+                  let top = rect.top - tooltipRect.height - 5;
+                  if (top < 0) {
+                    top = rect.bottom + 5;
+                  }
+                  if (top + tooltipRect.height > window.innerHeight) {
+                    top = rect.top - tooltipRect.height - 5;
+                  }
+
+                  let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+                  if (left < 0) left = 5;
+                  if (left + tooltipRect.width > window.innerWidth) {
+                    left = window.innerWidth - tooltipRect.width - 5;
+                  }
+                  
+                  operatorTooltip.style.top = `${top}px`;
+                  operatorTooltip.style.left = `${left}px`;
+                  
+                  setTimeout(() => { operatorTooltip.style.opacity = 1; }, 10);
+              }, 300);
+          }
+      }
+  });
+
+  bingOperatorFilters.addEventListener('mouseout', function(e) {
+      if (e.target.classList.contains('operator-btn')) {
+          clearTimeout(tooltipTimeout);
+          operatorTooltip.style.opacity = 0;
+          setTimeout(() => {
+              if (operatorTooltip.style.opacity === '0') {
+                   operatorTooltip.style.display = 'none';
+              }
+          }, 200);
+      }
+  });
+
+  bingOperatorFilters.addEventListener('click', function(e) {
+    if (e.target.classList.contains('operator-btn')) {
+        const operator = e.target.dataset.operator;
+        const input = document.getElementById('searchInput');
+
+        if (input.value.trim() && !input.value.endsWith(' ')) {
+            input.value += ' ';
+        }
+
+        let textToInsert = operator;
+        let cursorOffset = 0;
+
+        if (operator === '" "') {
+            textToInsert = '""';
+            cursorOffset = -1;
+        }
+
+        const selectionStart = input.selectionStart;
+        const textBefore = input.value.substring(0, selectionStart);
+        const textAfter = input.value.substring(input.selectionEnd);
+        
+        input.value = textBefore + textToInsert + textAfter;
+        
+        const finalCursorPos = selectionStart + textToInsert.length + cursorOffset;
+        
+        input.focus();
+        input.setSelectionRange(finalCursorPos, finalCursorPos);
+    }
   });
 
   // AI-Assisted Comment: This constant stores a reference to the dark mode toggle button.
