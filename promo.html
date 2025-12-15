@@ -1840,6 +1840,35 @@
   });
 
   document.addEventListener('keydown', (e) => {
+    // Ctrl+K : Focus sur la recherche
+    if (e.ctrlKey && e.key === 'k') {
+      e.preventDefault();
+      searchInput.focus();
+    }
+    
+    // Ctrl+Shift+K : Clear current url in search bar, and focus on search bar
+    if (e.ctrlKey && e.shiftKey && e.key === 'K') {
+      e.preventDefault();
+      searchInput.value = '';
+      searchInput.focus();
+    }
+
+    // Alt+1-4 : Basculer entre catégories
+    if (e.altKey && e.key >= '1' && e.key <= '4') {
+      e.preventDefault(); // Prevent default browser behavior for Alt+Number
+      const groups = ['#group1', '#group2', '#group3', '#group4'];
+      const firstRadio = document.querySelector(`${groups[e.key-1]} input`);
+      if (firstRadio) { // Check if the radio button exists
+        firstRadio.click();
+      }
+    }
+    
+    // Ctrl+Shift+C : Copier la recherche actuelle
+    if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+      e.preventDefault(); // Prevent default browser behavior for Ctrl+Shift+C
+      copyCurrentSearch();
+    }
+
     if (e.key === 'Escape') {
       if (filetypesPopup.classList.contains('show')) {
         closeFiletypesPopup();
@@ -2006,7 +2035,18 @@
       'AROUND()': "Finds terms within N words of each other. Example: \"electric cars\" AROUND(5) battery"
   };
 
+  function copyCurrentSearch() {
+    navigator.clipboard.writeText(searchInput.value).then(() => {
+      // Optional: Provide visual feedback to the user
+      // alert('Current search copied to clipboard!');
+      console.log('Search query copied to clipboard');
+    }).catch(err => {
+      console.error('Failed to copy search query: ', err);
+    });
+  }
+
   let tooltipTimeout;
+
 
   googleOperatorFilters.addEventListener('mouseover', function(e) {
       if (e.target.classList.contains('operator-btn')) {
