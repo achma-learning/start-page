@@ -1023,6 +1023,7 @@
           <label><input type="radio" name="searchEngine" value="these-fr:">Theses.fr</label>
           <label><input type="radio" name="searchEngine" value="rgate:">ResearchGate</label>
           <label><input type="radio" name="searchEngine" value="ndltd:">NDLTD</label>
+          <label><input type="radio" name="searchEngine" value="proinserm:">Pro Inserm</label>
         </div>
       </div>
       
@@ -1090,6 +1091,7 @@
         <li><b>these-fr:</b> Theses.fr</li>
         <li><b>rgate:</b> ResearchGate</li>
         <li><b>ndltd:</b> NDLTD</li>
+        <li><b>proinserm:</b> Pro Inserm</li>
       </ul>
       
       <h4>⚕️ Médical / Santé</h4>
@@ -1337,6 +1339,7 @@
     'these-fr:': { name: 'Theses.fr', url: 'https://theses.fr/resultats?filtres=%255BStatut%25253D%252522soutenue%252522~Statut%25253D%252522Accessibles%252520en%252520ligne%252522%255D&q=', domain: 'theses.fr' },
     'rgate:': { name: 'ResearchGate', url: 'https://www.researchgate.net/search/publication?q=', domain: 'researchgate.net' },
     'ndltd:': { name: 'NDLTD', url: 'http://search.ndltd.org/search.php?q=', domain: 'ndltd.org' },
+    'proinserm:': { name: 'Pro Inserm', url: 'https://pro.inserm.fr/?s=', domain: 'pro.inserm.fr' },
     'cismef:': { name: 'CISMeF', url: 'https://doccismef.chu-rouen.fr/dc/#', domain: 'doccismef.chu-rouen.fr' },
     // look for functional MSPS search url
     'msps:': { name: 'Ministère de la santé et de la Protection Sociale', url: 'https://www.google.com/search?q=site:sante.gov.ma ', domain: 'sante.gov.ma' },
@@ -1545,6 +1548,7 @@
       
       searchInput.value = selectedPrefix + (val ? ' ' + val : '');
       updateSearchSource();
+      searchInput.focus();
     });
   });
 
@@ -1651,6 +1655,9 @@
       } else if (prefix === 'dd:') {
         const encodedQuery = encodeURIComponent(query).replace(/%20/g, '+');
         finalUrl = baseUrl + encodedQuery + '&bytSearchType=0';
+      } else if (prefix === 'proinserm:') {
+        const encodedQuery = encodeURIComponent(query).replace(/%20/g, '+');
+        finalUrl = baseUrl + encodedQuery;
       } else {
         finalUrl = baseUrl + encodeURIComponent(query);
       }
