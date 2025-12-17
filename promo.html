@@ -114,8 +114,7 @@
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             min-width: 300px;
-            flex: 1;
-            max-width: 500px;
+            width: 100%;
             background: #fafafa;
             transition: all 0.3s ease;
         }
@@ -846,6 +845,62 @@
             color: #1a1a1a;
             border: 1px solid #555;
         }
+
+        .autocomplete-container {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+            min-width: 300px;
+        }
+
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+        }
+
+        .autocomplete-items div:hover {
+            background-color: #e9e9e9;
+        }
+
+        .autocomplete-active {
+            background-color: DodgerBlue !important;
+            color: #ffffff;
+        }
+
+        .dark-mode .autocomplete-items {
+            border-color: #2d3e52;
+        }
+
+        .dark-mode .autocomplete-items div {
+            background-color: #243447;
+            border-color: #2d3e52;
+            color: #b0bec5;
+        }
+
+        .dark-mode .autocomplete-items div:hover {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+        }
+
+        .dark-mode .autocomplete-active {
+            background-color: #1e3c72 !important;
+            color: #fff !important;
+        }
     </style>
 </head>
 <body>
@@ -860,7 +915,11 @@
     <div class="search-bar">
       <form id="searchForm">
         <div id="searchSource">Entrez une requête pour afficher la source</div>
-        <img id="search-prefix-favicon" class="favicon-icon" src="" alt="favicon" style="display: none; margin-right: 5px;"><input type="text" id="searchInput" autocomplete="off" placeholder="Commencez votre recherche ici..." />
+        <img id="search-prefix-favicon" class="favicon-icon" src="" alt="favicon" style="display: none; margin-right: 5px;">
+        <div class="autocomplete-container">
+          <input type="text" id="searchInput" autocomplete="off" placeholder="Commencez votre recherche ici..." />
+          <div id="autocomplete-list" class="autocomplete-items"></div>
+        </div>
         <button type="submit">🔍</button>
         <label class="checkbox-label">
           <input type="checkbox" id="siteCheckbox">
@@ -1524,7 +1583,84 @@
     searchSource.style.color = color;
   }
 
-  searchInput.addEventListener('input', updateSearchSource);
+  function setupAutocomplete(inp, arr) {
+    let currentFocus;
+
+    inp.addEventListener("input", function(e) {
+        let a, b, i, val = this.value;
+        closeAllLists();
+        updateSearchSource();
+        if (!val || val.includes(':')) { return false; }
+        currentFocus = -1;
+
+        a = document.createElement("DIV");
+        a.setAttribute("id", this.id + "autocomplete-list");
+        a.setAttribute("class", "autocomplete-items");
+        this.parentNode.appendChild(a);
+
+        for (i = 0; i < arr.length; i++) {
+            if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                b = document.createElement("DIV");
+                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                b.innerHTML += arr[i].substr(val.length);
+                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                b.addEventListener("click", function(e) {
+                    inp.value = this.getElementsByTagName("input")[0].value;
+                    closeAllLists();
+                    updateSearchSource();
+                    inp.focus();
+                });
+                a.appendChild(b);
+            }
+        }
+    });
+
+    inp.addEventListener("keydown", function(e) {
+        let x = document.getElementById(this.id + "autocomplete-list");
+        if (x) x = x.getElementsByTagName("div");
+        if (e.keyCode == 40) { // Arrow DOWN
+            currentFocus++;
+            addActive(x);
+        } else if (e.keyCode == 38) { // Arrow UP
+            currentFocus--;
+            addActive(x);
+        } else if (e.keyCode == 13) { // Enter
+            if (currentFocus > -1) {
+                e.preventDefault();
+                if (x) x[currentFocus].click();
+            }
+        } else if (e.keyCode === 9 || e.keyCode === 27) { // Tab or Escape
+            closeAllLists();
+        }
+    });
+
+    function addActive(x) {
+        if (!x) return false;
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+        x[currentFocus].classList.add("autocomplete-active");
+    }
+
+    function removeActive(x) {
+        for (let i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+        }
+    }
+
+    function closeAllLists(elmnt) {
+        const x = document.getElementsByClassName("autocomplete-items");
+        for (let i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+                x[i].parentNode.removeChild(x[i]);
+            }
+        }
+    }
+
+    document.addEventListener("click", function(e) {
+        closeAllLists(e.target);
+    });
+  }
 
   // AI-Assisted Comment: This adds a 'change' event listener to all search engine radio buttons.
   // When a user selects a different radio button, this code updates the search input field
@@ -1903,6 +2039,8 @@
     searchInput.focus();
     // AI-Assisted Comment: Dynamically add favicons to search engine options on page load.
     addFaviconsToSearchEngines();
+    const prefixes = Object.keys(searchEngines);
+    setupAutocomplete(searchInput, prefixes);
   });
   
   const bingOperatorDescriptions = {
