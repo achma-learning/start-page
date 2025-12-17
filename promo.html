@@ -1043,6 +1043,7 @@
           <label><input type="radio" name="searchEngine" value="coch:">Cochrane Library</label>
           <label><input type="radio" name="searchEngine" value="medscape:">Medscape</label>
           <label><input type="radio" name="searchEngine" value="openmd:">OpenMD</label>
+          <label><input type="radio" name="searchEngine" value="dd:">Diseases Database</label>
         </div>
       </div>
       
@@ -1110,6 +1111,7 @@
         <li><b>coch:</b> Cochrane Library</li>
         <li><b>medscape:</b> Medscape</li>
         <li><b>openmd:</b> OpenMD</li>
+        <li><b>dd:</b> Diseases Database</li>
       </ul>
       
       <h4>🤖 IA / Avancé</h4>
@@ -1353,6 +1355,7 @@
     'coch:': { name: 'Cochrane Library', url: 'https://www.cochranelibrary.com/search?q=', domain: 'cochranelibrary.com' },
     'medscape:': { name: 'Medscape', url: 'https://search.medscape.com/search/fr/', domain: 'medscape.com' },
     'openmd:': { name: 'OpenMD', url: 'https://openmd.com/search?q=', domain: 'openmd.com' },
+    'dd:': { name: 'Diseases Database', url: 'http://www.diseasesdatabase.com/item_choice.asp?strUserInput=', domain: 'diseasesdatabase.com' },
     'wolf:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=', domain: 'wolframalpha.com' },
     'chatgpt:': { name: 'ChatGPT', url: 'https://chatgpt.com/?prompt=', domain: 'chatgpt.com' },
     'claude:': { name: 'Claude AI', url: 'https://claude.ai/new?q=', domain: 'claude.ai' },
@@ -1645,6 +1648,9 @@
       } else if (prefix === 'vidal:') {
         const encodedQuery = encodeURIComponent(query).replace(/%20/g, '+');
         finalUrl = baseUrl + encodedQuery;
+      } else if (prefix === 'dd:') {
+        const encodedQuery = encodeURIComponent(query).replace(/%20/g, '+');
+        finalUrl = baseUrl + encodedQuery + '&bytSearchType=0';
       } else {
         finalUrl = baseUrl + encodeURIComponent(query);
       }
