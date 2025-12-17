@@ -853,54 +853,71 @@
             min-width: 300px;
         }
 
-        .autocomplete-items {
-            position: absolute;
-            border: 1px solid #d4d4d4;
-            border-bottom: none;
-            border-top: none;
-            z-index: 99;
-            top: 100%;
-            left: 0;
-            right: 0;
-            max-height: 300px;
-            overflow-y: auto;
-        }
+#autocomplete {
+    position: absolute;
+    background: white;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    min-width: 400px;
+}
 
-        .autocomplete-items div {
-            padding: 10px;
-            cursor: pointer;
-            background-color: #fff;
-            border-bottom: 1px solid #d4d4d4;
-        }
+.dark-mode #autocomplete {
+    background: #1a2332;
+    border-color: #64b5f6;
+}
 
-        .autocomplete-items div:hover {
-            background-color: #e9e9e9;
-        }
+.autocomplete-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background 0.2s;
+}
 
-        .autocomplete-active {
-            background-color: DodgerBlue !important;
-            color: #ffffff;
-        }
+.dark-mode .autocomplete-item {
+    border-bottom-color: #2d3e52;
+}
 
-        .dark-mode .autocomplete-items {
-            border-color: #2d3e52;
-        }
+.autocomplete-item:hover,
+.autocomplete-item.selected {
+    background: linear-gradient(135deg, #667eea15, #764ba215);
+}
 
-        .dark-mode .autocomplete-items div {
-            background-color: #243447;
-            border-color: #2d3e52;
-            color: #b0bec5;
-        }
+.dark-mode .autocomplete-item:hover,
+.dark-mode .autocomplete-item.selected {
+    background: #243447;
+}
 
-        .dark-mode .autocomplete-items div:hover {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: #fff;
-        }
+.autocomplete-item .favicon-icon {
+    flex-shrink: 0;
+}
 
-        .dark-mode .autocomplete-active {
-            background-color: #1e3c72 !important;
-            color: #fff !important;
-        }
+.autocomplete-prefix {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    color: #667eea;
+    min-width: 80px;
+}
+
+.dark-mode .autocomplete-prefix {
+    color: #64b5f6;
+}
+
+.autocomplete-name {
+    color: #555;
+    flex: 1;
+}
+
+.dark-mode .autocomplete-name {
+    color: #b0bec5;
+}
     </style>
 </head>
 <body>
@@ -918,7 +935,6 @@
         <img id="search-prefix-favicon" class="favicon-icon" src="" alt="favicon" style="display: none; margin-right: 5px;">
         <div class="autocomplete-container">
           <input type="text" id="searchInput" autocomplete="off" placeholder="Commencez votre recherche ici..." />
-          <div id="autocomplete-list" class="autocomplete-items"></div>
         </div>
         <button type="submit">🔍</button>
         <label class="checkbox-label">
@@ -1093,7 +1109,7 @@
           <label><input type="radio" name="searchEngine" value="msps:">Ministère de la santé et de la Protection Sociale</label>
           <label><input type="radio" name="searchEngine" value="has:">HAS</label>
           <label><input type="radio" name="searchEngine" value="vidal:">VIDAL</label>
-
+          <label><input type="radio" name="searchEngine" value="mesh:">MeSH Browser</label>
           <label><input type="radio" name="searchEngine" value="lissa:">LISSA</label>
           <label><input type="radio" name="searchEngine" value="anm:">Académie nationale de médecine</label>
           <label><input type="radio" name="searchEngine" value="hetop:">HETOP</label>
@@ -1163,6 +1179,7 @@
         <li><b>msps:</b> Ministère de la santé et de la Protection Sociale</li>
         <li><b>has:</b> HAS</li>
         <li><b>vidal:</b> VIDAL</li>
+        <li><b>mesh:</b> MeSH Browser</li>
         <li><b>lissa:</b> LISSA</li>
         <li><b>anm:</b> Académie nationale de médecine</li>
         <li><b>hetop:</b> HETOP</li>
@@ -1417,6 +1434,7 @@
     'coch:': { name: 'Cochrane Library', url: 'https://www.cochranelibrary.com/search?q=', domain: 'cochranelibrary.com' },
     'medscape:': { name: 'Medscape', url: 'https://search.medscape.com/search/fr/', domain: 'medscape.com' },
     'openmd:': { name: 'OpenMD', url: 'https://openmd.com/search?q=', domain: 'openmd.com' },
+    'mesh:': { name: 'MeSH Browser', url: 'https://meshb.nlm.nih.gov/search?searchInField=allTerms&searchString=', domain: 'nlm.nih.gov' },
     'dd:': { name: 'Diseases Database', url: 'http://www.diseasesdatabase.com/item_choice.asp?strUserInput=', domain: 'diseasesdatabase.com' },
     'wolf:': { name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/input?i=', domain: 'wolframalpha.com' },
     'chatgpt:': { name: 'ChatGPT', url: 'https://chatgpt.com/?prompt=', domain: 'chatgpt.com' },
@@ -1581,85 +1599,6 @@
 
     searchSource.textContent = source;
     searchSource.style.color = color;
-  }
-
-  function setupAutocomplete(inp, arr) {
-    let currentFocus;
-
-    inp.addEventListener("input", function(e) {
-        let a, b, i, val = this.value;
-        closeAllLists();
-        updateSearchSource();
-        if (!val || val.includes(':')) { return false; }
-        currentFocus = -1;
-
-        a = document.createElement("DIV");
-        a.setAttribute("id", this.id + "autocomplete-list");
-        a.setAttribute("class", "autocomplete-items");
-        this.parentNode.appendChild(a);
-
-        for (i = 0; i < arr.length; i++) {
-            if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-                b = document.createElement("DIV");
-                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-                b.innerHTML += arr[i].substr(val.length);
-                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-                b.addEventListener("click", function(e) {
-                    inp.value = this.getElementsByTagName("input")[0].value;
-                    closeAllLists();
-                    updateSearchSource();
-                    inp.focus();
-                });
-                a.appendChild(b);
-            }
-        }
-    });
-
-    inp.addEventListener("keydown", function(e) {
-        let x = document.getElementById(this.id + "autocomplete-list");
-        if (x) x = x.getElementsByTagName("div");
-        if (e.keyCode == 40) { // Arrow DOWN
-            currentFocus++;
-            addActive(x);
-        } else if (e.keyCode == 38) { // Arrow UP
-            currentFocus--;
-            addActive(x);
-        } else if (e.keyCode == 13) { // Enter
-            if (currentFocus > -1) {
-                e.preventDefault();
-                if (x) x[currentFocus].click();
-            }
-        } else if (e.keyCode === 9 || e.keyCode === 27) { // Tab or Escape
-            closeAllLists();
-        }
-    });
-
-    function addActive(x) {
-        if (!x) return false;
-        removeActive(x);
-        if (currentFocus >= x.length) currentFocus = 0;
-        if (currentFocus < 0) currentFocus = (x.length - 1);
-        x[currentFocus].classList.add("autocomplete-active");
-    }
-
-    function removeActive(x) {
-        for (let i = 0; i < x.length; i++) {
-            x[i].classList.remove("autocomplete-active");
-        }
-    }
-
-    function closeAllLists(elmnt) {
-        const x = document.getElementsByClassName("autocomplete-items");
-        for (let i = 0; i < x.length; i++) {
-            if (elmnt != x[i] && elmnt != inp) {
-                x[i].parentNode.removeChild(x[i]);
-            }
-        }
-    }
-
-    document.addEventListener("click", function(e) {
-        closeAllLists(e.target);
-    });
   }
 
   // AI-Assisted Comment: This adds a 'change' event listener to all search engine radio buttons.
@@ -2039,8 +1978,6 @@
     searchInput.focus();
     // AI-Assisted Comment: Dynamically add favicons to search engine options on page load.
     addFaviconsToSearchEngines();
-    const prefixes = Object.keys(searchEngines);
-    setupAutocomplete(searchInput, prefixes);
   });
   
   const bingOperatorDescriptions = {
@@ -2285,6 +2222,106 @@
         input.setSelectionRange(finalCursorPos, finalCursorPos);
     }
   });
+
+// Autocomplete functionality
+const autocompleteDiv = document.createElement('div');
+autocompleteDiv.id = 'autocomplete';
+searchInput.parentElement.appendChild(autocompleteDiv);
+
+let selectedIndex = -1;
+
+function showAutocomplete(matches) {
+  if (matches.length === 0) {
+    autocompleteDiv.style.display = 'none';
+    return;
+  }
+
+  autocompleteDiv.innerHTML = '';
+  matches.forEach((match, index) => {
+    const item = document.createElement('div');
+    item.className = 'autocomplete-item';
+    if (index === selectedIndex) item.classList.add('selected');
+    
+    const favicon = document.createElement('img');
+    favicon.className = 'favicon-icon';
+    favicon.src = `https://www.google.com/s2/favicons?sz=32&domain=${match.engine.domain}`;
+    favicon.alt = '';
+    
+    const prefix = document.createElement('span');
+    prefix.className = 'autocomplete-prefix';
+    prefix.textContent = match.prefix;
+    
+    const name = document.createElement('span');
+    name.className = 'autocomplete-name';
+    name.textContent = match.engine.name;
+    
+    item.appendChild(favicon);
+    item.appendChild(prefix);
+    item.appendChild(name);
+    
+    item.addEventListener('click', () => {
+      const currentValue = searchInput.value.trim();
+      const afterPrefix = currentValue.split(':')[1] || '';
+      searchInput.value = match.prefix + (afterPrefix ? ' ' + afterPrefix.trim() : ' ');
+      autocompleteDiv.style.display = 'none';
+      updateSearchSource();
+      searchInput.focus();
+    });
+    
+    autocompleteDiv.appendChild(item);
+  });
+  
+  const rect = searchInput.getBoundingClientRect();
+  autocompleteDiv.style.top = (rect.bottom + window.scrollY + 5) + 'px';
+  autocompleteDiv.style.left = rect.left + 'px';
+  autocompleteDiv.style.display = 'block';
+}
+
+searchInput.addEventListener('input', function(e) {
+  const value = e.target.value.trim().toLowerCase();
+  selectedIndex = -1;
+  
+  if (!value || value.includes(' ')) {
+    autocompleteDiv.style.display = 'none';
+    return;
+  }
+  
+  const matches = Object.keys(searchEngines)
+    .filter(prefix => prefix.toLowerCase().startsWith(value))
+    .map(prefix => ({ prefix, engine: searchEngines[prefix] }))
+    .slice(0, 10);
+  
+  showAutocomplete(matches);
+});
+
+searchInput.addEventListener('keydown', function(e) {
+  const items = autocompleteDiv.querySelectorAll('.autocomplete-item');
+  
+  if (autocompleteDiv.style.display === 'none' || items.length === 0) return;
+  
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+    items.forEach((item, i) => item.classList.toggle('selected', i === selectedIndex));
+    items[selectedIndex]?.scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    selectedIndex = Math.max(selectedIndex - 1, 0);
+    items.forEach((item, i) => item.classList.toggle('selected', i === selectedIndex));
+    items[selectedIndex]?.scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter' && selectedIndex >= 0) {
+    e.preventDefault();
+    items[selectedIndex]?.click();
+  } else if (e.key === 'Escape') {
+    autocompleteDiv.style.display = 'none';
+  }
+});
+
+document.addEventListener('click', function(e) {
+  if (!searchInput.contains(e.target) && !autocompleteDiv.contains(e.target)) {
+    autocompleteDiv.style.display = 'none';
+  }
+});
 </script>
 </body>
 </html>
