@@ -1941,6 +1941,27 @@
       searchInput.focus();
     }
 
+    // Alt+Up/Down to cycle through search engines
+    if (e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+      e.preventDefault();
+      
+      const allRadios = Array.from(document.querySelectorAll('input[name="searchEngine"]'));
+      const currentRadio = document.querySelector('input[name="searchEngine"]:checked');
+      let currentIndex = allRadios.findIndex(radio => radio === currentRadio);
+
+      if (e.key === 'ArrowDown') {
+        currentIndex = (currentIndex + 1) % allRadios.length;
+      } else { // ArrowUp
+        currentIndex = (currentIndex - 1 + allRadios.length) % allRadios.length;
+      }
+      
+      const nextRadio = allRadios[currentIndex];
+      if (nextRadio) {
+        nextRadio.click(); // .click() will check the radio and trigger the change event
+      }
+      searchInput.focus();
+    }
+
     // Alt+1-4 : Basculer entre catégories
     if (e.altKey && e.key >= '1' && e.key <= '4') {
       e.preventDefault(); // Prevent default browser behavior for Alt+Number
